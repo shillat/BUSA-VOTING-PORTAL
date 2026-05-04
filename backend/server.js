@@ -11,7 +11,7 @@ const app = express();
 
 // CORS - allow frontend on any port (dev & prod)
 app.use(cors({
-  origin: '*',
+  origin: 'https://busa-voting-portal.vercel.app',
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
