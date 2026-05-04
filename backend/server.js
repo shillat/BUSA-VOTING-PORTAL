@@ -11,7 +11,7 @@ const app = express();
 
 // CORS - allow frontend on any port (dev & prod)
 app.use(cors({
-  origin: true,
+  origin: 'https://busa-voting-portal.vercel.app',
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
@@ -92,28 +92,6 @@ const db = new sqlite3.Database(dbPath, (err) => {
         // Ignore error if column already exists
       }
     });
-    db.run(`CREATE TABLE IF NOT EXISTS guidelines (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      title TEXT,
-      content TEXT,
-      category TEXT,
-      is_published BOOLEAN DEFAULT 0,
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-      created_by TEXT
-    )`);
-    db.run(`CREATE TABLE IF NOT EXISTS election_calendar (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      title TEXT,
-      description TEXT,
-      event_date DATETIME,
-      event_type TEXT,
-      location TEXT,
-      is_published BOOLEAN DEFAULT 0,
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-      created_by TEXT
-    )`);
   }
 });
 
