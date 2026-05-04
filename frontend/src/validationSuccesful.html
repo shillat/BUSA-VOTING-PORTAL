@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BUSA Online Voting Portal | Validation Successful</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Body – exact spec */
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 0px;
+            isolation: isolate;
+            position: relative;
+            width: 1280px;
+            height: 1405px;
+            min-height: 1405px;
+            background: #FFFFFF;
+            font-family: 'Inter', 'Public Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+            margin: 0 auto;
+            overflow-x: hidden;
+        }
+
+        /* Main container */
+        .portal-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ========== HEADER SECTION ========== */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 28px 48px 20px 48px;
+            border-bottom: 1px solid #EFF3F8;
+            width: 100%;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .logo-icon {
+            background: #002F6C;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 14px;
+            font-weight: 800;
+            font-size: 28px;
+            color: white;
+            font-family: monospace;
+        }
+
+        .portal-title {
+            font-weight: 700;
+            font-size: 20px;
+            letter-spacing: -0.3px;
+            color: #0B2B44;
+            background: #F8FAFE;
+            padding: 6px 20px;
+            border-radius: 40px;
+        }
+
+        .back-link {
+            font-size: 15px;
+            font-weight: 500;
+            color: #2A6F8F;
+            text-decoration: none;
+            border-bottom: 1px dashed #B9D4E3;
+            padding-bottom: 2px;
+            transition: opacity 0.2s;
+        }
+
+        .back-link:hover {
+            opacity: 0.75;
+        }
+
+        /* ========== MAIN CONTENT ========== */
+        .main-content {
+            flex: 1;
+            padding: 48px 80px 64px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Success Badge */
+        .success-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: #E8F5E9;
+            padding: 10px 28px;
+            border-radius: 60px;
+            margin-bottom: 32px;
+        }
+
+        .success-icon {
+            font-size: 24px;
+        }
+
+        .success-text {
+            font-weight: 700;
+            font-size: 18px;
+            color: #2E7D32;
+            letter-spacing: 0.5px;
+        }
+
+        /* Main Title */
+        .main-title {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .main-title h1 {
+            font-size: 42px;
+            font-weight: 800;
+            color: #1A2C3E;
+            margin-bottom: 12px;
+        }
+
+        .main-title p {
+            font-size: 18px;
+            color: #5E7E9C;
+        }
+
+        /* ========== CREDENTIAL CARD ========== */
+        .credential-card {
+            background: #FFFFFF;
+            border: 2px solid #E8EDF4;
+            border-radius: 32px;
+            box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.08);
+            width: 780px;
+            max-width: 100%;
+            margin-bottom: 40px;
+            overflow: hidden;
+        }
+
+        /* Card Header with BUSA branding */
+        .card-header {
+            background: linear-gradient(135deg, #002F6C 0%, #0A4175 100%);
+            padding: 24px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .card-logo-icon {
+            background: white;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 30px;
+            color: #002F6C;
+        }
+
+        .card-logo-text {
+            color: white;
+            font-weight: 700;
+            font-size: 20px;
+            letter-spacing: 1px;
+        }
+
+        .card-badge {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 6px 16px;
+            border-radius: 40px;
+            font-size: 12px;
+            font-weight: 600;
+            color: white;
+            text-transform: uppercase;
+        }
+
+        /* Card Body */
+        .card-body {
+            padding: 36px 40px;
+            display: flex;
+            gap: 48px;
+            flex-wrap: wrap;
+        }
+
+        /* Left Column - Voter Info */
+        .info-column {
+            flex: 1.2;
+        }
+
+        .credential-title {
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: #8A9BB0;
+            margin-bottom: 24px;
+        }
+
+        .info-row {
+            margin-bottom: 28px;
+        }
+
+        .info-label {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #6F8FAC;
+            margin-bottom: 6px;
+        }
+
+        .info-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1A2C3E;
+        }
+
+        .token-value {
+            font-family: monospace;
+            font-size: 24px;
+            font-weight: 800;
+            color: #002F6C;
+            letter-spacing: 1px;
+        }
+
+        .status-active {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #E8F5E9;
+            padding: 6px 16px;
+            border-radius: 40px;
+            font-weight: 700;
+            font-size: 14px;
+            color: #2E7D32;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: #2E7D32;
+            border-radius: 50%;
+        }
+
+        .date-value {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1A2C3E;
+        }
+
+        /* Right Column - QR Code */
+        .qrcode-column {
+            flex: 0.8;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: #F9FBFE;
+            border-radius: 24px;
+            padding: 24px;
+            border: 1px solid #EDF2F7;
+        }
+
+        .qrcode-box {
+            width: 160px;
+            height: 160px;
+            background: #FFFFFF;
+            border: 2px solid #E0E8F0;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+            position: relative;
+        }
+
+        /* Simulated QR pattern */
+        .qr-pattern {
+            width: 130px;
+            height: 130px;
+            background: repeating-linear-gradient(90deg, #000 0px, #000 2px, #fff 2px, #fff 6px),
+                repeating-linear-gradient(0deg, #000 0px, #000 2px, #fff 2px, #fff 6px);
+            background-blend-mode: multiply;
+            position: relative;
+        }
+
+        .qr-pattern::before {
+            content: "BUSA";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 12px;
+            font-weight: 800;
+            background: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+
+        .qr-label {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #8A9BB0;
+            text-align: center;
+        }
+
+        /* Divider */
+        .divider {
+            height: 1px;
+            background: #EEF3F8;
+            margin: 0 40px 24px 40px;
+        }
+
+        /* Footer inside card */
+        .card-footer {
+            padding: 0 40px 36px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .security-note {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+            color: #D32F2F;
+            background: #FFEBEE;
+            padding: 10px 18px;
+            border-radius: 40px;
+        }
+
+        .security-icon {
+            font-size: 16px;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 20px;
+        }
+
+        .btn-primary {
+            background: #002F6C;
+            color: white;
+            border: none;
+            padding: 14px 32px;
+            border-radius: 48px;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary:hover {
+            background: #0A4175;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #1A2C3E;
+            border: 2px solid #DCE3EC;
+            padding: 12px 28px;
+            border-radius: 48px;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-secondary:hover {
+            border-color: #002F6C;
+            background: #F5F8FC;
+        }
+
+        /* ========== FOOTER ========== */
+        .footer {
+            background: #FCFDFF;
+            border-top: 1px solid #ECF3F9;
+            padding: 32px 48px 28px;
+            width: 100%;
+            margin-top: auto;
+        }
+
+        .footer-grid {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 40px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .footer-col h4 {
+            font-weight: 700;
+            font-size: 14px;
+            color: #1A405E;
+            margin-bottom: 14px;
+        }
+
+        .footer-col a {
+            display: block;
+            font-size: 12px;
+            color: #48708E;
+            text-decoration: none;
+            margin-bottom: 10px;
+            transition: color 0.2s;
+        }
+
+        .footer-col a:hover {
+            color: #002F6C;
+        }
+
+        .copyright {
+            text-align: center;
+            font-size: 11px;
+            color: #7C95AF;
+            margin-top: 28px;
+            padding-top: 16px;
+            border-top: 1px solid #E9F0F6;
+        }
+
+        /* Print styles */
+        @media print {
+            body {
+                width: 100%;
+                height: auto;
+                background: white;
+            }
+
+            .back-link,
+            .action-buttons,
+            .security-note,
+            .footer {
+                display: none;
+            }
+
+            .credential-card {
+                box-shadow: none;
+                border: 1px solid #ccc;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="portal-container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo-area">
+                <div class="logo-icon">B</div>
+                <div class="portal-title">BUSA ONLINE VOTING PORTAL</div>
+            </div>
+            <a href="#" class="back-link" id="backToHome">← Back to Home</a>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Success Badge -->
+            <div class="success-badge">
+                <span class="success-icon">✓</span>
+                <span class="success-text">Validation Successful</span>
+            </div>
+
+            <!-- Main Title -->
+            <div class="main-title">
+                <h1>Your identity has been verified.</h1>
+                <p>You are now ready to participate in the upcoming elections.</p>
+            </div>
+
+            <!-- Credential Card -->
+            <div class="credential-card">
+                <!-- Card Header -->
+                <div class="card-header">
+                    <div class="card-logo">
+                        <div class="card-logo-icon">B</div>
+                        <div class="card-logo-text">BUSA</div>
+                    </div>
+                    <div class="card-badge">Official Credential</div>
+                </div>
+
+                <!-- Card Body -->
+                <div class="card-body">
+                    <!-- Left Column - Voter Information -->
+                    <div class="info-column">
+                        <div class="credential-title">Authenticated Voter</div>
+
+                        <div class="info-row">
+                            <div class="info-label">Token</div>
+                            <div class="info-value token-value">V-2026-8901</div>
+                        </div>
+
+                        <div class="info-row">
+                            <div class="info-label">Status</div>
+                            <div class="status-active">
+                                <span class="status-dot"></span>
+                                ACTIVE
+                            </div>
+                        </div>
+
+                        <div class="info-row">
+                            <div class="info-label">Verified Date</div>
+                            <div class="info-value date-value">MARCH 24, 2026</div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column - QR Code -->
+                    <div class="qrcode-column">
+                        <div class="qrcode-box">
+                            <div class="qr-pattern"></div>
+                        </div>
+                        <div class="qr-label">Secure Verification QR</div>
+                    </div>
+                </div>
+
+                <!-- Divider -->
+                <div class="divider"></div>
+
+                <!-- Card Footer -->
+                <div class="card-footer">
+                    <div class="security-note">
+                        <span class="security-icon">🔒</span>
+                        <span>Please ensure you are in a private area before continuing to the ballot.</span>
+                    </div>
+                    <div class="action-buttons">
+                        <button class="btn-primary" id="proceedBtn">Proceed to Dashboard</button>
+                        <button class="btn-secondary" id="printBtn">PRINT Voter ID</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>BUSA</h4>
+                    <a href="#">About Union</a>
+                    <a href="#">Election Guidelines</a>
+                    <a href="#">Contact Us</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Help & Support</h4>
+                    <a href="#">FAQ</a>
+                    <a href="#">Live Chat</a>
+                    <a href="#">Support Ticket</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Legal</h4>
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                    <a href="#">Cookie Policy</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Resources</h4>
+                    <a href="#">Voter Guide</a>
+                    <a href="#">Announcements</a>
+                </div>
+            </div>
+            <div class="copyright">
+                © 2026 BUSA ONLINE VOTING PORTAL. All rights reserved.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function () {
+            // Interactive elements with user feedback (non-intrusive toast)
+            function showMessage(message, isSuccess = true) {
+                // Remove existing toast if any
+                const existingToast = document.querySelector('.custom-toast');
+                if (existingToast) existingToast.remove();
+
+                const toast = document.createElement('div');
+                toast.className = 'custom-toast';
+                toast.textContent = message;
+                toast.style.position = 'fixed';
+                toast.style.bottom = '30px';
+                toast.style.left = '50%';
+                toast.style.transform = 'translateX(-50%)';
+                toast.style.backgroundColor = isSuccess ? '#1E5A3C' : '#B13E3E';
+                toast.style.color = 'white';
+                toast.style.padding = '12px 28px';
+                toast.style.borderRadius = '60px';
+                toast.style.fontSize = '14px';
+                toast.style.fontWeight = '500';
+                toast.style.fontFamily = 'Inter, sans-serif';
+                toast.style.zIndex = '1000';
+                toast.style.boxShadow = '0 4px 15px rgba(0,0,0,0.2)';
+                document.body.appendChild(toast);
+
+                setTimeout(() => {
+                    toast.style.opacity = '0';
+                    setTimeout(() => toast.remove(), 300);
+                }, 2800);
+            }
+
+            // Back to Home button
+            const backBtn = document.getElementById('backToHome');
+            if (backBtn) {
+                backBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    showMessage('🏠 Returning to homepage (demo navigation)', false);
+                });
+            }
+
+            // Proceed to Dashboard button
+            const proceedBtn = document.getElementById('proceedBtn');
+            if (proceedBtn) {
+                proceedBtn.addEventListener('click', () => {
+                    showMessage('✓ Redirecting to voter dashboard... (demo)', true);
+                    // Simulate navigation after a short delay
+                    setTimeout(() => {
+                        showMessage('Dashboard would open in production environment', false);
+                    }, 1000);
+                });
+            }
+
+            // Print button functionality
+            const printBtn = document.getElementById('printBtn');
+            if (printBtn) {
+                printBtn.addEventListener('click', () => {
+                    showMessage('🖨️ Preparing your Voter ID for printing...', true);
+                    setTimeout(() => {
+                        window.print();
+                    }, 300);
+                });
+            }
+
+            // Handle all footer links with demo message
+            const footerLinks = document.querySelectorAll('.footer-col a');
+            footerLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    showMessage(`📄 ${link.innerText} (demo information)`, false);
+                });
+            });
+
+            // Additional: Any other interactive elements
+            const cardBadge = document.querySelector('.card-badge');
+            if (cardBadge) {
+                cardBadge.style.cursor = 'default';
+            }
+        })();
+    </script>
+</body>
+
+</html>

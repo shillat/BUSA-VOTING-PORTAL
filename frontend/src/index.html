@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>BUSA Online Voting Portal | Bugema University Elections 2027</title>
+    <!-- Font Awesome 6 (free icons) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Google Fonts: Inter (clean, professional) -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            font-family: 'Inter', sans-serif;
+            color: #1a1f2b;
+            line-height: 1.45;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Header: logo beside site name, centered nav below */
+        .top-header {
+            background: white;
+            border-bottom: 1px solid #e2e6ea;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-top {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 20px 0 12px 0;
+            border-bottom: 1px solid #eef2f5;
+        }
+
+        .logo-icon {
+            background: #1e3a5f;
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 24px;
+            color: white;
+        }
+
+        .site-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            letter-spacing: -0.2px;
+            color: #000000;
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            gap: 48px;
+            padding: 14px 0 16px 0;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            font-weight: 500;
+            color: #2c3e4e;
+            font-size: 0.9rem;
+            transition: 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: #1e3a5f;
+        }
+
+        /* Cards: white background, thin border, no extra shadows */
+        .card-white {
+            background: white;
+            border: 1px solid #e2e6ea;
+            border-radius: 20px;
+            padding: 24px;
+        }
+
+        /* Hero Section: Two columns, verification left (above live tally) */
+        .hero-section {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 40px;
+            margin: 40px 0 48px;
+            align-items: stretch;
+        }
+
+        .hero-left {
+            flex: 1.2;
+        }
+
+        .hero-badge {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #1e3a5f;
+            background: #eef2f7;
+            display: inline-block;
+            padding: 4px 14px;
+            border-radius: 40px;
+            margin-bottom: 20px;
+        }
+
+        .hero-left h2 {
+            font-size: 3rem;
+            font-weight: 700;
+            line-height: 1.2;
+            color: #000000;
+            letter-spacing: -0.02em;
+        }
+
+        .hero-left h2 span {
+            color: #000000;
+        }
+
+        .hero-desc {
+            margin: 20px 0 28px;
+            font-size: 0.95rem;
+            color: #2c3e4e;
+            max-width: 90%;
+        }
+
+        .register-btn {
+            background: #1e3a5f;
+            padding: 12px 28px;
+            border-radius: 60px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 8px;
+            border: none;
+            color: white;
+            cursor: default;
+            font-size: 0.85rem;
+        }
+
+        /* Verification Card (above live tally in right column) */
+        .verification-card {
+            background: white;
+            border: 1px solid #e2e6ea;
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .verification-card h4 {
+            font-weight: 700;
+            margin-bottom: 12px;
+            font-size: 1rem;
+            color: #000000;
+        }
+
+        .input-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 16px 0 8px;
+        }
+
+        .input-group input {
+            flex: 2;
+            padding: 12px 18px;
+            border: 1px solid #d0d8e0;
+            border-radius: 60px;
+            font-size: 0.85rem;
+            background: #ffffff;
+            font-family: monospace;
+            font-weight: 500;
+            color: #1a1f2b;
+        }
+
+        .input-group button {
+            background: #1e3a5f;
+            border: none;
+            padding: 0 28px;
+            border-radius: 60px;
+            color: white;
+            font-weight: 600;
+            cursor: default;
+            font-size: 0.8rem;
+        }
+
+        .check-link {
+            margin-top: 10px;
+        }
+
+        .check-link a {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #1e3a5f;
+            text-decoration: none;
+        }
+
+        .hero-right {
+            flex: 0.9;
+        }
+
+        /* Live Tally Card (placed below verification) */
+        .live-tally-card {
+            background: white;
+            border: 1px solid #e2e6ea;
+            border-radius: 20px;
+            padding: 28px 24px;
+            text-align: center;
+        }
+
+        .live-badge {
+            background: #eef2f7;
+            color: #1e3a5f;
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 50px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+        }
+
+        .total-ballots {
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin: 16px 0 8px;
+            color: #000000;
+        }
+
+        .tally-link {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            font-weight: 500;
+            border-top: 1px solid #eef2f5;
+            padding-top: 16px;
+            color: #1e3a5f;
+        }
+
+        /* Section headers */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            flex-wrap: wrap;
+            margin: 48px 0 20px 0;
+        }
+
+        .section-title {
+            font-size: 1.7rem;
+            font-weight: 700;
+            color: #000000;
+        }
+
+        .active-badge {
+            background: #eef2f7;
+            font-size: 0.8rem;
+            padding: 6px 16px;
+            border-radius: 40px;
+            font-weight: 500;
+            color: #2c3e4e;
+            margin-left: 12px;
+        }
+
+        /* Election grid */
+        .election-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 28px;
+            margin-bottom: 20px;
+        }
+
+        .election-card {
+            background: white;
+            border: 1px solid #e2e6ea;
+            border-radius: 20px;
+            padding: 24px;
+        }
+
+        .status-open {
+            background: #eef2f7;
+            color: #1e3a5f;
+            font-size: 0.7rem;
+            font-weight: 700;
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 60px;
+        }
+
+        .election-card h3 {
+            margin: 14px 0 8px;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #000000;
+        }
+
+        .election-desc {
+            color: #2c3e4e;
+            font-size: 0.9rem;
+            margin-bottom: 14px;
+        }
+
+        .timer {
+            font-weight: 600;
+            font-size: 0.8rem;
+            color: #1e3a5f;
+            margin-top: 8px;
+        }
+
+        /* two column: key dates + guidelines */
+        .two-col-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 32px;
+            margin: 32px 0 40px;
+        }
+
+        .info-card {
+            flex: 1;
+            background: white;
+            border: 1px solid #e2e6ea;
+            border-radius: 20px;
+            padding: 24px;
+        }
+
+        .info-card h3 {
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            color: #000000;
+        }
+
+        .date-item {
+            display: flex;
+            gap: 18px;
+            margin-bottom: 22px;
+            align-items: baseline;
+        }
+
+        .date-day {
+            font-weight: 700;
+            font-size: 1rem;
+            min-width: 62px;
+            color: #1e3a5f;
+        }
+
+        .guidelines-list {
+            list-style: none;
+            margin-top: 8px;
+        }
+
+        .guidelines-list li {
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9rem;
+            color: #2c3e4e;
+        }
+
+        .guidelines-list i {
+            color: #1e3a5f;
+            width: 20px;
+        }
+
+        .view-link {
+            color: #1e3a5f;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        /* announcements */
+        .announcements-wrapper {
+            background: white;
+            border: 1px solid #e2e6ea;
+            border-radius: 20px;
+            padding: 24px;
+            margin: 20px 0 40px;
+        }
+
+        .announce-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .announce-header h3 {
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: #000000;
+        }
+
+        .announce-item {
+            border-bottom: 1px solid #eef2f5;
+            padding: 20px 0;
+        }
+
+        .announce-title {
+            font-weight: 700;
+            display: flex;
+            gap: 12px;
+            margin-bottom: 8px;
+            color: #000000;
+        }
+
+        .announce-date {
+            font-weight: 400;
+            font-size: 0.7rem;
+            color: #6a7a8a;
+        }
+
+        .announce-text {
+            color: #2c3e4e;
+            font-size: 0.9rem;
+            margin-top: 6px;
+        }
+
+        /* candidates grid */
+        .candidate-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 28px;
+            margin: 32px 0 40px;
+        }
+
+        .candidate-card {
+            background: white;
+            border: 1px solid #e2e6ea;
+            border-radius: 20px;
+            padding: 24px 20px;
+            text-align: center;
+        }
+
+        .candidate-name {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #000000;
+        }
+
+        .candidate-position {
+            background: #eef2f7;
+            display: inline-block;
+            padding: 4px 16px;
+            border-radius: 60px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            margin: 14px 0 8px;
+            color: #1e3a5f;
+        }
+
+        .candidate-faculty {
+            font-weight: 500;
+            font-size: 0.8rem;
+            margin-bottom: 12px;
+            color: #2c3e4e;
+        }
+
+        .candidate-quote {
+            font-style: italic;
+            font-size: 0.85rem;
+            color: #2c3e4e;
+            margin: 14px 0;
+            line-height: 1.4;
+        }
+
+        .view-profile {
+            font-weight: 600;
+            color: #1e3a5f;
+            text-decoration: none;
+            font-size: 0.8rem;
+        }
+
+        .see-all-btn {
+            text-align: center;
+            margin: 8px 0 48px;
+        }
+
+        .see-all-btn a {
+            background: white;
+            border: 1px solid #d0d8e0;
+            padding: 12px 32px;
+            border-radius: 60px;
+            font-weight: 600;
+            text-decoration: none;
+            color: #1e3a5f;
+            font-size: 0.85rem;
+        }
+
+        .live-tally-row {
+            background: white;
+            border: 1px solid #e2e6ea;
+            border-radius: 18px;
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 20px 0 24px;
+        }
+
+        .footer {
+            background: white;
+            border-top: 1px solid #e2e6ea;
+            color: #2c3e4e;
+            padding: 48px 0 28px;
+            margin-top: 32px;
+        }
+
+        .footer-inner {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 40px;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 48px;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: #2c3e4e;
+            text-decoration: none;
+            font-size: 0.8rem;
+        }
+
+        .footer-copy {
+            text-align: center;
+            margin-top: 48px;
+            font-size: 0.7rem;
+            border-top: 1px solid #eef2f5;
+            padding-top: 24px;
+            color: #5b6b7c;
+        }
+
+        @media (max-width: 760px) {
+            .hero-left h2 {
+                font-size: 2rem;
+            }
+
+            .container {
+                padding: 0 18px;
+            }
+
+            .nav-links {
+                gap: 26px;
+            }
+
+            .header-top {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="top-header">
+        <div class="container">
+            <div class="header-top">
+                <div class="logo-icon">B</div>
+                <div class="site-title">BUSA ONLINE VOTING PORTAL</div>
+            </div>
+            <div class="nav-links">
+                <a href="#">HOME</a>
+                <a href="#">VOTER PANEL</a>
+                <a href="#">ADMIN PANEL</a>
+            </div>
+        </div>
+    </div>
+
+    <main class="container">
+        <!-- Hero Section: following wireframe: Verification column appears above Live Tally on the right -->
+        <div class="hero-section">
+            <!-- Left side: Bugema University Elections 2027 + title + description + register button -->
+            <div class="hero-left">
+                <div class="hero-badge">BUGEMA UNIVERSITY ELECTIONS 2027</div>
+                <h2>YOUR VOICE SHAPES<br><span>OUR SHARED FUTURE.</span></h2>
+                <p class="hero-desc">A secure, transparent, and accessible voting platform designed for the student
+                    community. Exercise your right with confidence.</p>
+                <button class="register-btn"><i class="fas fa-check-circle"></i> REGISTER TO VOTE 🗳️</button>
+            </div>
+
+            <!-- Right side: VERIFICATION (above) then LIVE TALLY (below) -->
+            <div class="hero-right">
+                <!-- Verification Card -->
+                <div class="verification-card">
+                    <h4><i class="fas fa-id-card" style="color:#1e3a5f; margin-right: 6px;"></i> VERIFICATION</h4>
+                    <p style="font-size: 0.75rem; color: #5a6874; margin-bottom: 8px;">ENTER YOUR REG. NUMBER</p>
+                    <div class="input-group">
+                        <input type="text" placeholder="24/XXX/BUX/XXXX" value="24/XXX/BUX/XXXX">
+                        <button>CHECK STATUS</button>
+                    </div>
+                    <div class="check-link">
+                        <a href="#">CHECK STATUS →</a>
+                    </div>
+                </div>
+
+                <!-- Live Tally Card -->
+                <div class="live-tally-card">
+                    <div><span class="live-badge"><i class="fas fa-circle" style="font-size: 0.45rem;"></i> LIVE
+                            TALLY</span></div>
+                    <div class="total-ballots">12,842</div>
+                    <div style="font-weight: 500; color: #2c3e4e;">TOTAL BALLOTS CAST</div>
+                    <div class="tally-link">
+                        <span>📊 LIVE FEED</span>
+                        <span style="cursor: default; font-weight: 600;">VIEW FULL TALLY →</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ELECTION OVERVIEW + active sessions -->
+        <div class="section-header">
+            <div>
+                <span class="section-title">ELECTION OVERVIEW</span>
+                <span class="active-badge">ACTIVE SESSIONS (3)</span>
+            </div>
+        </div>
+
+        <div class="election-grid">
+            <div class="election-card">
+                <div><span class="status-open"><i class="fas fa-check-circle"></i> VOTING OPEN</span></div>
+                <h3>STUDENT UNION PRESIDENCY</h3>
+                <div class="election-desc">Annual general election for the executive student council positions.</div>
+                <div class="timer">⏱️ ENDS IN 14H 22M (APRIL)</div>
+            </div>
+            <div class="election-card">
+                <div><span class="status-open"><i class="fas fa-check-circle"></i> VOTING OPEN</span></div>
+                <h3>FACULTY REPRESENTATIVE</h3>
+                <div class="election-desc">Departmental representation for the Faculty of Social Sciences.</div>
+                <div class="timer">⏱️ ENDS IN 14H 22MIN (APRIL)</div>
+            </div>
+        </div>
+
+        <!-- KEY DATES + GUIDELINES two columns (wireframe) -->
+        <div class="two-col-grid">
+            <div class="info-card">
+                <h3><i class="far fa-calendar-alt" style="color: #1e3a5f;"></i> KEY DATES</h3>
+                <div class="date-item"><span class="date-day">APR 15</span>
+                    <div><strong>Candidate Debates</strong><br>Main auditorium, 6:00 PM</div>
+                </div>
+                <div class="date-item"><span class="date-day">APR 20</span>
+                    <div><strong>General Voting Opens</strong><br>00:01 AM (Online)</div>
+                </div>
+                <div class="date-item"><span class="date-day">APR 22</span>
+                    <div><strong>Final Results Release</strong><br>MAIN AUDITORIUM</div>
+                </div>
+                <div style="margin-top: 12px;"><a href="#" class="view-link">VIEW CALENDAR →</a></div>
+            </div>
+            <div class="info-card">
+                <h3><i class="fas fa-list-check" style="color: #1e3a5f;"></i> GUIDELINES</h3>
+                <ul class="guidelines-list">
+                    <li><i class="fas fa-check-circle"></i> Verify registration 24h before voting.</li>
+                    <li><i class="fas fa-lock"></i> Authentication codes remain private.</li>
+                    <li><i class="fas fa-vote-yea"></i> One vote per category per student.</li>
+                    <li><i class="fas fa-file-alt"></i> Manifestos in profile section.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ANNOUNCEMENTS -->
+        <div class="announcements-wrapper">
+            <div class="announce-header">
+                <h3><i class="fas fa-bullhorn"></i> ANNOUNCEMENTS</h3>
+                <a href="#" class="view-link">View All →</a>
+            </div>
+            <div class="announce-item">
+                <div class="announce-title">PUBLIC NOTICE <span class="announce-date">Apr 28, 2027</span></div>
+                <div class="announce-text"><strong>Updated Voter Eligibility Requirements</strong><br>The board has
+                    finalized the list of eligible students for the upcoming cycle. Please ensure your tuition balance
+                    is settled to avoid suspension of voting rights...</div>
+            </div>
+            <div class="announce-item">
+                <div class="announce-title">SYSTEM UPDATE <span class="announce-date">Apr 25, 2027</span></div>
+                <div class="announce-text"><strong>Mobile Portal Optimization Now Live</strong><br>Voters can now cast
+                    ballots via the official university mobile application with enhanced biometric security. Update your
+                    app today.</div>
+            </div>
+            <div style="margin-top: 12px;"><a href="#" class="view-link"><i class="fas fa-envelope"></i> Contact
+                    Board</a></div>
+        </div>
+
+        <!-- CANDIDATES AND THEIR PROFILES -->
+        <div style="margin-top: 20px;">
+            <div class="section-title" style="margin-bottom: 8px;">CANDIDATES AND THEIR PROFILES</div>
+            <p style="color: #2c3e4e; margin-bottom: 28px;">Leading with vision, integrity, and purpose. Explore
+                profiles of those vying to serve.</p>
+        </div>
+
+        <div class="candidate-grid">
+            <div class="candidate-card">
+                <div class="candidate-name">JULIAN MUSAVI</div>
+                <div class="candidate-position">GUILD PRESIDENT</div>
+                <div class="candidate-faculty">Faculty of Business</div>
+                <div class="candidate-quote">“Empowering Every Student through Data-Driven Advocacy and Radical
+                    Transparency.”</div>
+                <a href="#" class="view-profile">VIEW PROFILE →</a>
+            </div>
+            <div class="candidate-card">
+                <div class="candidate-name">SARAH OCHEN</div>
+                <div class="candidate-position">GUILD PRESIDENT</div>
+                <div class="candidate-faculty">School of EDUCATION</div>
+                <div class="candidate-quote">“Bridging the Gap: Uniting Campus Initiatives with Sustainable Funding
+                    Models.”</div>
+                <a href="#" class="view-profile">VIEW PROFILE →</a>
+            </div>
+            <div class="candidate-card">
+                <div class="candidate-name">MAYA OKORO</div>
+                <div class="candidate-position">GEN. SECRETARY</div>
+                <div class="candidate-faculty">Faculty of EDUCATION</div>
+                <div class="candidate-quote">“Efficiency through Digitalization. Every student matters. Every process
+                    refined.”</div>
+                <a href="#" class="view-profile">VIEW PROFILE →</a>
+            </div>
+            <div class="candidate-card">
+                <div class="candidate-name">DAVID KABUGO</div>
+                <div class="candidate-position">GEN. SECRETARY</div>
+                <div class="candidate-faculty">SCHOOL OF Arts & Humanities</div>
+                <div class="candidate-quote">“Cultivating Creativity in Governance. Building an inclusive university for
+                    all.”</div>
+                <a href="#" class="view-profile">VIEW PROFILE →</a>
+            </div>
+        </div>
+        <div class="see-all-btn">
+            <a href="#">SEE ALL CANDIDATES →</a>
+        </div>
+
+        <!-- Wireframe extra: LIVE TALLY row (consistent with content) -->
+        <div class="live-tally-row">
+            <span><i class="fas fa-chart-line" style="color:#1e3a5f;"></i> <strong>LIVE TALLY</strong> | Total Ballots
+                Cast: 12,842</span>
+            <span style="font-weight: 500;">VIEW FULL TALLY →</span>
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-inner">
+                <div>
+                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 14px;">
+                        <div class="logo-icon" style="background: #1e3a5f;">B</div>
+                        <span style="font-weight: 700; font-size: 1.1rem; color: #000;">BUSA VOTING</span>
+                    </div>
+                    <p style="max-width: 260px; font-size: 0.8rem; color: #5a6874;">Secure digital elections for Bugema
+                        University community.</p>
+                </div>
+                <div class="footer-links">
+                    <div><strong>Explore</strong><br><br>
+                        <a href="#">Home</a><br>
+                        <a href="#">Voter Panel</a><br>
+                        <a href="#">Admin Panel</a>
+                    </div>
+                    <div><strong>Support</strong><br><br>
+                        <a href="#">Help & Support</a><br>
+                        <a href="#">Privacy Policy</a><br>
+                        <a href="#">Terms of Service</a>
+                    </div>
+                    <div><strong>Resources</strong><br><br>
+                        <a href="#">FAQ</a><br>
+                        <a href="#">Contact Board</a><br>
+                        <a href="#">View Calendar</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-copy">
+                © 2026 BUSA Online Voting Portal. ALL RIGHTS RESERVED. | Bugema University Elections 2027
+            </div>
+        </div>
+    </footer>
+</body>
+
+</html>

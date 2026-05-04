@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BUSA Online Voting Portal | Election Calendar 2027</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Body – exact spec */
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 0px;
+            position: relative;
+            width: 1280px;
+            height: 1478px;
+            min-height: 1478px;
+            background: #FFFFFF;
+            font-family: 'Inter', 'Public Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+            margin: 0 auto;
+            overflow-x: hidden;
+        }
+
+        /* Main container */
+        .portal-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ========== HEADER SECTION ========== */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px 48px 20px 48px;
+            border-bottom: 1px solid #EFF3F8;
+            width: 100%;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .logo-icon {
+            background: #002F6C;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 24px;
+            color: white;
+        }
+
+        .portal-title {
+            font-weight: 700;
+            font-size: 18px;
+            letter-spacing: -0.2px;
+            color: #0B2B44;
+            background: #F8FAFE;
+            padding: 5px 18px;
+            border-radius: 40px;
+        }
+
+        .back-link {
+            font-size: 14px;
+            font-weight: 500;
+            color: #2A6F8F;
+            text-decoration: none;
+            border-bottom: 1px dashed #B9D4E3;
+            padding-bottom: 2px;
+            transition: opacity 0.2s;
+        }
+
+        .back-link:hover {
+            opacity: 0.75;
+        }
+
+        /* ========== PAGE TITLE ========== */
+        .page-title {
+            padding: 32px 48px 16px 48px;
+        }
+
+        .page-title h1 {
+            font-size: 36px;
+            font-weight: 800;
+            color: #1A2C3E;
+            letter-spacing: -0.5px;
+        }
+
+        /* ========== CALENDAR NAVIGATION ========== */
+        .calendar-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 48px 0 48px;
+        }
+
+        .month-year {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1A2C3E;
+        }
+
+        .nav-controls {
+            display: flex;
+            gap: 16px;
+        }
+
+        .view-buttons {
+            display: flex;
+            gap: 12px;
+            background: #F5F8FC;
+            padding: 4px;
+            border-radius: 48px;
+        }
+
+        .view-btn {
+            padding: 8px 20px;
+            border: none;
+            background: transparent;
+            font-weight: 600;
+            font-size: 14px;
+            border-radius: 40px;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #6F8FAC;
+        }
+
+        .view-btn.active {
+            background: #002F6C;
+            color: white;
+        }
+
+        .nav-arrows {
+            display: flex;
+            gap: 8px;
+        }
+
+        .nav-arrow {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #E2E9F2;
+            border-radius: 40px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 18px;
+        }
+
+        .nav-arrow:hover {
+            border-color: #002F6C;
+            background: #F5F8FC;
+        }
+
+        /* ========== CALENDAR GRID ========== */
+        .calendar-container {
+            padding: 24px 48px 32px 48px;
+        }
+
+        .calendar-grid {
+            background: #FFFFFF;
+            border: 1px solid #EDF2F7;
+            border-radius: 28px;
+            overflow: hidden;
+        }
+
+        .weekdays {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            background: #F8FAFE;
+            border-bottom: 1px solid #EDF2F7;
+        }
+
+        .weekday {
+            padding: 16px 12px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 14px;
+            color: #5E7E9C;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .calendar-days {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            background: #FFFFFF;
+        }
+
+        .calendar-day {
+            min-height: 110px;
+            padding: 12px;
+            border-right: 1px solid #F0F4F9;
+            border-bottom: 1px solid #F0F4F9;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .calendar-day:nth-child(7n) {
+            border-right: none;
+        }
+
+        .day-number {
+            font-weight: 600;
+            font-size: 14px;
+            color: #8A9BB0;
+            margin-bottom: 8px;
+        }
+
+        .calendar-day.today {
+            background: #F0F7FF;
+        }
+
+        .calendar-day.today .day-number {
+            color: #002F6C;
+            font-weight: 800;
+        }
+
+        .event-badge {
+            background: #002F6C;
+            color: white;
+            font-size: 10px;
+            padding: 4px 8px;
+            border-radius: 12px;
+            margin-top: 6px;
+            display: inline-block;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .event-badge.debate {
+            background: #E67E22;
+        }
+
+        .event-badge.voting {
+            background: #27AE60;
+        }
+
+        .event-badge.results {
+            background: #8E44AD;
+        }
+
+        /* ========== EVENT DETAILS SECTION ========== */
+        .events-section {
+            padding: 16px 48px 48px 48px;
+        }
+
+        .events-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 28px;
+        }
+
+        .event-card {
+            background: #FFFFFF;
+            border: 1px solid #EDF2F7;
+            border-radius: 24px;
+            overflow: hidden;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+        }
+
+        .event-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.06);
+        }
+
+        .event-date-badge {
+            background: #002F6C;
+            padding: 16px 20px;
+            color: white;
+        }
+
+        .event-date {
+            font-size: 28px;
+            font-weight: 800;
+            line-height: 1.2;
+        }
+
+        .event-month {
+            font-size: 14px;
+            opacity: 0.8;
+            margin-top: 4px;
+        }
+
+        .event-content {
+            padding: 20px 24px 24px 24px;
+        }
+
+        .event-title {
+            font-size: 20px;
+            font-weight: 800;
+            color: #1A2C3E;
+            margin-bottom: 12px;
+        }
+
+        .event-description {
+            font-size: 14px;
+            line-height: 1.55;
+            color: #5E7E9C;
+            margin-bottom: 16px;
+        }
+
+        .event-time {
+            font-size: 13px;
+            color: #8A9BB0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #F0F4F9;
+        }
+
+        /* ========== EMBEDDED CALENDAR SECTION ========== */
+        .embedded-calendar {
+            padding: 16px 48px 40px 48px;
+        }
+
+        .calendar-placeholder {
+            background: #F8FAFE;
+            border-radius: 28px;
+            border: 1px solid #EDF2F7;
+            padding: 40px 32px;
+            text-align: center;
+        }
+
+        .placeholder-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .placeholder-header h3 {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1A2C3E;
+        }
+
+        .mock-controls {
+            display: flex;
+            gap: 12px;
+        }
+
+        .mock-btn {
+            padding: 6px 16px;
+            background: white;
+            border: 1px solid #E2E9F2;
+            border-radius: 40px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .mock-calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+            margin-bottom: 24px;
+        }
+
+        .mock-weekday {
+            font-size: 12px;
+            font-weight: 600;
+            color: #8A9BB0;
+            text-align: center;
+            padding: 8px;
+        }
+
+        .mock-day {
+            background: white;
+            border-radius: 12px;
+            padding: 12px 8px;
+            text-align: center;
+            font-size: 13px;
+            color: #4A627A;
+            border: 1px solid #EDF2F7;
+        }
+
+        .mock-day.highlight {
+            background: #002F6C;
+            color: white;
+            border-color: #002F6C;
+        }
+
+        .calendar-note {
+            font-size: 13px;
+            color: #8A9BB0;
+            margin-top: 20px;
+            font-style: italic;
+        }
+
+        /* ========== FOOTER ========== */
+        .footer {
+            background: #FCFDFF;
+            border-top: 1px solid #ECF3F9;
+            padding: 32px 48px 28px;
+            width: 100%;
+            margin-top: auto;
+        }
+
+        .footer-grid {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 40px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .footer-col h4 {
+            font-weight: 700;
+            font-size: 14px;
+            color: #1A405E;
+            margin-bottom: 14px;
+        }
+
+        .footer-col a {
+            display: block;
+            font-size: 12px;
+            color: #48708E;
+            text-decoration: none;
+            margin-bottom: 10px;
+            transition: color 0.2s;
+        }
+
+        .footer-col a:hover {
+            color: #002F6C;
+        }
+
+        .copyright {
+            text-align: center;
+            font-size: 11px;
+            color: #7C95AF;
+            margin-top: 28px;
+            padding-top: 16px;
+            border-top: 1px solid #E9F0F6;
+        }
+
+        /* Helper */
+        .text-center {
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="portal-container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo-area">
+                <div class="logo-icon">B</div>
+                <div class="portal-title">BUSA ONLINE VOTING PORTAL</div>
+            </div>
+            <a href="#" class="back-link" id="backToHome">← Back to Home</a>
+        </div>
+
+        <!-- Page Title -->
+        <div class="page-title">
+            <h1>ELECTION CALENDAR 2027</h1>
+        </div>
+
+        <!-- Calendar Navigation -->
+        <div class="calendar-nav">
+            <div class="month-year">April 2027</div>
+            <div class="nav-controls">
+                <div class="view-buttons">
+                    <button class="view-btn" data-view="month">Month</button>
+                    <button class="view-btn" data-view="week">Week</button>
+                    <button class="view-btn" data-view="day">Day</button>
+                </div>
+                <div class="nav-arrows">
+                    <div class="nav-arrow" id="prevMonth">←</div>
+                    <div class="nav-arrow" id="nextMonth">→</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Calendar Grid -->
+        <div class="calendar-container">
+            <div class="calendar-grid">
+                <div class="weekdays">
+                    <div class="weekday">Mon</div>
+                    <div class="weekday">Tue</div>
+                    <div class="weekday">Wed</div>
+                    <div class="weekday">Thu</div>
+                    <div class="weekday">Fri</div>
+                    <div class="weekday">Sat</div>
+                    <div class="weekday">Sun</div>
+                </div>
+                <div class="calendar-days" id="calendarDays">
+                    <!-- Dynamic calendar days will be populated via JS -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Event Details Section -->
+        <div class="events-section">
+            <div class="events-grid">
+                <!-- April 05 - Candidate Debates -->
+                <div class="event-card">
+                    <div class="event-date-badge" style="background: #E67E22;">
+                        <div class="event-date">April 05</div>
+                        <div class="event-month">2027</div>
+                    </div>
+                    <div class="event-content">
+                        <div class="event-title">CANDIDATE DEBATES</div>
+                        <div class="event-description">
+                            Live televised and streamed sessions where all registered candidates present their
+                            manifestos and answer community questions.
+                        </div>
+                        <div class="event-time">🕒 6:00 PM | Main Auditorium & Live Stream</div>
+                    </div>
+                </div>
+
+                <!-- April 12 - General Voting Opens -->
+                <div class="event-card">
+                    <div class="event-date-badge" style="background: #27AE60;">
+                        <div class="event-date">April 12</div>
+                        <div class="event-month">2027</div>
+                    </div>
+                    <div class="event-content">
+                        <div class="event-title">GENERAL VOTING OPENS</div>
+                        <div class="event-description">
+                            The portal opens for all verified voters. Cast your secure ballot using your unique
+                            registration credentials from 08:00 AM.
+                        </div>
+                        <div class="event-time">🕒 08:00 AM | Online Voting Portal Opens</div>
+                    </div>
+                </div>
+
+                <!-- April 15 - Final Results Release -->
+                <div class="event-card">
+                    <div class="event-date-badge" style="background: #8E44AD;">
+                        <div class="event-date">April 15</div>
+                        <div class="event-month">2027</div>
+                    </div>
+                    <div class="event-content">
+                        <div class="event-title">FINAL RESULTS RELEASE</div>
+                        <div class="event-description">
+                            Official certification and announcement of election winners following independent
+                            verification of the digital tally.
+                        </div>
+                        <div class="event-time">🕒 4:00 PM | Main Auditorium & Live Stream</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Embedded Google Calendar Placeholder -->
+        <div class="embedded-calendar">
+            <div class="calendar-placeholder">
+                <div class="placeholder-header">
+                    <h3>📅 Embedded Google Calendar</h3>
+                    <div class="mock-controls">
+                        <span class="mock-btn">Today</span>
+                        <span class="mock-btn">Month</span>
+                        <span class="mock-btn">Week</span>
+                        <span class="mock-btn">Day</span>
+                    </div>
+                </div>
+                <div class="mock-calendar" id="mockCalendarPreview">
+                    <!-- Mock calendar preview via JS -->
+                </div>
+                <div class="calendar-note">
+                    A live, synchronized view of the official election timeline would appear here in the production
+                    environment.
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>BUSA</h4>
+                    <a href="#">About Union</a>
+                    <a href="#">Election Guidelines</a>
+                    <a href="#">Contact Us</a>
+                </div>
+                <div class="footer-col">
+                    <h4>HELP & CENTER</h4>
+                    <a href="#">FAQ</a>
+                    <a href="#">Live Chat</a>
+                    <a href="#">Support Ticket</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Legal</h4>
+                    <a href="#">PRIVACY POLICY</a>
+                    <a href="#">TERMS OF SERVICE</a>
+                    <a href="#">Cookie Policy</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Resources</h4>
+                    <a href="#">Voter Guide</a>
+                    <a href="#">Announcements</a>
+                </div>
+            </div>
+            <div class="copyright">
+                © 2026 BUSA ONLINE VOTING PORTAL. ALL RIGHTS RESERVED
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function () {
+            // Toast notification system
+            function showMessage(message, isSuccess = false) {
+                const existingToast = document.querySelector('.custom-toast');
+                if (existingToast) existingToast.remove();
+
+                const toast = document.createElement('div');
+                toast.className = 'custom-toast';
+                toast.textContent = message;
+                toast.style.position = 'fixed';
+                toast.style.bottom = '30px';
+                toast.style.left = '50%';
+                toast.style.transform = 'translateX(-50%)';
+                toast.style.backgroundColor = isSuccess ? '#1E5A3C' : '#2A6F8F';
+                toast.style.color = 'white';
+                toast.style.padding = '12px 28px';
+                toast.style.borderRadius = '60px';
+                toast.style.fontSize = '14px';
+                toast.style.fontWeight = '500';
+                toast.style.fontFamily = 'Inter, sans-serif';
+                toast.style.zIndex = '1000';
+                toast.style.boxShadow = '0 4px 15px rgba(0,0,0,0.2)';
+                document.body.appendChild(toast);
+
+                setTimeout(() => {
+                    toast.style.opacity = '0';
+                    setTimeout(() => toast.remove(), 300);
+                }, 2800);
+            }
+
+            // Back to Home button
+            const backBtn = document.getElementById('backToHome');
+            if (backBtn) {
+                backBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    showMessage('🏠 Returning to homepage (demo navigation)', false);
+                });
+            }
+
+            // Calendar navigation simulation
+            const prevBtn = document.getElementById('prevMonth');
+            const nextBtn = document.getElementById('nextMonth');
+
+            if (prevBtn) {
+                prevBtn.addEventListener('click', () => showMessage('← Previous month (demo - calendar would update)', false));
+            }
+            if (nextBtn) {
+                nextBtn.addEventListener('click', () => showMessage('Next month → (demo - calendar would update)', false));
+            }
+
+            // View buttons simulation
+            const viewBtns = document.querySelectorAll('.view-btn');
+            viewBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    viewBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    showMessage(`📅 ${btn.innerText} view (demo mode)`, false);
+                });
+            });
+
+            // Generate calendar days for April 2027
+            function generateCalendar() {
+                const calendarDays = document.getElementById('calendarDays');
+                if (!calendarDays) return;
+
+                // April 2027 starts on Thursday (April 1, 2027 is a Thursday)
+                // Monday as first day: April 1 = Thursday = index 3 (Mon=0, Tue=1, Wed=2, Thu=3)
+                const startOffset = 3; // Thursday offset from Monday
+                const daysInApril = 30;
+
+                calendarDays.innerHTML = '';
+
+                // Empty cells before start of month
+                for (let i = 0; i < startOffset; i++) {
+                    const emptyCell = document.createElement('div');
+                    emptyCell.className = 'calendar-day';
+                    emptyCell.style.background = '#FAFCFE';
+                    emptyCell.style.opacity = '0.5';
+                    calendarDays.appendChild(emptyCell);
+                }
+
+                // Days of April
+                for (let day = 1; day <= daysInApril; day++) {
+                    const dayCell = document.createElement('div');
+                    dayCell.className = 'calendar-day';
+
+                    // Mark today (April 12, 2027 is voting day - highlight as today for demo)
+                    if (day === 12) {
+                        dayCell.classList.add('today');
+                    }
+
+                    const dayNumber = document.createElement('div');
+                    dayNumber.className = 'day-number';
+                    dayNumber.textContent = day;
+                    dayCell.appendChild(dayNumber);
+
+                    // Add event badges for specific dates
+                    if (day === 5) {
+                        const badge = document.createElement('div');
+                        badge.className = 'event-badge debate';
+                        badge.textContent = 'Debates';
+                        badge.style.cursor = 'pointer';
+                        badge.addEventListener('click', () => showMessage('🗣️ Candidate Debates - April 5, 6:00 PM', true));
+                        dayCell.appendChild(badge);
+                    }
+                    if (day === 12) {
+                        const badge = document.createElement('div');
+                        badge.className = 'event-badge voting';
+                        badge.textContent = 'Voting Opens';
+                        badge.style.cursor = 'pointer';
+                        badge.addEventListener('click', () => showMessage('🗳️ General Voting Opens - April 12, 8:00 AM', true));
+                        dayCell.appendChild(badge);
+                    }
+                    if (day === 15) {
+                        const badge = document.createElement('div');
+                        badge.className = 'event-badge results';
+                        badge.textContent = 'Results';
+                        badge.style.cursor = 'pointer';
+                        badge.addEventListener('click', () => showMessage('🏆 Final Results Release - April 15, 4:00 PM', true));
+                        dayCell.appendChild(badge);
+                    }
+
+                    calendarDays.appendChild(dayCell);
+                }
+            }
+
+            generateCalendar();
+
+            // Mock calendar preview for embedded section
+            function generateMockCalendar() {
+                const container = document.getElementById('mockCalendarPreview');
+                if (!container) return;
+
+                const weekdays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+                const weekdaysHtml = weekdays.map(day => `<div class="mock-weekday">${day}</div>`).join('');
+
+                // Simple mock days for April 2027 (first few days)
+                const days = [null, null, null, 1, 2, 3, 4];
+                let daysHtml = '';
+                for (let i = 0; i < 7; i++) {
+                    const dayVal = days[i];
+                    if (dayVal === null) {
+                        daysHtml += `<div class="mock-day" style="background:#F5F8FC;"></div>`;
+                    } else {
+                        const isHighlight = (dayVal === 5 || dayVal === 12 || dayVal === 15);
+                        daysHtml += `<div class="mock-day ${isHighlight ? 'highlight' : ''}">${dayVal}</div>`;
+                    }
+                }
+
+                container.innerHTML = weekdaysHtml + daysHtml;
+            }
+
+            generateMockCalendar();
+
+            // Event card click handlers
+            const eventCards = document.querySelectorAll('.event-card');
+            eventCards.forEach((card, idx) => {
+                card.addEventListener('click', () => {
+                    const title = card.querySelector('.event-title')?.innerText || 'Event';
+                    showMessage(`📅 Viewing details for: ${title}`, true);
+                });
+            });
+
+            // Footer links
+            const footerLinks = document.querySelectorAll('.footer-col a');
+            footerLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    showMessage(`📄 ${link.innerText} (information page)`, false);
+                });
+            });
+        })();
+    </script>
+</body>
+
+</html>

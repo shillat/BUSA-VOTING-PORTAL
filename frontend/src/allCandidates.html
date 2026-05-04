@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BUSA Online Voting Portal | All Candidates</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Body – exact spec */
+        body {
+            position: relative;
+            width: 1280px;
+            height: 2877.61px;
+            background: #FFFFFF;
+            font-family: 'Inter', 'Public Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+            margin: 0 auto;
+            overflow-x: hidden;
+        }
+
+        /* Main container */
+        .portal-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ========== HEADER SECTION ========== */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px 48px 20px 48px;
+            border-bottom: 1px solid #EFF3F8;
+            width: 100%;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .logo-icon {
+            background: #002F6C;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 24px;
+            color: white;
+        }
+
+        .portal-title {
+            font-weight: 700;
+            font-size: 18px;
+            letter-spacing: -0.2px;
+            color: #0B2B44;
+            background: #F8FAFE;
+            padding: 5px 18px;
+            border-radius: 40px;
+        }
+
+        .back-link {
+            font-size: 14px;
+            font-weight: 500;
+            color: #2A6F8F;
+            text-decoration: none;
+            border-bottom: 1px dashed #B9D4E3;
+            padding-bottom: 2px;
+            transition: opacity 0.2s;
+        }
+
+        .back-link:hover {
+            opacity: 0.75;
+        }
+
+        /* ========== PAGE TITLE ========== */
+        .page-title {
+            padding: 40px 48px 20px 48px;
+        }
+
+        .page-title h1 {
+            font-size: 42px;
+            font-weight: 800;
+            color: #1A2C3E;
+            letter-spacing: -0.5px;
+        }
+
+        /* ========== CANDIDATE SECTION ========== */
+        .candidates-section {
+            padding: 16px 48px 48px 48px;
+        }
+
+        .position-block {
+            margin-bottom: 64px;
+        }
+
+        .position-title {
+            font-size: 28px;
+            font-weight: 800;
+            color: #1A2C3E;
+            padding-bottom: 16px;
+            border-bottom: 3px solid #002F6C;
+            margin-bottom: 32px;
+            display: inline-block;
+        }
+
+        .candidates-row {
+            display: flex;
+            gap: 32px;
+            flex-wrap: wrap;
+        }
+
+        /* Candidate Card */
+        .candidate-card {
+            flex: 1;
+            min-width: 280px;
+            background: #FFFFFF;
+            border: 1px solid #EDF2F7;
+            border-radius: 28px;
+            overflow: hidden;
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+        }
+
+        .candidate-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 30px -12px rgba(0, 0, 0, 0.1);
+            border-color: #DCE5EF;
+        }
+
+        .candidate-avatar {
+            background: linear-gradient(135deg, #002F6C 0%, #1A4A7A 100%);
+            padding: 32px 24px;
+            text-align: center;
+            color: white;
+        }
+
+        .avatar-initials {
+            width: 90px;
+            height: 90px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            font-size: 36px;
+            font-weight: 800;
+            backdrop-filter: blur(2px);
+        }
+
+        .candidate-avatar h3 {
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 6px;
+        }
+
+        .candidate-avatar .faculty {
+            font-size: 14px;
+            opacity: 0.85;
+        }
+
+        .candidate-bio {
+            padding: 28px 24px 32px 24px;
+            background: #FFFFFF;
+        }
+
+        .candidate-quote {
+            font-style: italic;
+            font-size: 15px;
+            line-height: 1.55;
+            color: #4A627A;
+            margin-bottom: 24px;
+            position: relative;
+            padding-left: 20px;
+            border-left: 3px solid #002F6C;
+        }
+
+        .candidate-stats {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-top: 8px;
+            border-top: 1px solid #F0F4F9;
+        }
+
+        .btn-view-profile {
+            background: transparent;
+            border: 1.5px solid #002F6C;
+            color: #002F6C;
+            padding: 10px 24px;
+            border-radius: 40px;
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+            width: 100%;
+            font-family: inherit;
+        }
+
+        .btn-view-profile:hover {
+            background: #002F6C;
+            color: white;
+        }
+
+        /* MP Schools special note */
+        .candidate-meta {
+            font-size: 12px;
+            color: #8A9BB0;
+            margin-top: 12px;
+            text-align: center;
+        }
+
+        /* ========== FOOTER ========== */
+        .footer {
+            background: #FCFDFF;
+            border-top: 1px solid #ECF3F9;
+            padding: 32px 48px 28px;
+            width: 100%;
+            margin-top: auto;
+        }
+
+        .footer-grid {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 40px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .footer-col h4 {
+            font-weight: 700;
+            font-size: 14px;
+            color: #1A405E;
+            margin-bottom: 14px;
+        }
+
+        .footer-col a {
+            display: block;
+            font-size: 12px;
+            color: #48708E;
+            text-decoration: none;
+            margin-bottom: 10px;
+            transition: color 0.2s;
+        }
+
+        .footer-col a:hover {
+            color: #002F6C;
+        }
+
+        .copyright {
+            text-align: center;
+            font-size: 11px;
+            color: #7C95AF;
+            margin-top: 28px;
+            padding-top: 16px;
+            border-top: 1px solid #E9F0F6;
+        }
+
+        /* Helper */
+        .text-center {
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="portal-container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo-area">
+                <div class="logo-icon">B</div>
+                <div class="portal-title">BUSA ONLINE VOTING PORTAL</div>
+            </div>
+            <a href="#" class="back-link" id="backToHome">← Back to Home</a>
+        </div>
+
+        <!-- Page Title -->
+        <div class="page-title">
+            <h1>ALL CANDIDATES</h1>
+        </div>
+
+        <!-- Candidates Sections -->
+        <div class="candidates-section">
+
+            <!-- GUILD PRESIDENT Section -->
+            <div class="position-block">
+                <div class="position-title">GUILD PRESIDENT</div>
+                <div class="candidates-row">
+
+                    <!-- Julian Musavi -->
+                    <div class="candidate-card">
+                        <div class="candidate-avatar">
+                            <div class="avatar-initials">JM</div>
+                            <h3>Julian Musavi</h3>
+                            <div class="faculty">Faculty of Business</div>
+                        </div>
+                        <div class="candidate-bio">
+                            <div class="candidate-quote">
+                                "Dedicated to fostering a community of integrity, innovation, and inclusive
+                                representation for every student across all schools."
+                            </div>
+                            <div class="candidate-stats">
+                                <span style="font-size:13px; color:#6F8FAC;">Guild President Candidate</span>
+                            </div>
+                            <button class="btn-view-profile" data-candidate="Julian Musavi - Guild President">VIEW FULL
+                                PROFILE</button>
+                        </div>
+                    </div>
+
+                    <!-- Sarah Ochen -->
+                    <div class="candidate-card">
+                        <div class="candidate-avatar">
+                            <div class="avatar-initials">SO</div>
+                            <h3>Sarah Ochen</h3>
+                            <div class="faculty">School of Law</div>
+                        </div>
+                        <div class="candidate-bio">
+                            <div class="candidate-quote">
+                                "Transparency is not just a promise; it is a mandate. I stand for accountable leadership
+                                that listens and delivers tangible results."
+                            </div>
+                            <div class="candidate-stats">
+                                <span style="font-size:13px; color:#6F8FAC;">Guild President Candidate</span>
+                            </div>
+                            <button class="btn-view-profile" data-candidate="Sarah Ochen - Guild President">VIEW FULL
+                                PROFILE</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- GENERAL SECRETARY Section -->
+            <div class="position-block">
+                <div class="position-title">GENERAL SECRETARY</div>
+                <div class="candidates-row">
+
+                    <!-- Maya Okoro -->
+                    <div class="candidate-card">
+                        <div class="candidate-avatar">
+                            <div class="avatar-initials">MO</div>
+                            <h3>Maya Okoro</h3>
+                            <div class="faculty">Faculty of Humanities</div>
+                        </div>
+                        <div class="candidate-bio">
+                            <div class="candidate-quote">
+                                "Streamlining communication and ensuring that the guild archives and records are
+                                accessible to every member of the student body."
+                            </div>
+                            <div class="candidate-stats">
+                                <span style="font-size:13px; color:#6F8FAC;">General Secretary Candidate</span>
+                            </div>
+                            <button class="btn-view-profile" data-candidate="Maya Okoro - General Secretary">VIEW FULL
+                                PROFILE</button>
+                        </div>
+                    </div>
+
+                    <!-- David Kabugo -->
+                    <div class="candidate-card">
+                        <div class="candidate-avatar">
+                            <div class="avatar-initials">DK</div>
+                            <h3>David Kabugo</h3>
+                            <div class="faculty">Faculty of Engineering</div>
+                        </div>
+                        <div class="candidate-bio">
+                            <div class="candidate-quote">
+                                "Organized, efficient, and ready to serve. My focus is on digital transformation of all
+                                secretarial duties within the BUSA guild."
+                            </div>
+                            <div class="candidate-stats">
+                                <span style="font-size:13px; color:#6F8FAC;">General Secretary Candidate</span>
+                            </div>
+                            <button class="btn-view-profile" data-candidate="David Kabugo - General Secretary">VIEW FULL
+                                PROFILE</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MP SCHOOLS Section -->
+            <div class="position-block">
+                <div class="position-title">MP SCHOOLS</div>
+                <div class="candidates-row">
+
+                    <!-- Grace Amena -->
+                    <div class="candidate-card">
+                        <div class="candidate-avatar">
+                            <div class="avatar-initials">GA</div>
+                            <h3>Grace Amena</h3>
+                            <div class="faculty">School of Medicine</div>
+                        </div>
+                        <div class="candidate-bio">
+                            <div class="candidate-quote">
+                                "A voice for the medical students. Advocacy for better facilities and balanced
+                                curriculum schedules for all professional courses."
+                            </div>
+                            <div class="candidate-stats">
+                                <span style="font-size:13px; color:#6F8FAC;">MP Schools Candidate</span>
+                            </div>
+                            <button class="btn-view-profile" data-candidate="Grace Amena - MP Schools">VIEW FULL
+                                PROFILE</button>
+                        </div>
+                    </div>
+
+                    <!-- Samuel Birungi -->
+                    <div class="candidate-card">
+                        <div class="candidate-avatar">
+                            <div class="avatar-initials">SB</div>
+                            <h3>Samuel Birungi</h3>
+                            <div class="faculty">School of Computing</div>
+                        </div>
+                        <div class="candidate-bio">
+                            <div class="candidate-quote">
+                                "Representing the digital pioneers. Bridging the gap between school administration and
+                                the ever-evolving needs of tech students."
+                            </div>
+                            <div class="candidate-stats">
+                                <span style="font-size:13px; color:#6F8FAC;">MP Schools Candidate</span>
+                            </div>
+                            <button class="btn-view-profile" data-candidate="Samuel Birungi - MP Schools">VIEW FULL
+                                PROFILE</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>BUSA</h4>
+                    <a href="#">About Union</a>
+                    <a href="#">Election Guidelines</a>
+                    <a href="#">Contact Us</a>
+                </div>
+                <div class="footer-col">
+                    <h4>HELP & CENTER</h4>
+                    <a href="#">FAQ</a>
+                    <a href="#">Live Chat</a>
+                    <a href="#">Support Ticket</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Legal</h4>
+                    <a href="#">PRIVACY POLICY</a>
+                    <a href="#">TERMS OF SERVICE</a>
+                    <a href="#">Cookie Policy</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Resources</h4>
+                    <a href="#">Voter Guide</a>
+                    <a href="#">Announcements</a>
+                </div>
+            </div>
+            <div class="copyright">
+                © 2026 BUSA ONLINE VOTING PORTAL. ALL RIGHTS RESERVED
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function () {
+            // Toast notification system
+            function showMessage(message, isSuccess = false) {
+                const existingToast = document.querySelector('.custom-toast');
+                if (existingToast) existingToast.remove();
+
+                const toast = document.createElement('div');
+                toast.className = 'custom-toast';
+                toast.textContent = message;
+                toast.style.position = 'fixed';
+                toast.style.bottom = '30px';
+                toast.style.left = '50%';
+                toast.style.transform = 'translateX(-50%)';
+                toast.style.backgroundColor = isSuccess ? '#1E5A3C' : '#2A6F8F';
+                toast.style.color = 'white';
+                toast.style.padding = '12px 28px';
+                toast.style.borderRadius = '60px';
+                toast.style.fontSize = '14px';
+                toast.style.fontWeight = '500';
+                toast.style.fontFamily = 'Inter, sans-serif';
+                toast.style.zIndex = '1000';
+                toast.style.boxShadow = '0 4px 15px rgba(0,0,0,0.2)';
+                document.body.appendChild(toast);
+
+                setTimeout(() => {
+                    toast.style.opacity = '0';
+                    setTimeout(() => toast.remove(), 300);
+                }, 2800);
+            }
+
+            // Back to Home button
+            const backBtn = document.getElementById('backToHome');
+            if (backBtn) {
+                backBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    showMessage('🏠 Returning to homepage (demo navigation)', false);
+                });
+            }
+
+            // View Profile buttons
+            const profileBtns = document.querySelectorAll('.btn-view-profile');
+            profileBtns.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const candidateName = btn.getAttribute('data-candidate') || 'candidate';
+                    showMessage(`📋 Viewing full profile for ${candidateName} (demo - expanded profile would appear)`, true);
+                });
+            });
+
+            // Handle all footer links with demo message
+            const footerLinks = document.querySelectorAll('.footer-col a');
+            footerLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    showMessage(`📄 ${link.innerText} (information page)`, false);
+                });
+            });
+
+            // Add subtle animation on card hover - already handled by CSS
+            // Additional interactive detail: click on avatar initials
+            const avatars = document.querySelectorAll('.avatar-initials');
+            avatars.forEach(avatar => {
+                avatar.addEventListener('click', () => {
+                    const parentCard = avatar.closest('.candidate-card');
+                    const name = parentCard?.querySelector('h3')?.innerText || 'Candidate';
+                    showMessage(`✨ Learn more about ${name} — check their full profile for manifesto details.`, false);
+                });
+            });
+        })();
+    </script>
+</body>
+
+</html>

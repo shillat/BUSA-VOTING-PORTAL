@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BUSA Online Voting Portal | Administrator Login</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Body – exact spec */
+        body {
+            position: relative;
+            width: 1280px;
+            height: 1298px;
+            background: #FFFFFF;
+            font-family: 'Inter', 'Public Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+            margin: 0 auto;
+            overflow-x: hidden;
+        }
+
+        /* Main container */
+        .portal-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ========== HEADER & NAVIGATION ========== */
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 48px;
+            background: #FFFFFF;
+            border-bottom: 1px solid #E9EDF2;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .logo-icon {
+            background: #002F6C;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 24px;
+            color: white;
+        }
+
+        .portal-title {
+            font-weight: 700;
+            font-size: 18px;
+            letter-spacing: -0.2px;
+            color: #0B2B44;
+            background: #F8FAFE;
+            padding: 5px 18px;
+            border-radius: 40px;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 32px;
+        }
+
+        .nav-item {
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            color: #4A627A;
+            transition: 0.2s;
+        }
+
+        .nav-item:hover {
+            color: #002F6C;
+        }
+
+        .nav-item.active {
+            color: #002F6C;
+            border-bottom: 2px solid #002F6C;
+            padding-bottom: 6px;
+        }
+
+        /* ========== MAIN CONTENT - LOGIN FORM ========== */
+        .main-content {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 48px 48px 64px 48px;
+        }
+
+        .login-card {
+            width: 520px;
+            max-width: 100%;
+            background: #FFFFFF;
+            border-radius: 32px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.03);
+            border: 1px solid #E9EDF2;
+            overflow: hidden;
+        }
+
+        /* Card Header */
+        .card-header {
+            background: linear-gradient(135deg, #002F6C 0%, #0A4175 100%);
+            padding: 32px 32px 28px 32px;
+            text-align: center;
+        }
+
+        .admin-logo {
+            background: white;
+            width: 72px;
+            height: 72px;
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            font-weight: 800;
+            font-size: 32px;
+            color: #002F6C;
+        }
+
+        .card-header h2 {
+            color: white;
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: -0.3px;
+            margin-bottom: 8px;
+        }
+
+        .card-header p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+        }
+
+        /* Card Body */
+        .card-body {
+            padding: 36px 32px 40px 32px;
+        }
+
+        /* Form Groups */
+        .form-group {
+            margin-bottom: 28px;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            font-size: 13px;
+            color: #4A627A;
+            margin-bottom: 8px;
+            letter-spacing: 0.3px;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .login-input {
+            width: 100%;
+            padding: 14px 18px;
+            font-size: 15px;
+            font-family: inherit;
+            border: 1.5px solid #E2E9F2;
+            border-radius: 20px;
+            background: #FFFFFF;
+            transition: all 0.2s;
+            outline: none;
+            color: #1A2C3E;
+        }
+
+        .login-input:focus {
+            border-color: #002F6C;
+            box-shadow: 0 0 0 3px rgba(0, 47, 108, 0.08);
+        }
+
+        .login-input::placeholder {
+            color: #B0C4DE;
+        }
+
+        /* Password field specific */
+        .password-input {
+            padding-right: 50px;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            color: #8AA0B8;
+        }
+
+        /* Login Button */
+        .login-btn {
+            width: 100%;
+            background: #002F6C;
+            color: white;
+            border: none;
+            padding: 16px 0;
+            border-radius: 48px;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 12px;
+            font-family: inherit;
+        }
+
+        .login-btn:hover {
+            background: #0A4175;
+            transform: translateY(-1px);
+        }
+
+        /* Forgot Password Link */
+        .forgot-link {
+            text-align: center;
+            margin-top: 24px;
+        }
+
+        .forgot-link a {
+            color: #2A6F8F;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+            transition: 0.2s;
+        }
+
+        .forgot-link a:hover {
+            color: #002F6C;
+            text-decoration: underline;
+        }
+
+        /* Divider */
+        .divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: 28px 0 20px;
+        }
+
+        .divider-line {
+            flex: 1;
+            height: 1px;
+            background: #E9EDF2;
+        }
+
+        .divider-text {
+            padding: 0 16px;
+            font-size: 12px;
+            color: #8AA0B8;
+        }
+
+        /* Demo Note */
+        .demo-note {
+            text-align: center;
+            font-size: 11px;
+            color: #8AA0B8;
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px solid #F0F4F9;
+        }
+
+        /* ========== FOOTER ========== */
+        .footer {
+            background: #F8FAFE;
+            border-top: 1px solid #E9EDF2;
+            padding: 24px 48px 20px;
+            width: 100%;
+        }
+
+        .footer-grid {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 32px;
+        }
+
+        .footer-col h4 {
+            font-weight: 700;
+            font-size: 13px;
+            color: #1A405E;
+            margin-bottom: 10px;
+        }
+
+        .footer-col a {
+            display: block;
+            font-size: 11px;
+            color: #48708E;
+            text-decoration: none;
+            margin-bottom: 6px;
+            transition: color 0.2s;
+        }
+
+        .footer-col a:hover {
+            color: #002F6C;
+        }
+
+        .copyright {
+            text-align: center;
+            font-size: 10px;
+            color: #7C95AF;
+            margin-top: 20px;
+            padding-top: 12px;
+            border-top: 1px solid #E9F0F6;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="portal-container">
+        <!-- Top Navigation -->
+        <div class="top-nav">
+            <div class="logo-area">
+                <div class="logo-icon">B</div>
+                <div class="portal-title">BUSA ONLINE VOTING PORTAL</div>
+            </div>
+            <div class="nav-menu">
+                <a href="#" class="nav-item">Home</a>
+                <a href="#" class="nav-item">Voter Panel</a>
+                <a href="#" class="nav-item active">Admin Panel</a>
+            </div>
+        </div>
+
+        <!-- Main Content - Login Form -->
+        <div class="main-content">
+            <div class="login-card">
+                <div class="card-header">
+                    <div class="admin-logo">👤</div>
+                    <h2>ADMINISTRATOR LOGIN</h2>
+                    <p>Secure access for election officials only.</p>
+                </div>
+                <div class="card-body">
+                    <!-- Admin ID Field -->
+                    <div class="form-group">
+                        <label class="form-label">ADMIN ID</label>
+                        <div class="input-wrapper">
+                            <input type="text" class="login-input" id="adminId" placeholder="Enter your Admin ID">
+                        </div>
+                    </div>
+
+                    <!-- Security Password Field -->
+                    <div class="form-group">
+                        <label class="form-label">SECURITY PASSWORD</label>
+                        <div class="input-wrapper">
+                            <input type="password" class="login-input password-input" id="adminPassword"
+                                placeholder="••••••••">
+                            <button type="button" class="toggle-password" id="togglePassword">👁️</button>
+                        </div>
+                    </div>
+
+                    <!-- Login Button -->
+                    <button class="login-btn" id="loginBtn">LOGIN →</button>
+
+                    <!-- Forgot Password Link -->
+                    <div class="forgot-link">
+                        <a href="#" id="forgotPasswordLink">FORGOT PASSWORD?</a>
+                    </div>
+
+                    <!-- Divider -->
+                    <div class="divider">
+                        <div class="divider-line"></div>
+                        <span class="divider-text">Demo Credentials: admin / admin123</span>
+                        <div class="divider-line"></div>
+                    </div>
+
+                    <!-- Demo Note -->
+                    <div class="demo-note">
+                        🔐 This is a secure administrative portal. All access attempts are logged.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>BUSA</h4>
+                    <a href="#">About Union</a>
+                    <a href="#">Election Guidelines</a>
+                    <a href="#">Contact Us</a>
+                </div>
+                <div class="footer-col">
+                    <h4>HELP & CENTER</h4>
+                    <a href="#">FAQ</a>
+                    <a href="#">Live Chat</a>
+                    <a href="#">Support Ticket</a>
+                </div>
+                <div class="footer-col">
+                    <h4>PRIVACY POLICY</h4>
+                    <a href="#">Data Protection</a>
+                    <a href="#">Cookie Policy</a>
+                </div>
+                <div class="footer-col">
+                    <h4>TERMS OF SERVICE</h4>
+                    <a href="#">Voter Agreement</a>
+                    <a href="#">Code of Conduct</a>
+                </div>
+            </div>
+            <div class="copyright">
+                © 2026 BUSA ONLINE VOTING PORTAL. ALL RIGHTS RESERVED
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function () {
+            // Helper to show toast messages
+            function showMessage(message, isError = false) {
+                const existingToast = document.querySelector('.custom-toast');
+                if (existingToast) existingToast.remove();
+
+                const toast = document.createElement('div');
+                toast.className = 'custom-toast';
+                toast.textContent = message;
+                toast.style.position = 'fixed';
+                toast.style.bottom = '30px';
+                toast.style.left = '50%';
+                toast.style.transform = 'translateX(-50%)';
+                toast.style.backgroundColor = isError ? '#C62828' : '#1E5A3C';
+                toast.style.color = 'white';
+                toast.style.padding = '12px 28px';
+                toast.style.borderRadius = '60px';
+                toast.style.fontSize = '14px';
+                toast.style.fontWeight = '500';
+                toast.style.fontFamily = 'Inter, sans-serif';
+                toast.style.zIndex = '1000';
+                toast.style.boxShadow = '0 4px 15px rgba(0,0,0,0.2)';
+                document.body.appendChild(toast);
+
+                setTimeout(() => {
+                    toast.style.opacity = '0';
+                    setTimeout(() => toast.remove(), 300);
+                }, 2800);
+            }
+
+            // Toggle password visibility
+            const toggleBtn = document.getElementById('togglePassword');
+            const passwordInput = document.getElementById('adminPassword');
+
+            if (toggleBtn && passwordInput) {
+                toggleBtn.addEventListener('click', () => {
+                    const type = passwordInput.type === 'password' ? 'text' : 'password';
+                    passwordInput.type = type;
+                    toggleBtn.textContent = type === 'password' ? '👁️' : '🙈';
+                });
+            }
+
+            // Login validation
+            function validateLogin() {
+                const adminId = document.getElementById('adminId').value.trim();
+                const password = document.getElementById('adminPassword').value;
+
+                if (!adminId) {
+                    showMessage('⚠️ Please enter your Admin ID', true);
+                    return false;
+                }
+                if (!password) {
+                    showMessage('⚠️ Please enter your security password', true);
+                    return false;
+                }
+
+                // Demo validation (in production, this would call an API)
+                if (adminId === 'admin' && password === 'admin123') {
+                    showMessage('✓ Login successful! Redirecting to Admin Dashboard...', false);
+                    setTimeout(() => {
+                        showMessage('📊 Dashboard would load in production environment', false);
+                    }, 1500);
+                    return true;
+                } else {
+                    showMessage('❌ Invalid Admin ID or Password. Please try again.', true);
+                    return false;
+                }
+            }
+
+            // Login button handler
+            const loginBtn = document.getElementById('loginBtn');
+            if (loginBtn) {
+                loginBtn.addEventListener('click', validateLogin);
+            }
+
+            // Enter key support
+            const inputs = ['adminId', 'adminPassword'];
+            inputs.forEach(id => {
+                const input = document.getElementById(id);
+                if (input) {
+                    input.addEventListener('keypress', (e) => {
+                        if (e.key === 'Enter') {
+                            e.preventDefault();
+                            validateLogin();
+                        }
+                    });
+                }
+            });
+
+            // Forgot Password link
+            const forgotLink = document.getElementById('forgotPasswordLink');
+            if (forgotLink) {
+                forgotLink.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    showMessage('📧 Password reset instructions would be sent to your registered email address.', false);
+                });
+            }
+
+            // Navigation links (demo)
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => {
+                item.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    if (item.innerText === 'Admin Panel') {
+                        showMessage('🔐 You are already on the Admin Login page', false);
+                    } else {
+                        showMessage(`🔗 Navigating to ${item.innerText} (demo mode)`, false);
+                    }
+                });
+            });
+
+            // Footer links demo
+            const footerLinks = document.querySelectorAll('.footer-col a');
+            footerLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    showMessage(`📄 ${link.innerText} (information page)`, false);
+                });
+            });
+        })();
+    </script>
+</body>
+
+</html>

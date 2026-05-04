@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BUSA Online Voting Portal | Administrator - Manage Elections</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Body – exact spec */
+        body {
+            position: relative;
+            width: 1280px;
+            height: 1365px;
+            background: #FFFFFF;
+            font-family: 'Inter', 'Public Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+            margin: 0 auto;
+            overflow-x: hidden;
+        }
+
+        /* Main container */
+        .portal-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ========== HEADER ========== */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            background: #FFFFFF;
+            border-bottom: 1px solid #E9EDF2;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .logo-icon {
+            background: #002F6C;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 24px;
+            color: white;
+        }
+
+        .portal-title {
+            font-weight: 700;
+            font-size: 18px;
+            letter-spacing: -0.2px;
+            color: #0B2B44;
+            background: #F8FAFE;
+            padding: 5px 18px;
+            border-radius: 40px;
+        }
+
+        .admin-badge {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1F2A44;
+            background: #F0F7FF;
+            padding: 6px 18px;
+            border-radius: 40px;
+            border: 1px solid #DCE5F0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* ========== MAIN LAYOUT ========== */
+        .dashboard-layout {
+            display: flex;
+            gap: 32px;
+            padding: 28px 40px 32px 40px;
+            flex: 1;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 260px;
+            flex-shrink: 0;
+            background: #FFFFFF;
+            border-radius: 24px;
+            padding: 20px 0;
+            border: 1px solid #E9EDF2;
+            height: fit-content;
+        }
+
+        .sidebar-header {
+            padding: 0 20px 16px 20px;
+            border-bottom: 1px solid #F0F4F9;
+        }
+
+        .sidebar-header h2 {
+            font-size: 20px;
+            font-weight: 800;
+            color: #1A2C3E;
+        }
+
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            margin-top: 12px;
+        }
+
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 20px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            color: #4A627A;
+            transition: 0.2s;
+        }
+
+        .sidebar-link:hover {
+            background: #F0F7FF;
+            color: #002F6C;
+        }
+
+        .sidebar-link.active {
+            background: #E8F0FE;
+            color: #002F6C;
+            border-left: 3px solid #002F6C;
+        }
+
+        .logout-link {
+            margin-top: 28px;
+            border-top: 1px solid #F0F4F9;
+            padding-top: 16px;
+            color: #C62828;
+        }
+
+        /* MAIN CONTENT */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 28px;
+        }
+
+        /* Status Card */
+        .status-card {
+            background: linear-gradient(105deg, #002F6C 0%, #0A4175 100%);
+            border-radius: 20px;
+            padding: 18px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+        }
+
+        .status-left h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .status-left p {
+            font-size: 13px;
+            opacity: 0.85;
+        }
+
+        .status-badge {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 6px 16px;
+            border-radius: 40px;
+            font-weight: 700;
+            font-size: 13px;
+        }
+
+        /* Create Election Form */
+        .form-card {
+            background: #FFFFFF;
+            border-radius: 24px;
+            border: 1px solid #E9EDF2;
+            padding: 24px 28px;
+        }
+
+        .form-header {
+            margin-bottom: 20px;
+        }
+
+        .form-header h2 {
+            font-size: 20px;
+            font-weight: 800;
+            color: #1A2C3E;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 24px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .form-group {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #4A627A;
+            margin-bottom: 8px;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1.5px solid #E2E9F2;
+            border-radius: 16px;
+            font-size: 14px;
+            font-family: inherit;
+            outline: none;
+            transition: 0.2s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            border-color: #002F6C;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .create-btn {
+            background: #002F6C;
+            color: white;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 40px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-top: 8px;
+        }
+
+        .create-btn:hover {
+            background: #0A4175;
+        }
+
+        /* Election Control Center */
+        .elections-card {
+            background: #FFFFFF;
+            border-radius: 24px;
+            border: 1px solid #E9EDF2;
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 18px 24px;
+            border-bottom: 1px solid #F0F4F9;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #F8FAFE;
+        }
+
+        .card-header h3 {
+            font-size: 18px;
+            font-weight: 800;
+            color: #1A2C3E;
+        }
+
+        .total-badge {
+            background: #E8F0FE;
+            padding: 4px 12px;
+            border-radius: 40px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #002F6C;
+        }
+
+        .elections-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .elections-table th {
+            text-align: left;
+            padding: 14px 20px;
+            font-size: 12px;
+            font-weight: 700;
+            color: #6F8FAC;
+            background: #FAFCFE;
+            border-bottom: 1px solid #F0F4F9;
+        }
+
+        .elections-table td {
+            padding: 16px 20px;
+            border-bottom: 1px solid #F0F4F9;
+            font-size: 13px;
+            vertical-align: top;
+        }
+
+        .elections-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .election-title {
+            font-weight: 700;
+            color: #1A2C3E;
+        }
+
+        .election-desc {
+            font-size: 11px;
+            color: #8AA0B8;
+            margin-top: 4px;
+            line-height: 1.4;
+        }
+
+        .status-active {
+            background: #E8F5E9;
+            color: #2E7D32;
+            padding: 4px 12px;
+            border-radius: 40px;
+            font-size: 11px;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .status-pending {
+            background: #FFF3E0;
+            color: #E67E22;
+            padding: 4px 12px;
+            border-radius: 40px;
+            font-size: 11px;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .status-completed {
+            background: #EEF2F6;
+            color: #6F8FAC;
+            padding: 4px 12px;
+            border-radius: 40px;
+            font-size: 11px;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .control-btn {
+            background: #F0F4F9;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 40px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-right: 8px;
+            font-family: inherit;
+        }
+
+        .control-btn.danger {
+            background: #FFEBEE;
+            color: #C62828;
+        }
+
+        .control-btn.danger:hover {
+            background: #FFCDD2;
+        }
+
+        .control-btn.success {
+            background: #E8F5E9;
+            color: #2E7D32;
+        }
+
+        .control-btn.success:hover {
+            background: #C8E6C9;
+        }
+
+        .control-btn:hover {
+            transform: translateY(-1px);
+        }
+
+        /* ========== FOOTER ========== */
+        .footer {
+            background: #FFFFFF;
+            border-top: 1px solid #E9EDF2;
+            padding: 24px 40px 20px;
+            width: 100%;
+        }
+
+        .footer-grid {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 32px;
+        }
+
+        .footer-col h4 {
+            font-weight: 700;
+            font-size: 13px;
+            color: #1A405E;
+            margin-bottom: 10px;
+        }
+
+        .footer-col a {
+            display: block;
+            font-size: 11px;
+            color: #48708E;
+            text-decoration: none;
+            margin-bottom: 6px;
+            transition: color 0.2s;
+        }
+
+        .footer-col a:hover {
+            color: #002F6C;
+        }
+
+        .copyright {
+            text-align: center;
+            font-size: 10px;
+            color: #7C95AF;
+            margin-top: 20px;
+            padding-top: 12px;
+            border-top: 1px solid #E9F0F6;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="portal-container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo-area">
+                <div class="logo-icon">B</div>
+                <div class="portal-title">BUSA ONLINE VOTING PORTAL</div>
+            </div>
+            <div class="admin-badge">👤 Administrator</div>
+        </div>
+
+        <!-- Dashboard Layout -->
+        <div class="dashboard-layout">
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <div class="sidebar-header">
+                    <h2>Dashboard</h2>
+                </div>
+                <div class="sidebar-nav">
+                    <a href="#" class="sidebar-link" id="dashboardLink">Dashboard</a>
+                    <a href="#" class="sidebar-link" id="voterDbLink">Voter Database</a>
+                    <a href="#" class="sidebar-link active" id="manageElectionsLink">Manage Elections</a>
+                    <a href="#" class="sidebar-link" id="manageCandidatesLink">Manage Candidates</a>
+                    <a href="#" class="sidebar-link" id="guidelinesLink">Guidelines</a>
+                    <a href="#" class="sidebar-link" id="announcementsLink">Announcements</a>
+                    <a href="#" class="sidebar-link" id="securityLogLink">Security Log</a>
+                    <a href="#" class="sidebar-link logout-link" id="logoutLink">Logout</a>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="main-content">
+                <!-- Status Card -->
+                <div class="status-card">
+                    <div class="status-left">
+                        <h3>Verified Status: Active</h3>
+                        <p>Administrator access with full election management privileges</p>
+                    </div>
+                    <div class="status-badge">✓ ACTIVE</div>
+                </div>
+
+                <!-- Create New Election Form -->
+                <div class="form-card">
+                    <div class="form-header">
+                        <h2>Create New Election</h2>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Election Post/Title</label>
+                            <input type="text" id="electionTitle" placeholder="e.g. Presidential Election 2027">
+                        </div>
+                        <div class="form-group">
+                            <label>Election Date (April 2027)</label>
+                            <input type="date" id="electionDate" value="2027-04-15">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Election Description</label>
+                        <textarea id="electionDesc"
+                            placeholder="Provide detailed information about this election post..."></textarea>
+                    </div>
+                    <button class="create-btn" id="createElectionBtn">+ Create Election</button>
+                </div>
+
+                <!-- Election Control Center -->
+                <div class="elections-card">
+                    <div class="card-header">
+                        <h3>Election Control Center</h3>
+                        <div class="total-badge">3 Total Elections</div>
+                    </div>
+                    <table class="elections-table">
+                        <thead>
+                            <tr>
+                                <th>Election Title</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th>Control</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="electionsTableBody">
+                            <!-- Dynamic rows -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>BUSA</h4>
+                    <a href="#">About Union</a>
+                    <a href="#">Election Guidelines</a>
+                    <a href="#">Contact Us</a>
+                </div>
+                <div class="footer-col">
+                    <h4>HELP & CENTER</h4>
+                    <a href="#">FAQ</a>
+                    <a href="#">Live Chat</a>
+                    <a href="#">Support Ticket</a>
+                </div>
+                <div class="footer-col">
+                    <h4>PRIVACY POLICY</h4>
+                    <a href="#">Data Protection</a>
+                    <a href="#">Cookie Policy</a>
+                </div>
+                <div class="footer-col">
+                    <h4>TERMS OF SERVICE</h4>
+                    <a href="#">Voter Agreement</a>
+                    <a href="#">Code of Conduct</a>
+                </div>
+            </div>
+            <div class="copyright">
+                © 2026 BUSA ONLINE VOTING PORTAL. ALL RIGHTS RESERVED
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function () {
+            // Initial elections data
+            let elections = [
+                {
+                    id: 1,
+                    title: "BUSA General Secretary 2026",
+                    desc: "Election for the post of General Secretary to oversee administrative duties.",
+                    date: "2027-04-12",
+                    status: "Active"
+                },
+                {
+                    id: 2,
+                    title: "Public Relations Officer",
+                    desc: "Selection of the PRO to manage institutional communication.",
+                    date: "2027-04-12",
+                    status: "Pending"
+                },
+                {
+                    id: 3,
+                    title: "BUSA Financial Director 2026",
+                    desc: "Election for the Financial Director to manage student association treasury.",
+                    date: "2027-04-12",
+                    status: "Completed"
+                }
+            ];
+
+            let nextId = 4;
+
+            // Toast notification system
+            function showMessage(message, isError = false) {
+                const existingToast = document.querySelector('.custom-toast');
+                if (existingToast) existingToast.remove();
+
+                const toast = document.createElement('div');
+                toast.className = 'custom-toast';
+                toast.textContent = message;
+                toast.style.position = 'fixed';
+                toast.style.bottom = '30px';
+                toast.style.left = '50%';
+                toast.style.transform = 'translateX(-50%)';
+                toast.style.backgroundColor = isError ? '#C62828' : '#1E5A3C';
+                toast.style.color = 'white';
+                toast.style.padding = '12px 28px';
+                toast.style.borderRadius = '60px';
+                toast.style.fontSize = '14px';
+                toast.style.fontWeight = '500';
+                toast.style.fontFamily = 'Inter, sans-serif';
+                toast.style.zIndex = '1000';
+                toast.style.boxShadow = '0 4px 15px rgba(0,0,0,0.2)';
+                document.body.appendChild(toast);
+
+                setTimeout(() => {
+                    toast.style.opacity = '0';
+                    setTimeout(() => toast.remove(), 300);
+                }, 2800);
+            }
+
+            // Format date for display
+            function formatDate(dateStr) {
+                const date = new Date(dateStr);
+                return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+            }
+
+            // Render elections table
+            function renderElections() {
+                const tbody = document.getElementById('electionsTableBody');
+                if (!tbody) return;
+
+                tbody.innerHTML = '';
+                elections.forEach(election => {
+                    const row = tbody.insertRow();
+
+                    // Title column
+                    const titleCell = row.insertCell(0);
+                    titleCell.innerHTML = `<div class="election-title">${election.title}</div><div class="election-desc">${election.desc.substring(0, 80)}${election.desc.length > 80 ? '...' : ''}</div>`;
+
+                    // Date column
+                    row.insertCell(1).innerHTML = formatDate(election.date);
+
+                    // Status column
+                    let statusClass = '';
+                    let statusText = '';
+                    if (election.status === 'Active') {
+                        statusClass = 'status-active';
+                        statusText = 'Active';
+                    } else if (election.status === 'Pending') {
+                        statusClass = 'status-pending';
+                        statusText = 'Pending';
+                    } else {
+                        statusClass = 'status-completed';
+                        statusText = 'Completed';
+                    }
+                    row.insertCell(2).innerHTML = `<span class="${statusClass}">${statusText}</span>`;
+
+                    // Control column (End Election / Start Election / View Archive)
+                    const controlCell = row.insertCell(3);
+                    if (election.status === 'Active') {
+                        controlCell.innerHTML = `<button class="control-btn danger" data-id="${election.id}" data-action="end">End Election</button>`;
+                    } else if (election.status === 'Pending') {
+                        controlCell.innerHTML = `<button class="control-btn success" data-id="${election.id}" data-action="start">Start Election</button>`;
+                    } else {
+                        controlCell.innerHTML = `<button class="control-btn" data-id="${election.id}" data-action="view">View Archive</button>`;
+                    }
+
+                    // Actions column - Manage button
+                    row.insertCell(4).innerHTML = `<button class="control-btn" data-id="${election.id}" data-action="manage">Manage</button>`;
+                });
+
+                // Attach event listeners to buttons
+                document.querySelectorAll('.control-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const id = parseInt(btn.getAttribute('data-id'));
+                        const action = btn.getAttribute('data-action');
+                        handleElectionAction(id, action);
+                    });
+                });
+            }
+
+            // Handle election actions
+            function handleElectionAction(id, action) {
+                const election = elections.find(e => e.id === id);
+                if (!election) return;
+
+                switch (action) {
+                    case 'end':
+                        if (election.status === 'Active') {
+                            election.status = 'Completed';
+                            showMessage(`✓ Election "${election.title}" has been ended and marked as Completed.`, false);
+                            renderElections();
+                        }
+                        break;
+                    case 'start':
+                        if (election.status === 'Pending') {
+                            election.status = 'Active';
+                            showMessage(`✓ Election "${election.title}" is now Active and open for voting.`, false);
+                            renderElections();
+                        }
+                        break;
+                    case 'view':
+                        showMessage(`📦 Viewing archive for "${election.title}" (demo: results and details would appear)`, false);
+                        break;
+                    case 'manage':
+                        showMessage(`⚙️ Managing election "${election.title}" (demo: edit settings, add candidates)`, false);
+                        break;
+                }
+            }
+
+            // Create new election
+            function createNewElection() {
+                const titleInput = document.getElementById('electionTitle');
+                const dateInput = document.getElementById('electionDate');
+                const descInput = document.getElementById('electionDesc');
+
+                const title = titleInput.value.trim();
+                const date = dateInput.value;
+                const desc = descInput.value.trim();
+
+                if (!title) {
+                    showMessage('⚠️ Please enter an election title', true);
+                    return;
+                }
+                if (!date) {
+                    showMessage('⚠️ Please select an election date', true);
+                    return;
+                }
+                if (!desc) {
+                    showMessage('⚠️ Please provide an election description', true);
+                    return;
+                }
+
+                const newElection = {
+                    id: nextId++,
+                    title: title,
+                    desc: desc,
+                    date: date,
+                    status: 'Pending'
+                };
+
+                elections.push(newElection);
+                renderElections();
+
+                // Clear form
+                titleInput.value = '';
+                dateInput.value = '2027-04-15';
+                descInput.value = '';
+
+                showMessage(`✅ New election "${title}" created successfully (Status: Pending)`, false);
+            }
+
+            // Create button listener
+            const createBtn = document.getElementById('createElectionBtn');
+            if (createBtn) {
+                createBtn.addEventListener('click', createNewElection);
+            }
+
+            // Sidebar navigation (demo)
+            document.getElementById('dashboardLink')?.addEventListener('click', (e) => {
+                e.preventDefault();
+                showMessage('📊 Navigating to Dashboard (demo)', false);
+            });
+            document.getElementById('voterDbLink')?.addEventListener('click', (e) => {
+                e.preventDefault();
+                showMessage('📋 Voter Database: Manage registered voters (demo)', false);
+            });
+            document.getElementById('manageCandidatesLink')?.addEventListener('click', (e) => {
+                e.preventDefault();
+                showMessage('👥 Manage Candidates: Add, edit, or approve candidates (demo)', false);
+            });
+            document.getElementById('guidelinesLink')?.addEventListener('click', (e) => {
+                e.preventDefault();
+                showMessage('📘 Election Guidelines: Review and update voting rules (demo)', false);
+            });
+            document.getElementById('announcementsLink')?.addEventListener('click', (e) => {
+                e.preventDefault();
+                showMessage('📢 Announcements: Post public notices to all voters (demo)', false);
+            });
+            document.getElementById('securityLogLink')?.addEventListener('click', (e) => {
+                e.preventDefault();
+                showMessage('🔐 Security Log: View all admin actions and system events (demo)', false);
+            });
+            document.getElementById('logoutLink')?.addEventListener('click', (e) => {
+                e.preventDefault();
+                showMessage('🔒 Logging out of admin panel... Redirecting to login', false);
+            });
+
+            // Footer links demo
+            const footerLinks = document.querySelectorAll('.footer-col a');
+            footerLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    showMessage(`📄 ${link.innerText} (information page)`, false);
+                });
+            });
+
+            // Initial render
+            renderElections();
+        })();
+    </script>
+</body>
+
+</html>

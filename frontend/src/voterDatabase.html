@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BUSA Online Voting Portal | Administrator - Voter Database</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Body – exact spec */
+        body {
+            position: relative;
+            width: 1280px;
+            height: 1184px;
+            background: #F9FAFB;
+            font-family: 'Inter', 'Public Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+            margin: 0 auto;
+            overflow-x: hidden;
+        }
+
+        /* Main container */
+        .portal-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ========== HEADER ========== */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            background: #FFFFFF;
+            border-bottom: 1px solid #E9EDF2;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .logo-icon {
+            background: #002F6C;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 24px;
+            color: white;
+        }
+
+        .portal-title {
+            font-weight: 700;
+            font-size: 18px;
+            letter-spacing: -0.2px;
+            color: #0B2B44;
+            background: #F0F7FF;
+            padding: 5px 18px;
+            border-radius: 40px;
+        }
+
+        .admin-badge {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1F2A44;
+            background: #F0F7FF;
+            padding: 6px 18px;
+            border-radius: 40px;
+            border: 1px solid #DCE5F0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* ========== MAIN LAYOUT (Sidebar + Content) ========== */
+        .dashboard-layout {
+            display: flex;
+            gap: 32px;
+            padding: 28px 40px 32px 40px;
+            flex: 1;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 260px;
+            flex-shrink: 0;
+            background: #FFFFFF;
+            border-radius: 24px;
+            padding: 20px 0;
+            border: 1px solid #E9EDF2;
+            height: fit-content;
+        }
+
+        .sidebar-header h2 {
+            font-size: 20px;
+            font-weight: 800;
+            color: #1A2C3E;
+            padding: 0 20px 16px 20px;
+            border-bottom: 1px solid #F0F4F9;
+            margin-bottom: 12px;
+        }
+
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 20px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            color: #4A627A;
+            transition: 0.2s;
+        }
+
+        .sidebar-link:hover {
+            background: #F0F7FF;
+            color: #002F6C;
+        }
+
+        .sidebar-link.active {
+            background: #E8F0FE;
+            color: #002F6C;
+            border-left: 3px solid #002F6C;
+        }
+
+        .logout-link {
+            margin-top: 28px;
+            border-top: 1px solid #F0F4F9;
+            padding-top: 16px;
+            color: #C62828;
+        }
+
+        /* MAIN CONTENT */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        /* Status Card */
+        .status-card {
+            background: linear-gradient(105deg, #002F6C 0%, #0A4175 100%);
+            border-radius: 20px;
+            padding: 18px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+        }
+
+        .status-left h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .status-left p {
+            font-size: 13px;
+            opacity: 0.85;
+        }
+
+        .status-badge {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 6px 16px;
+            border-radius: 40px;
+            font-weight: 700;
+            font-size: 13px;
+        }
+
+        /* Database Header */
+        .db-header h1 {
+            font-size: 24px;
+            font-weight: 800;
+            color: #1A2C3E;
+            margin-bottom: 6px;
+        }
+
+        .db-header p {
+            font-size: 13px;
+            color: #5E7E9C;
+        }
+
+        /* Stats Row */
+        .stats-row {
+            display: flex;
+            gap: 20px;
+        }
+
+        .stat-card {
+            background: #FFFFFF;
+            border-radius: 20px;
+            padding: 18px 24px;
+            border: 1px solid #E9EDF2;
+            flex: 1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .stat-info h4 {
+            font-size: 13px;
+            font-weight: 600;
+            color: #6F8FAC;
+            margin-bottom: 6px;
+        }
+
+        .stat-number {
+            font-size: 28px;
+            font-weight: 800;
+            color: #1A2C3E;
+        }
+
+        .sync-badge {
+            background: #E8F5E9;
+            color: #2E7D32;
+            padding: 6px 14px;
+            border-radius: 40px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .export-btn {
+            background: #F0F4F9;
+            border: 1px solid #E2E9F2;
+            padding: 10px 20px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 13px;
+            color: #1A2C3E;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+        }
+
+        .export-btn:hover {
+            background: #E2E9F2;
+        }
+
+        /* Search Bar */
+        .search-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 8px;
+        }
+
+        .search-input {
+            flex: 1;
+            max-width: 320px;
+            padding: 12px 18px;
+            border: 1.5px solid #E2E9F2;
+            border-radius: 40px;
+            font-size: 13px;
+            background: #FFFFFF;
+            outline: none;
+            transition: 0.2s;
+            font-family: inherit;
+        }
+
+        .search-input:focus {
+            border-color: #002F6C;
+        }
+
+        /* Voter Table */
+        .voter-table-container {
+            background: #FFFFFF;
+            border-radius: 20px;
+            border: 1px solid #E9EDF2;
+            overflow-x: auto;
+        }
+
+        .voter-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        .voter-table th {
+            text-align: left;
+            padding: 16px 20px;
+            background: #F8FAFE;
+            font-weight: 700;
+            color: #4A627A;
+            border-bottom: 1px solid #E9EDF2;
+        }
+
+        .voter-table td {
+            padding: 14px 20px;
+            border-bottom: 1px solid #F0F4F9;
+            color: #1A2C3E;
+        }
+
+        .voter-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .status-verified {
+            background: #E8F5E9;
+            color: #2E7D32;
+            padding: 4px 12px;
+            border-radius: 40px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .action-details {
+            background: #F0F4F9;
+            border: none;
+            padding: 6px 16px;
+            border-radius: 40px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #1A2C3E;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+        }
+
+        .action-details:hover {
+            background: #E2E9F2;
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 16px;
+            padding: 8px 0;
+        }
+
+        .pagination-info {
+            font-size: 13px;
+            color: #6F8FAC;
+        }
+
+        .pagination-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .page-btn {
+            background: white;
+            border: 1px solid #E2E9F2;
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+        }
+
+        .page-btn:hover {
+            background: #F0F7FF;
+            border-color: #002F6C;
+        }
+
+        .page-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* ========== FOOTER ========== */
+        .footer {
+            background: #FFFFFF;
+            border-top: 1px solid #E9EDF2;
+            padding: 24px 40px 20px;
+            width: 100%;
+        }
+
+        .footer-grid {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 32px;
+        }
+
+        .footer-col h4 {
+            font-weight: 700;
+            font-size: 13px;
+            color: #1A405E;
+            margin-bottom: 10px;
+        }
+
+        .footer-col a {
+            display: block;
+            font-size: 11px;
+            color: #48708E;
+            text-decoration: none;
+            margin-bottom: 6px;
+            transition: color 0.2s;
+        }
+
+        .footer-col a:hover {
+            color: #002F6C;
+        }
+
+        .copyright {
+            text-align: center;
+            font-size: 10px;
+            color: #7C95AF;
+            margin-top: 20px;
+            padding-top: 12px;
+            border-top: 1px solid #E9F0F6;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="portal-container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo-area">
+                <div class="logo-icon">B</div>
+                <div class="portal-title">BUSA ONLINE VOTING PORTAL</div>
+            </div>
+            <div class="admin-badge">👤 Administrator</div>
+        </div>
+
+        <!-- Dashboard Layout -->
+        <div class="dashboard-layout">
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <div class="sidebar-header">
+                    <h2>Dashboard</h2>
+                </div>
+                <div class="sidebar-nav">
+                    <a href="#" class="sidebar-link active" id="voterDbLink">Voter Database</a>
+                    <a href="#" class="sidebar-link" id="manageElectionsLink">Manage Elections</a>
+                    <a href="#" class="sidebar-link" id="manageCandidatesLink">Manage Candidates</a>
+                    <a href="#" class="sidebar-link" id="guidelinesLink">Guidelines</a>
+                    <a href="#" class="sidebar-link" id="announcementsLink">Announcements</a>
+                    <a href="#" class="sidebar-link" id="securityLogLink">Security Log</a>
+                    <a href="#" class="sidebar-link logout-link" id="logoutLink">Logout</a>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="main-content">
+                <!-- Status Card -->
+                <div class="status-card">
+                    <div class="status-left">
+                        <h3>Verified Status: Active</h3>
+                        <p>Database synchronized with registration portal</p>
+                    </div>
+                    <div class="status-badge">✓ ACTIVE</div>
+                </div>
+
+                <!-- Database Header -->
+                <div class="db-header">
+                    <h1>Voter Database</h1>
+                    <p>List of all verified voters automatically synced from the registration portal.</p>
+                </div>
+
+                <!-- Stats Row -->
+                <div class="stats-row">
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <h4>Total Verified</h4>
+                            <div class="stat-number">12,450</div>
+                        </div>
+                        <div class="sync-badge">✓ VERIFIED</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <h4>Sync Status</h4>
+                            <div class="stat-number">LIVE</div>
+                        </div>
+                        <div class="sync-badge">🟢 LIVE SYNC ACTIVE</div>
+                    </div>
+                    <div class="stat-card">
+                        <button class="export-btn" id="exportCsvBtn">📎 Export Database (CSV)</button>
+                    </div>
+                </div>
+
+                <!-- Search Bar -->
+                <div class="search-bar">
+                    <input type="text" class="search-input" id="searchInput" placeholder="FIND BY NAME OR ID...">
+                </div>
+
+                <!-- Voter Table -->
+                <div class="voter-table-container">
+                    <table class="voter-table">
+                        <thead>
+                            <tr>
+                                <th>Photo</th>
+                                <th>Full Name</th>
+                                <th>Reg. Number</th>
+                                <th>Voter ID</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="voterTableBody">
+                            <!-- Dynamic content -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination -->
+                <div class="pagination">
+                    <div class="pagination-info" id="paginationInfo">Showing 5 of 12,450 Voters</div>
+                    <div class="pagination-buttons">
+                        <button class="page-btn" id="prevPageBtn">Prev</button>
+                        <button class="page-btn" id="nextPageBtn">Next</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>BUSA</h4>
+                    <a href="#">About Union</a>
+                    <a href="#">Election Guidelines</a>
+                    <a href="#">Contact Us</a>
+                </div>
+                <div class="footer-col">
+                    <h4>HELP & CENTER</h4>
+                    <a href="#">FAQ</a>
+                    <a href="#">Live Chat</a>
+                    <a href="#">Support Ticket</a>
+                </div>
+                <div class="footer-col">
+                    <h4>PRIVACY POLICY</h4>
+                    <a href="#">Data Protection</a>
+                    <a href="#">Cookie Policy</a>
+                </div>
+                <div class="footer-col">
+                    <h4>TERMS OF SERVICE</h4>
+                    <a href="#">Voter Agreement</a>
+                    <a href="#">Code of Conduct</a>
+                </div>
+            </div>
+            <div class="copyright">
+                © 2026 BUSA ONLINE VOTING PORTAL. ALL RIGHTS RESERVED
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function () {
+            // Mock voter data (first 5 shown, with total count of 12,450)
+            const allVoters = [
+                { photo: "👤", name: "Kwesi Arthur", regNumber: "BUSA/2024/0042", voterId: "VT-992-001", status: "Verified" },
+                { photo: "👤", name: "Ssentongo Nicholas", regNumber: "BUSA/2024/1105", voterId: "VT-992-045", status: "Verified" },
+                { photo: "👤", name: "Amina Abiodun", regNumber: "BUSA/2024/0871", voterId: "VT-992-112", status: "Verified" },
+                { photo: "👤", name: "Musa Oladimeji", regNumber: "BUSA/2024/0239", voterId: "VT-992-088", status: "Verified" },
+                { photo: "👤", name: "Zainab Al-Farsi", regNumber: "BUSA/2024/1566", voterId: "VT-992-301", status: "Verified" }
+            ];
+
+            const totalVoters = 12450;
+            let currentPage = 0;
+            let filteredVoters = [...allVoters];
+            let searchTerm = '';
+
+            // Helper to show toast
+            function showMessage(message, isError = false) {
+                const existingToast = document.querySelector('.custom-toast');
+                if (existingToast) existingToast.remove();
+
+                const toast = document.createElement('div');
+                toast.className = 'custom-toast';
+                toast.textContent = message;
+                toast.style.position = 'fixed';
+                toast.style.bottom = '30px';
+                toast.style.left = '50%';
+                toast.style.transform = 'translateX(-50%)';
+                toast.style.backgroundColor = isError ? '#C62828' : '#1E5A3C';
+                toast.style.color = 'white';
+                toast.style.padding = '12px 28px';
+                toast.style.borderRadius = '60px';
+                toast.style.fontSize = '14px';
+                toast.style.fontWeight = '500';
+                toast.style.fontFamily = 'Inter, sans-serif';
+                toast.style.zIndex = '1000';
+                toast.style.boxShadow = '0 4px 15px rgba(0,0,0,0.2)';
+                document.body.appendChild(toast);
+
+                setTimeout(() => {
+                    toast.style.opacity = '0';
+                    setTimeout(() => toast.remove(), 300);
+                }, 2800);
+            }
+
+            // Render table
+            function renderTable() {
+                const start = currentPage * 5;
+                const end = start + 5;
+                const pageVoters = filteredVoters.slice(start, end);
+                const tbody = document.getElementById('voterTableBody');
+                if (!tbody) return;
+
+                if (pageVoters.length === 0 && filteredVoters.length > 0 && currentPage > 0) {
+                    currentPage--;
+                    renderTable();
+                    return;
+                }
+
+                tbody.innerHTML = '';
+                pageVoters.forEach(voter => {
+                    const row = tbody.insertRow();
+                    row.insertCell(0).innerHTML = `<span style="font-size:20px;">${voter.photo}</span>`;
+                    row.insertCell(1).innerHTML = `<strong>${voter.name}</strong>`;
+                    row.insertCell(2).innerHTML = voter.regNumber;
+                    row.insertCell(3).innerHTML = voter.voterId;
+                    row.insertCell(4).innerHTML = `<span class="status-verified">✓ ${voter.status}</span>`;
+                    row.insertCell(5).innerHTML = `<button class="action-details" data-name="${voter.name}">Details</button>`;
+                });
+
+                // attach details buttons
+                document.querySelectorAll('.action-details').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const name = btn.getAttribute('data-name');
+                        showMessage(`📋 Viewing details for ${name} (demo: full profile would appear)`, false);
+                    });
+                });
+
+                // Update pagination info (showing based on filtered count, but total remains 12,450 for display)
+                const totalDisplay = totalVoters;
+                const startNum = currentPage * 5 + 1;
+                const endNum = Math.min((currentPage + 1) * 5, filteredVoters.length);
+                const paginationInfo = document.getElementById('paginationInfo');
+                if (paginationInfo) {
+                    if (filteredVoters.length === 0) {
+                        paginationInfo.innerHTML = `Showing 0 of ${totalDisplay.toLocaleString()} Voters`;
+                    } else {
+                        paginationInfo.innerHTML = `Showing ${startNum}-${endNum} of ${totalDisplay.toLocaleString()} Voters`;
+                    }
+                }
+
+                // Update prev/next buttons
+                const prevBtn = document.getElementById('prevPageBtn');
+                const nextBtn = document.getElementById('nextPageBtn');
+                if (prevBtn) prevBtn.disabled = currentPage === 0;
+                if (nextBtn) nextBtn.disabled = (currentPage + 1) * 5 >= filteredVoters.length;
+            }
+
+            // Search filter
+            function filterVoters() {
+                if (searchTerm.trim() === '') {
+                    filteredVoters = [...allVoters];
+                } else {
+                    const term = searchTerm.toLowerCase();
+                    filteredVoters = allVoters.filter(v =>
+                        v.name.toLowerCase().includes(term) ||
+                        v.regNumber.toLowerCase().includes(term) ||
+                        v.voterId.toLowerCase().includes(term)
+                    );
+                }
+                currentPage = 0;
+                renderTable();
+            }
+
+            // Search input
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) {
+                searchInput.addEventListener('input', (e) => {
+                    searchTerm = e.target.value;
+                    filterVoters();
+                });
+            }
+
+            // Pagination buttons
+            const prevBtn = document.getElementById('prevPageBtn');
+            const nextBtn = document.getElementById('nextPageBtn');
+            if (prevBtn) {
+                prevBtn.addEventListener('click', () => {
+                    if (currentPage > 0) {
+                        currentPage--;
+                        renderTable();
+                    }
+                });
+            }
+            if (nextBtn) {
+                nextBtn.addEventListener('click', () => {
+                    if ((currentPage + 1) * 5 < filteredVoters.length) {
+                        currentPage++;
+                        renderTable();
+                    }
+                });
+            }
+
+            // Export CSV
+            const exportBtn = document.getElementById('exportCsvBtn');
+            if (exportBtn) {
+                exportBtn.addEventListener('click', () => {
+                    showMessage('📎 Exporting voter database as CSV (demo: file would download)', false);
+                });
+            }
+
+            // Sidebar navigation (demo)
+            document.getElementById('voterDbLink')?.addEventListener('click', (e) => {
+                e.preventDefault();
+                showMessage('📋 You are already on the Voter Database page', false);
+            });
+            document.getElementById('manageElectionsLink')?.addEventListener('click', (e) => {
+                e.preventDefault();
+                showMessage('🗳️ Manage Elections: Create, edit, or schedule elections (demo)', false);
+            });
+            document.getElementById('manageCandidatesLink')?.addEventListener('click', (e) => {
+                e.preventDefault();
+                showMessage('👥 Manage Candidates: Add, edit, or remove candidates from ballot (demo)', false);
+            });
+            document.getElementById('guidelinesLink')?.addEventListener('click', (e) => {
+                e.preventDefault();
+                showMessage('📘 Election Guidelines: View and update voting rules (demo)', false);
+            });
+            document.getElementById('announcementsLink')?.addEventListener('click', (e) => {
+                e.preventDefault();
+                showMessage('📢 Announcements: Post public notices to voters (demo)', false);
+            });
+            document.getElementById('securityLogLink')?.addEventListener('click', (e) => {
+                e.preventDefault();
+                showMessage('🔐 Security Log: View all admin actions and system access (demo)', false);
+            });
+            document.getElementById('logoutLink')?.addEventListener('click', (e) => {
+                e.preventDefault();
+                showMessage('🔒 Logging out of admin panel...', false);
+            });
+
+            // Footer links demo
+            const footerLinks = document.querySelectorAll('.footer-col a');
+            footerLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    showMessage(`📄 ${link.innerText} (information page)`, false);
+                });
+            });
+
+            // Initial render
+            renderTable();
+        })();
+    </script>
+</body>
+
+</html>

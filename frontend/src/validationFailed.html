@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BUSA Online Voting Portal | Verification Error</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Body – exact spec */
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 0px;
+            isolation: isolate;
+            position: relative;
+            width: 1280px;
+            height: 1241px;
+            min-height: 1241px;
+            background: #FFFFFF;
+            font-family: 'Inter', 'Public Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+            margin: 0 auto;
+            overflow-x: hidden;
+        }
+
+        /* Main container */
+        .portal-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ========== HEADER SECTION ========== */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 28px 48px 20px 48px;
+            border-bottom: 1px solid #EFF3F8;
+            width: 100%;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .logo-icon {
+            background: #002F6C;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 14px;
+            font-weight: 800;
+            font-size: 28px;
+            color: white;
+            font-family: monospace;
+        }
+
+        .portal-title {
+            font-weight: 700;
+            font-size: 20px;
+            letter-spacing: -0.3px;
+            color: #0B2B44;
+            background: #F8FAFE;
+            padding: 6px 20px;
+            border-radius: 40px;
+        }
+
+        .back-link {
+            font-size: 15px;
+            font-weight: 500;
+            color: #2A6F8F;
+            text-decoration: none;
+            border-bottom: 1px dashed #B9D4E3;
+            padding-bottom: 2px;
+            transition: opacity 0.2s;
+        }
+
+        .back-link:hover {
+            opacity: 0.75;
+        }
+
+        /* ========== MAIN CONTENT ========== */
+        .main-content {
+            flex: 1;
+            padding: 60px 80px 80px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Error Badge */
+        .error-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: #FFEBEE;
+            padding: 10px 28px;
+            border-radius: 60px;
+            margin-bottom: 32px;
+        }
+
+        .error-icon {
+            font-size: 24px;
+        }
+
+        .error-text {
+            font-weight: 700;
+            font-size: 18px;
+            color: #C62828;
+            letter-spacing: 0.5px;
+        }
+
+        /* Main Title */
+        .main-title {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .main-title h1 {
+            font-size: 48px;
+            font-weight: 800;
+            color: #C62828;
+            margin-bottom: 16px;
+        }
+
+        .main-title p {
+            font-size: 18px;
+            color: #5E7E9C;
+            max-width: 550px;
+            line-height: 1.5;
+        }
+
+        /* ========== ERROR CARD ========== */
+        .error-card {
+            background: #FFFFFF;
+            border: 2px solid #FFCDD2;
+            border-radius: 32px;
+            box-shadow: 0 20px 35px -12px rgba(198, 40, 40, 0.12);
+            width: 680px;
+            max-width: 100%;
+            margin-bottom: 40px;
+            overflow: hidden;
+        }
+
+        /* Card Header */
+        .card-header {
+            background: #C62828;
+            padding: 20px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .access-denied-icon {
+            font-size: 28px;
+        }
+
+        .access-denied-text {
+            color: white;
+            font-weight: 800;
+            font-size: 20px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .card-badge {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 6px 16px;
+            border-radius: 40px;
+            font-size: 12px;
+            font-weight: 600;
+            color: white;
+            text-transform: uppercase;
+        }
+
+        /* Card Body */
+        .card-body {
+            padding: 40px 40px 32px;
+        }
+
+        .error-message {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .error-message-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+
+        .error-message h3 {
+            font-size: 22px;
+            font-weight: 700;
+            color: #C62828;
+            margin-bottom: 16px;
+        }
+
+        .error-message p {
+            font-size: 16px;
+            color: #4A627A;
+            line-height: 1.6;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        /* Warning Box */
+        .warning-box {
+            background: #FFF8E1;
+            border-left: 4px solid #FF9800;
+            padding: 20px 24px;
+            border-radius: 16px;
+            margin: 28px 0;
+        }
+
+        .warning-box p {
+            font-size: 14px;
+            color: #5D4037;
+            line-height: 1.6;
+            margin-bottom: 12px;
+        }
+
+        .warning-box .small-note {
+            font-size: 12px;
+            color: #8D6E63;
+            font-family: monospace;
+        }
+
+        /* System Reference */
+        .system-ref {
+            background: #F5F5F5;
+            padding: 14px 20px;
+            border-radius: 12px;
+            text-align: center;
+            margin-top: 24px;
+        }
+
+        .system-ref code {
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            color: #5E7E9C;
+            font-weight: 500;
+        }
+
+        /* Divider */
+        .divider {
+            height: 1px;
+            background: #EEF3F8;
+            margin: 28px 0 24px;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 16px;
+        }
+
+        .btn-primary {
+            background: #C62828;
+            color: white;
+            border: none;
+            padding: 14px 32px;
+            border-radius: 48px;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary:hover {
+            background: #B71C1C;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #1A2C3E;
+            border: 2px solid #DCE3EC;
+            padding: 12px 28px;
+            border-radius: 48px;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-secondary:hover {
+            border-color: #C62828;
+            background: #FFF5F5;
+        }
+
+        /* Additional Info Link */
+        .help-link {
+            text-align: center;
+            margin-top: 24px;
+        }
+
+        .help-link a {
+            color: #2A6F8F;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            border-bottom: 1px solid #B9D4E3;
+        }
+
+        .help-link a:hover {
+            color: #C62828;
+        }
+
+        /* ========== FOOTER ========== */
+        .footer {
+            background: #FCFDFF;
+            border-top: 1px solid #ECF3F9;
+            padding: 32px 48px 28px;
+            width: 100%;
+            margin-top: auto;
+        }
+
+        .footer-grid {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 40px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .footer-col h4 {
+            font-weight: 700;
+            font-size: 14px;
+            color: #1A405E;
+            margin-bottom: 14px;
+        }
+
+        .footer-col a {
+            display: block;
+            font-size: 12px;
+            color: #48708E;
+            text-decoration: none;
+            margin-bottom: 10px;
+            transition: color 0.2s;
+        }
+
+        .footer-col a:hover {
+            color: #002F6C;
+        }
+
+        .copyright {
+            text-align: center;
+            font-size: 11px;
+            color: #7C95AF;
+            margin-top: 28px;
+            padding-top: 16px;
+            border-top: 1px solid #E9F0F6;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="portal-container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo-area">
+                <div class="logo-icon">B</div>
+                <div class="portal-title">BUSA ONLINE VOTING PORTAL</div>
+            </div>
+            <a href="#" class="back-link" id="backToHome">← Back to Home</a>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Error Badge -->
+            <div class="error-badge">
+                <span class="error-icon">⚠️</span>
+                <span class="error-text">Verification Error</span>
+            </div>
+
+            <!-- Main Title -->
+            <div class="main-title">
+                <h1>Validation Failed</h1>
+                <p>Your identity could not be verified in the student database.</p>
+            </div>
+
+            <!-- Error Card -->
+            <div class="error-card">
+                <!-- Card Header -->
+                <div class="card-header">
+                    <div class="card-header-left">
+                        <span class="access-denied-icon">🚫</span>
+                        <span class="access-denied-text">Access Denied</span>
+                    </div>
+                    <div class="card-badge">Verification Failed</div>
+                </div>
+
+                <!-- Card Body -->
+                <div class="card-body">
+                    <!-- Error Message -->
+                    <div class="error-message">
+                        <div class="error-message-icon">🔍</div>
+                        <h3>Identity Not Found</h3>
+                        <p>We could not verify your identity in the student database. Please visit the Registrar's
+                            Office at your campus to ensure your registration is up to date.</p>
+                    </div>
+
+                    <!-- Warning Box -->
+                    <div class="warning-box">
+                        <p><strong>📋 What you need to do:</strong></p>
+                        <p>• Visit the Registrar's Office with your Student ID<br>
+                            • Confirm your registration details are correct<br>
+                            • Request database synchronization for online voting</p>
+                        <div class="small-note">Processing time: 1-2 business days after verification</div>
+                    </div>
+
+                    <!-- System Reference -->
+                    <div class="system-ref">
+                        <code>System Reference: ERR_AUTH_IDENTITY_NOT_FOUND</code>
+                    </div>
+
+                    <div class="divider"></div>
+
+                    <!-- Action Buttons -->
+                    <div class="action-buttons">
+                        <button class="btn-primary" id="returnHomeBtn">Return to Home</button>
+                        <button class="btn-secondary" id="faqBtn">View FAQs</button>
+                    </div>
+
+                    <!-- Help Link -->
+                    <div class="help-link">
+                        <a href="#" id="contactSupport">Need immediate assistance? Contact Support →</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>BUSA</h4>
+                    <a href="#">About Union</a>
+                    <a href="#">Election Guidelines</a>
+                    <a href="#">Contact Us</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Help & Support</h4>
+                    <a href="#">FAQ</a>
+                    <a href="#">Live Chat</a>
+                    <a href="#">Support Ticket</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Legal</h4>
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                    <a href="#">Cookie Policy</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Resources</h4>
+                    <a href="#">Voter Guide</a>
+                    <a href="#">Announcements</a>
+                </div>
+            </div>
+            <div class="copyright">
+                © 2026 BUSA ONLINE VOTING PORTAL. All rights reserved.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function () {
+            // Toast notification system
+            function showMessage(message, isError = true) {
+                const existingToast = document.querySelector('.custom-toast');
+                if (existingToast) existingToast.remove();
+
+                const toast = document.createElement('div');
+                toast.className = 'custom-toast';
+                toast.textContent = message;
+                toast.style.position = 'fixed';
+                toast.style.bottom = '30px';
+                toast.style.left = '50%';
+                toast.style.transform = 'translateX(-50%)';
+                toast.style.backgroundColor = isError ? '#C62828' : '#2E7D32';
+                toast.style.color = 'white';
+                toast.style.padding = '12px 28px';
+                toast.style.borderRadius = '60px';
+                toast.style.fontSize = '14px';
+                toast.style.fontWeight = '500';
+                toast.style.fontFamily = 'Inter, sans-serif';
+                toast.style.zIndex = '1000';
+                toast.style.boxShadow = '0 4px 15px rgba(0,0,0,0.2)';
+                document.body.appendChild(toast);
+
+                setTimeout(() => {
+                    toast.style.opacity = '0';
+                    setTimeout(() => toast.remove(), 300);
+                }, 2800);
+            }
+
+            // Back to Home button
+            const backBtn = document.getElementById('backToHome');
+            if (backBtn) {
+                backBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    showMessage('🏠 Returning to homepage...', false);
+                });
+            }
+
+            // Return to Home button (primary)
+            const returnHomeBtn = document.getElementById('returnHomeBtn');
+            if (returnHomeBtn) {
+                returnHomeBtn.addEventListener('click', () => {
+                    showMessage('✓ Redirecting to home page', false);
+                    setTimeout(() => {
+                        showMessage('Home page would load in production', false);
+                    }, 1000);
+                });
+            }
+
+            // View FAQs button
+            const faqBtn = document.getElementById('faqBtn');
+            if (faqBtn) {
+                faqBtn.addEventListener('click', () => {
+                    showMessage('📖 Opening Frequently Asked Questions section', false);
+                });
+            }
+
+            // Contact Support link
+            const contactSupport = document.getElementById('contactSupport');
+            if (contactSupport) {
+                contactSupport.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    showMessage('📧 Support ticket system would open. Visit Registrar\'s Office for urgent database updates.', false);
+                });
+            }
+
+            // Handle all footer links with demo message
+            const footerLinks = document.querySelectorAll('.footer-col a');
+            footerLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    showMessage(`📄 ${link.innerText} (information page)`, false);
+                });
+            });
+
+            // Additional: Simulate error code display animation
+            const systemRef = document.querySelector('.system-ref code');
+            if (systemRef) {
+                systemRef.style.cursor = 'pointer';
+                systemRef.addEventListener('click', () => {
+                    showMessage('📋 Error code copied to clipboard (demo)', false);
+                });
+            }
+        })();
+    </script>
+</body>
+
+</html>

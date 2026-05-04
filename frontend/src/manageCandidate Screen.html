@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BUSA Online Voting Portal | Add New Candidate</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Body – exact spec */
+        body {
+            position: relative;
+            width: 1280px;
+            height: 1378px;
+            background: #FFFFFF;
+            font-family: 'Inter', 'Public Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+            margin: 0 auto;
+            overflow-x: hidden;
+        }
+
+        /* Main container */
+        .portal-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ========== HEADER ========== */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            background: #FFFFFF;
+            border-bottom: 1px solid #E9EDF2;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .logo-icon {
+            background: #002F6C;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 24px;
+            color: white;
+        }
+
+        .portal-title {
+            font-weight: 700;
+            font-size: 18px;
+            letter-spacing: -0.2px;
+            color: #0B2B44;
+            background: #F8FAFE;
+            padding: 5px 18px;
+            border-radius: 40px;
+        }
+
+        .admin-badge {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1F2A44;
+            background: #F0F7FF;
+            padding: 6px 18px;
+            border-radius: 40px;
+            border: 1px solid #DCE5F0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* ========== MAIN LAYOUT ========== */
+        .dashboard-layout {
+            display: flex;
+            gap: 32px;
+            padding: 28px 40px 40px 40px;
+            flex: 1;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 260px;
+            flex-shrink: 0;
+            background: #F8FAFE;
+            border-radius: 24px;
+            padding: 20px 0;
+            border: 1px solid #E9EDF2;
+            height: fit-content;
+        }
+
+        .sidebar-header {
+            padding: 0 20px 16px 20px;
+            border-bottom: 1px solid #E9EDF2;
+        }
+
+        .sidebar-header h2 {
+            font-size: 20px;
+            font-weight: 800;
+            color: #1A2C3E;
+        }
+
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            margin-top: 12px;
+        }
+
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 20px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            color: #4A627A;
+            transition: 0.2s;
+        }
+
+        .sidebar-link:hover {
+            background: #E8F0FE;
+            color: #002F6C;
+        }
+
+        .sidebar-link.active {
+            background: #E8F0FE;
+            color: #002F6C;
+            border-left: 3px solid #002F6C;
+        }
+
+        .logout-link {
+            margin-top: 28px;
+            border-top: 1px solid #E9EDF2;
+            padding-top: 16px;
+            color: #C62828;
+        }
+
+        /* MAIN CONTENT */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        /* Status Card */
+        .status-card {
+            background: linear-gradient(105deg, #002F6C 0%, #0A4175 100%);
+            border-radius: 20px;
+            padding: 18px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+        }
+
+        .status-left h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .status-left p {
+            font-size: 13px;
+            opacity: 0.85;
+        }
+
+        .status-badge {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 6px 16px;
+            border-radius: 40px;
+            font-weight: 700;
+            font-size: 13px;
+        }
+
+        /* Page Header */
+        .page-header h1 {
+            font-size: 24px;
+            font-weight: 800;
+            color: #1A2C3E;
+            margin-bottom: 6px;
+        }
+
+        .page-header p {
+            font-size: 13px;
+            color: #5E7E9C;
+        }
+
+        /* Form Card */
+        .form-card {
+            background: #FFFFFF;
+            border-radius: 24px;
+            border: 1px solid #E9EDF2;
+            padding: 28px 32px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 24px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .form-group {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #4A627A;
+            margin-bottom: 8px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1.5px solid #E2E9F2;
+            border-radius: 16px;
+            font-size: 14px;
+            font-family: inherit;
+            outline: none;
+            transition: 0.2s;
+            background: #FFFFFF;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: #002F6C;
+            box-shadow: 0 0 0 3px rgba(0, 47, 108, 0.05);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        /* Upload Area */
+        .upload-area {
+            border: 2px dashed #E2E9F2;
+            border-radius: 20px;
+            padding: 32px;
+            text-align: center;
+            background: #F8FAFE;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-top: 8px;
+        }
+
+        .upload-area:hover {
+            border-color: #002F6C;
+            background: #F0F7FF;
+        }
+
+        .upload-icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+        }
+
+        .upload-text {
+            font-size: 14px;
+            color: #6F8FAC;
+        }
+
+        .upload-hint {
+            font-size: 11px;
+            color: #8AA0B8;
+            margin-top: 8px;
+        }
+
+        /* Register Button */
+        .register-btn {
+            background: #002F6C;
+            color: white;
+            border: none;
+            padding: 14px 32px;
+            border-radius: 48px;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.2s;
+            width: 100%;
+            margin-top: 16px;
+        }
+
+        .register-btn:hover {
+            background: #0A4175;
+            transform: translateY(-1px);
+        }
+
+        /* ========== FOOTER ========== */
+        .footer {
+            background: #F8FAFE;
+            border-top: 1px solid #E9EDF2;
+            padding: 24px 40px 20px;
+            width: 100%;
+        }
+
+        .footer-grid {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 32px;
+        }
+
+        .footer-col h4 {
+            font-weight: 700;
+            font-size: 13px;
+            color: #1A405E;
+            margin-bottom: 10px;
+        }
+
+        .footer-col a {
+            display: block;
+            font-size: 11px;
+            color: #48708E;
+            text-decoration: none;
+            margin-bottom: 6px;
+            transition: color 0.2s;
+        }
+
+        .footer-col a:hover {
+            color: #002F6C;
+        }
+
+        .copyright {
+            text-align: center;
+            font-size: 10px;
+            color: #7C95AF;
+            margin-top: 20px;
+            padding-top: 12px;
+            border-top: 1px solid #E9F0F6;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="portal-container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo-area">
+                <div class="logo-icon">B</div>
+                <div class="portal-title">BUSA ONLINE VOTING PORTAL</div>
+            </div>
+            <div class="admin-badge">👤 Administrator</div>
+        </div>
+
+        <!-- Dashboard Layout -->
+        <div class="dashboard-layout">
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <div class="sidebar-header">
+                    <h2>Dashboard</h2>
+                </div>
+                <div class="sidebar-nav">
+                    <a href="#" class="sidebar-link" id="dashboardLink">Dashboard</a>
+                    <a href="#" class="sidebar-link" id="voterDbLink">Voter Database</a>
+                    <a href="#" class="sidebar-link" id="manageElectionsLink">Manage Elections</a>
+                    <a href="#" class="sidebar-link active" id="manageCandidatesLink">Manage Candidates</a>
+                    <a href="#" class="sidebar-link" id="guidelinesLink">Guidelines</a>
+                    <a href="#" class="sidebar-link" id="announcementsLink">Announcements</a>
+                    <a href="#" class="sidebar-link" id="securityLogLink">Security Log</a>
+                    <a href="#" class="sidebar-link logout-link" id="logoutLink">Logout</a>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="main-content">
+                <!-- Status Card -->
+                <div class="status-card">
+                    <div class="status-left">
+                        <h3>Verified Status: Active</h3>
+                        <p>Administrator access with candidate management privileges</p>
+                    </div>
+                    <div class="status-badge">✓ ACTIVE</div>
+                </div>
+
+                <!-- Page Header -->
+                <div class="page-header">
+                    <h1>Add New Candidate</h1>
+                    <p>Initialize new candidate profile for the upcoming election</p>
+                </div>
+
+                <!-- Candidate Registration Form -->
+                <div class="form-card">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Candidate Full Name</label>
+                            <input type="text" id="candidateName" placeholder="Enter full name">
+                        </div>
+                        <div class="form-group">
+                            <label>Position</label>
+                            <select id="candidatePosition">
+                                <option value="Guild President">Guild President</option>
+                                <option value="Vice Guild President">Vice Guild President</option>
+                                <option value="General Secretary">General Secretary</option>
+                                <option value="MP Schools">MP Schools</option>
+                                <option value="Treasurer">Treasurer</option>
+                                <option value="Public Relations Officer">Public Relations Officer</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>School / Faculty</label>
+                            <select id="candidateSchool">
+                                <option value="Faculty of Business">Faculty of Business</option>
+                                <option value="Faculty of Engineering">Faculty of Engineering</option>
+                                <option value="Faculty of Law">Faculty of Law</option>
+                                <option value="Faculty of Health Sciences">Faculty of Health Sciences</option>
+                                <option value="Faculty of Humanities">Faculty of Humanities</option>
+                                <option value="School of Computing">School of Computing</option>
+                                <option value="School of Liberal Arts">School of Liberal Arts</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Campaign Slogan (Optional)</label>
+                            <input type="text" id="candidateSlogan" placeholder="e.g., Together We Rise">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Manifesto Statement</label>
+                        <textarea id="candidateManifesto"
+                            placeholder="Briefly describe candidate's vision and core objectives..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Candidate Photograph</label>
+                        <div class="upload-area" id="uploadArea">
+                            <div class="upload-icon">📸</div>
+                            <div class="upload-text">Click or drag to upload candidate image</div>
+                            <div class="upload-hint">PNG, JPG up to 5MB</div>
+                            <input type="file" id="fileInput" accept="image/*" style="display: none;">
+                        </div>
+                        <div id="fileNameDisplay"
+                            style="font-size: 12px; color: #2E7D32; margin-top: 8px; text-align: center;"></div>
+                    </div>
+
+                    <button class="register-btn" id="registerBtn">REGISTER CANDIDATE →</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>BUSA</h4>
+                    <a href="#">About Union</a>
+                    <a href="#">Election Guidelines</a>
+                    <a href="#">Contact Us</a>
+                </div>
+                <div class="footer-col">
+                    <h4>HELP & CENTER</h4>
+                    <a href="#">FAQ</a>
+                    <a href="#">Live Chat</a>
+                    <a href="#">Support Ticket</a>
+                </div>
+                <div class="footer-col">
+                    <h4>PRIVACY POLICY</h4>
+                    <a href="#">Data Protection</a>
+                    <a href="#">Cookie Policy</a>
+                </div>
+                <div class="footer-col">
+                    <h4>TERMS OF SERVICE</h4>
+                    <a href="#">Voter Agreement</a>
+                    <a href="#">Code of Conduct</a>
+                </div>
+            </div>
+            <div class="copyright">
+                © 2026 BUSA ONLINE VOTING PORTAL. ALL RIGHTS RESERVED
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function () {
+            // Helper to show toast messages
+            function showMessage(message, isError = false) {
+                const existingToast = document.querySelector('.custom-toast');
+                if (existingToast) existingToast.remove();
+
+                const toast = document.createElement('div');
+                toast.className = 'custom-toast';
+                toast.textContent = message;
+                toast.style.position = 'fixed';
+                toast.style.bottom = '30px';
+                toast.style.left = '50%';
+                toast.style.transform = 'translateX(-50%)';
+                toast.style.backgroundColor = isError ? '#C62828' : '#1E5A3C';
+                toast.style.color = 'white';
+                toast.style.padding = '12px 28px';
+                toast.style.borderRadius = '60px';
+                toast.style.fontSize = '14px';
+                toast.style.fontWeight = '500';
+                toast.style.fontFamily = 'Inter, sans-serif';
+                toast.style.zIndex = '1000';
+                toast.style.boxShadow = '0 4px 15px rgba(0,0,0,0.2)';
+                document.body.appendChild(toast);
+
+                setTimeout(() => {
+                    toast.style.opacity = '0';
+                    setTimeout(() => toast.remove(), 300);
+                }, 2800);
+            }
+
+            // File upload handling
+            const uploadArea = document.getElementById('uploadArea');
+            const fileInput = document.getElementById('fileInput');
+            const fileNameDisplay = document.getElementById('fileNameDisplay');
+            let uploadedFileName = '';
+
+            if (uploadArea && fileInput) {
+                uploadArea.addEventListener('click', () => {
+                    fileInput.click();
+                });
+
+                fileInput.addEventListener('change', (e) => {
+                    if (e.target.files && e.target.files[0]) {
+                        const file = e.target.files[0];
+                        uploadedFileName = file.name;
+                        fileNameDisplay.textContent = `✓ ${file.name} selected`;
+                        fileNameDisplay.style.color = '#2E7D32';
+                    } else {
+                        uploadedFileName = '';
+                        fileNameDisplay.textContent = '';
+                    }
+                });
+
+                // Drag and drop functionality
+                uploadArea.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    uploadArea.style.borderColor = '#002F6C';
+                    uploadArea.style.background = '#F0F7FF';
+                });
+
+                uploadArea.addEventListener('dragleave', (e) => {
+                    e.preventDefault();
+                    uploadArea.style.borderColor = '#E2E9F2';
+                    uploadArea.style.background = '#F8FAFE';
+                });
+
+                uploadArea.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    uploadArea.style.borderColor = '#E2E9F2';
+                    uploadArea.style.background = '#F8FAFE';
+                    const files = e.dataTransfer.files;
+                    if (files.length > 0) {
+                        uploadedFileName = files[0].name;
+                        fileNameDisplay.textContent = `✓ ${uploadedFileName} selected`;
+                        fileNameDisplay.style.color = '#2E7D32';
+                    }
+                });
+            }
+
+            // Register candidate
+            function registerCandidate() {
+                const name = document.getElementById('candidateName').value.trim();
+                const position = document.getElementById('candidatePosition').value;
+                const school = document.getElementById('candidateSchool').value;
+                const slogan = document.getElementById('candidateSlogan').value.trim();
+                const manifesto = document.getElementById('candidateManifesto').value.trim();
+
+                if (!name) {
+                    showMessage('⚠️ Please enter the candidate\'s full name', true);
+                    return;
+                }
+                if (!manifesto) {
+                    showMessage('⚠️ Please provide a manifesto statement', true);
+                    return;
+                }
+
+                // Success message
+                showMessage(`✅ Candidate "${name}" has been successfully registered for ${position}.`, false);
+
+                // Optionally reset form (commented out for user convenience)
+                // document.getElementById('candidateName').value = '';
+                // document.getElementById('candidateManifesto').value = '';
+                // document.getElementById('candidateSlogan').value = '';
+                // fileNameDisplay.textContent = '';
+                // uploadedFileName = '';
+            }
+
+            const registerBtn = document.getElementById('registerBtn');
+            if (registerBtn) {
+                registerBtn.addEventListener('click', registerCandidate);
+            }
+
+            // Enter key support for manifesto textarea (Ctrl+Enter)
+            const manifestoInput = document.getElementById('candidateManifesto');
+            if (manifestoInput) {
+                manifestoInput.addEventListener('keydown', (e) => {
+                    if (e.ctrlKey && e.key === 'Enter') {
+                        e.preventDefault();
+                        registerCandidate();
+                    }
+                });
+            }
+
+            // Sidebar navigation (demo)
+            document.getElementById('dashboardLink')?.addEventListener('click', (e) => {
+                e.preventDefault();
+                showMessage('📊 Navigating to Dashboard (demo)', false);
+            });
+            document.getElementById('voterDbLink')?.addEventListener('click', (e) => {
+                e.preventDefault();
+                showMessage('📋 Voter Database: Manage registered voters (demo)', false);
+            });
+            document.getElementById('manageElectionsLink')?.addEventListener('click', (e) => {
+                e.preventDefault();
+                showMessage('🗳️ Manage Elections: Create, schedule, or end elections (demo)', false);
+            });
+            document.getElementById('guidelinesLink')?.addEventListener('click', (e) => {
+                e.preventDefault();
+                showMessage('📘 Election Guidelines: Review and update voting rules (demo)', false);
+            });
+            document.getElementById('announcementsLink')?.addEventListener('click', (e) => {
+                e.preventDefault();
+                showMessage('📢 Announcements: Post public notices to all voters (demo)', false);
+            });
+            document.getElementById('securityLogLink')?.addEventListener('click', (e) => {
+                e.preventDefault();
+                showMessage('🔐 Security Log: View all admin actions and system events (demo)', false);
+            });
+            document.getElementById('logoutLink')?.addEventListener('click', (e) => {
+                e.preventDefault();
+                showMessage('🔒 Logging out of admin panel... Redirecting to login', false);
+            });
+
+            // Footer links demo
+            const footerLinks = document.querySelectorAll('.footer-col a');
+            footerLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    showMessage(`📄 ${link.innerText} (information page)`, false);
+                });
+            });
+        })();
+    </script>
+</body>
+
+</html>

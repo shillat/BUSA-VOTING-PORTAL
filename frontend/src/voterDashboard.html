@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BUSA Online Voting Portal | Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #F5F7FB;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            display: flex;
+            justify-content: center;
+        }
+
+        /* Main app container - matching overall portal width */
+        .app-container {
+            width: 1280px;
+            background: #F9FAFB;
+            min-height: 100vh;
+        }
+
+        /* ========== HEADER / NAVIGATION ========== */
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 40px;
+            background: white;
+            border-bottom: 1px solid #E9EDF2;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            background: #0B2F5C;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            font-weight: 800;
+            font-size: 22px;
+            color: white;
+        }
+
+        .logo-text {
+            font-weight: 700;
+            font-size: 16px;
+            color: #1F2A44;
+            background: #F0F3F8;
+            padding: 5px 14px;
+            border-radius: 30px;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 32px;
+        }
+
+        .nav-item {
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            color: #4A5B6E;
+            transition: 0.2s;
+        }
+
+        .nav-item.active {
+            color: #0B2F5C;
+            border-bottom: 2px solid #0B2F5C;
+            padding-bottom: 6px;
+        }
+
+        .nav-item:hover {
+            color: #0B2F5C;
+        }
+
+        /* ========== DASHBOARD LAYOUT ========== */
+        .dashboard-wrapper {
+            display: flex;
+            gap: 32px;
+            padding: 32px 40px;
+        }
+
+        /* SIDEBAR (Left) */
+        .sidebar {
+            width: 280px;
+            background: white;
+            border-radius: 24px;
+            padding: 24px 0;
+            border: 1px solid #E9EDF2;
+            height: fit-content;
+        }
+
+        .sidebar-header {
+            padding: 0 20px 16px 20px;
+            border-bottom: 1px solid #EEF2F6;
+        }
+
+        .sidebar-header h2 {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1F2A44;
+        }
+
+        .sidebar-nav {
+            margin-top: 16px;
+        }
+
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 20px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            color: #4A5B6E;
+            transition: 0.2s;
+        }
+
+        .sidebar-link:hover {
+            background: #F5F9FF;
+            color: #0B2F5C;
+        }
+
+        .sidebar-link i {
+            width: 20px;
+            font-style: normal;
+            font-weight: 600;
+        }
+
+        .logout-link {
+            margin-top: 32px;
+            border-top: 1px solid #EEF2F6;
+            padding-top: 16px;
+            color: #C2410C;
+        }
+
+        /* MAIN CONTENT (Right) */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 28px;
+        }
+
+        /* Welcome Card */
+        .welcome-card {
+            background: linear-gradient(105deg, #0B2F5C 0%, #16456E 100%);
+            border-radius: 24px;
+            padding: 28px 32px;
+            color: white;
+        }
+
+        .welcome-card h3 {
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            opacity: 0.8;
+            margin-bottom: 8px;
+        }
+
+        .welcome-card h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.12);
+            padding: 6px 14px;
+            border-radius: 40px;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .status-badge .dot {
+            width: 8px;
+            height: 8px;
+            background: #2DCC70;
+            border-radius: 50%;
+        }
+
+        /* Info Row (Status, Campus, Category) */
+        .info-strip {
+            display: flex;
+            gap: 40px;
+            background: white;
+            border-radius: 20px;
+            padding: 20px 28px;
+            border: 1px solid #E9EDF2;
+            flex-wrap: wrap;
+        }
+
+        .info-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .info-label {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #7A8B9F;
+        }
+
+        .info-value {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1F2A44;
+        }
+
+        .verify-badge {
+            background: #E9F7EF;
+            color: #1E7B48;
+            padding: 4px 12px;
+            border-radius: 40px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-block;
+            width: fit-content;
+        }
+
+        /* Two columns for Active Elections & Security Log */
+        .two-col-grid {
+            display: flex;
+            gap: 28px;
+        }
+
+        /* Cards common */
+        .card {
+            background: white;
+            border-radius: 24px;
+            border: 1px solid #E9EDF2;
+            overflow: hidden;
+            flex: 1;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 24px 12px 24px;
+            border-bottom: 1px solid #EEF2F6;
+        }
+
+        .card-header h3 {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1F2A44;
+        }
+
+        .view-link {
+            font-size: 13px;
+            color: #3F7E9C;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .card-content {
+            padding: 8px 0;
+        }
+
+        /* Election item */
+        .election-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 24px;
+            border-bottom: 1px solid #F0F4FA;
+        }
+
+        .election-row:last-child {
+            border-bottom: none;
+        }
+
+        .election-title {
+            font-weight: 700;
+            font-size: 15px;
+            color: #1F2A44;
+            margin-bottom: 4px;
+        }
+
+        .election-deadline {
+            font-size: 12px;
+            color: #C2410C;
+            font-weight: 500;
+        }
+
+        .time-badge {
+            background: #FFF1E5;
+            padding: 6px 14px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #C2410C;
+        }
+
+        /* Security log item */
+        .log-row {
+            padding: 16px 24px;
+            border-bottom: 1px solid #F0F4FA;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .log-row:last-child {
+            border-bottom: none;
+        }
+
+        .log-title {
+            font-weight: 600;
+            font-size: 14px;
+            color: #1F2A44;
+            margin-bottom: 4px;
+        }
+
+        .log-meta {
+            font-size: 12px;
+            color: #7E8C9E;
+        }
+
+        .log-time {
+            font-size: 11px;
+            color: #7E8C9E;
+            text-align: right;
+            white-space: nowrap;
+            margin-left: 12px;
+        }
+
+        /* FOOTER */
+        .footer {
+            background: white;
+            border-top: 1px solid #E9EDF2;
+            padding: 32px 40px 28px;
+            margin-top: 20px;
+        }
+
+        .footer-grid {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 32px;
+        }
+
+        .footer-col h4 {
+            font-weight: 700;
+            font-size: 14px;
+            color: #283B4C;
+            margin-bottom: 12px;
+        }
+
+        .footer-col a {
+            display: block;
+            font-size: 12px;
+            color: #5C6F87;
+            text-decoration: none;
+            margin-bottom: 8px;
+        }
+
+        .copyright {
+            text-align: center;
+            font-size: 11px;
+            color: #7C8EA6;
+            margin-top: 28px;
+            padding-top: 16px;
+            border-top: 1px solid #EDF2F8;
+        }
+
+        button {
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Header with LOGO and nav -->
+        <div class="top-bar">
+            <div class="logo-area">
+                <div class="logo-icon">B</div>
+                <div class="logo-text">BUSA ONLINE VOTING PORTAL</div>
+            </div>
+            <div class="nav-menu">
+                <a href="#" class="nav-item">HOME</a>
+                <a href="#" class="nav-item active">VOTER PANEL</a>
+                <a href="#" class="nav-item">ADMIN PANEL</a>
+            </div>
+        </div>
+
+        <!-- Dashboard area: SIDEBAR + MAIN -->
+        <div class="dashboard-wrapper">
+            <!-- LEFT SIDEBAR (Profile, Cast Vote, Review and Confirm, Rating, Logout) -->
+            <div class="sidebar">
+                <div class="sidebar-header">
+                    <h2>Dashboard</h2>
+                </div>
+                <div class="sidebar-nav">
+                    <a href="#" class="sidebar-link" id="profileLink"><i>👤</i> Profile</a>
+                    <a href="#" class="sidebar-link" id="castVoteLink"><i>🗳️</i> Cast Vote</a>
+                    <a href="#" class="sidebar-link" id="reviewLink"><i>📋</i> Review and Confirm</a>
+                    <a href="#" class="sidebar-link" id="ratingLink"><i>⭐</i> Rating</a>
+                    <a href="#" class="sidebar-link logout-link" id="logoutLink"><i>🚪</i> Logout</a>
+                </div>
+            </div>
+
+            <!-- RIGHT MAIN CONTENT -->
+            <div class="main-content">
+                <!-- Welcome Card -->
+                <div class="welcome-card">
+                    <h3>Welcome back,</h3>
+                    <h1>Kwesi Arthur</h1>
+                    <div class="status-badge">
+                        <span class="dot"></span>
+                        <span>Active Elections</span>
+                    </div>
+                </div>
+
+                <!-- STATUS + CAMPUS + CATEGORY row -->
+                <div class="info-strip">
+                    <div class="info-item">
+                        <div class="info-label">STATUS</div>
+                        <div class="info-value"><span class="verify-badge">✓ Verified</span></div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">CAMPUS</div>
+                        <div class="info-value">Main Campus</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">CATEGORY</div>
+                        <div class="info-value">Regular Student</div>
+                    </div>
+                </div>
+
+                <!-- Active Elections + Security Log (two columns) -->
+                <div class="two-col-grid">
+                    <!-- Active Elections Card -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Active Elections</h3>
+                            <a href="#" class="view-link" id="viewAllElections">View all →</a>
+                        </div>
+                        <div class="card-content">
+                            <div class="election-row">
+                                <div>
+                                    <div class="election-title">BUSA Executive Council</div>
+                                    <div class="election-deadline">Closes in 14 hours</div>
+                                </div>
+                                <div class="time-badge">14h left</div>
+                            </div>
+                            <div class="election-row">
+                                <div>
+                                    <div class="election-title">Departmental Reps</div>
+                                    <div class="election-deadline">Closes in 2 days</div>
+                                </div>
+                                <div class="time-badge">2d left</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Security Log Card -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Security Log</h3>
+                        </div>
+                        <div class="card-content">
+                            <div class="log-row">
+                                <div>
+                                    <div class="log-title">Dashboard Access</div>
+                                    <div class="log-meta">IP: 192.168.1.1</div>
+                                </div>
+                                <div class="log-time">Today, 10:42 AM</div>
+                            </div>
+                            <div class="log-row">
+                                <div>
+                                    <div class="log-title">Viewed Portfolios</div>
+                                    <div class="log-meta">Main Campus Library</div>
+                                </div>
+                                <div class="log-time">Yesterday, 04:15 PM</div>
+                            </div>
+                            <div class="log-row">
+                                <div>
+                                    <div class="log-title">Account Login</div>
+                                    <div class="log-meta">Ongoing Verification</div>
+                                </div>
+                                <div class="log-time">Yesterday, 04:10 PM • Mobile App</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>BUSA</h4>
+                    <a href="#">About Union</a>
+                    <a href="#">Election Guidelines</a>
+                    <a href="#">Contact Us</a>
+                </div>
+                <div class="footer-col">
+                    <h4>HELP & SUPPORT</h4>
+                    <a href="#">FAQ</a>
+                    <a href="#">Live Chat</a>
+                    <a href="#">Support Ticket</a>
+                </div>
+                <div class="footer-col">
+                    <h4>PRIVACY POLICY</h4>
+                    <a href="#">Data Protection</a>
+                    <a href="#">Cookie Policy</a>
+                </div>
+                <div class="footer-col">
+                    <h4>TERMS OF SERVICE</h4>
+                    <a href="#">Voter Agreement</a>
+                    <a href="#">Code of Conduct</a>
+                </div>
+            </div>
+            <div class="copyright">
+                © 2026 BUSA ONLINE VOTING PORTAL. ALL RIGHTS RESERVED.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Toast/demo interactions (non-intrusive)
+        (function () {
+            function showMessage(msg, isError = false) {
+                const existing = document.querySelector('.demo-toast');
+                if (existing) existing.remove();
+                const toast = document.createElement('div');
+                toast.className = 'demo-toast';
+                toast.textContent = msg;
+                toast.style.position = 'fixed';
+                toast.style.bottom = '30px';
+                toast.style.left = '50%';
+                toast.style.transform = 'translateX(-50%)';
+                toast.style.backgroundColor = isError ? '#C2410C' : '#0B2F5C';
+                toast.style.color = 'white';
+                toast.style.padding = '10px 24px';
+                toast.style.borderRadius = '40px';
+                toast.style.fontSize = '13px';
+                toast.style.fontWeight = '500';
+                toast.style.fontFamily = 'Inter, sans-serif';
+                toast.style.zIndex = '2000';
+                toast.style.boxShadow = '0 4px 10px rgba(0,0,0,0.1)';
+                document.body.appendChild(toast);
+                setTimeout(() => toast.remove(), 2600);
+            }
+
+            // Sidebar interactions
+            document.getElementById('profileLink')?.addEventListener('click', (e) => {
+                e.preventDefault();
+                showMessage('👤 Viewing your voter profile (demo)');
+            });
+            document.getElementById('castVoteLink')?.addEventListener('click', (e) => {
+                e.preventDefault();
+                showMessage('🗳️ Casting your ballot — redirect to voting interface');
+            });
+            document.getElementById('reviewLink')?.addEventListener('click', (e) => {
+                e.preventDefault();
+                showMessage('📋 Review and confirm your selections before final vote');
+            });
+            document.getElementById('ratingLink')?.addEventListener('click', (e) => {
+                e.preventDefault();
+                showMessage('⭐ Rating & feedback: your voice matters');
+            });
+            document.getElementById('logoutLink')?.addEventListener('click', (e) => {
+                e.preventDefault();
+                showMessage('🔒 Logging out. Redirecting to home...');
+            });
+            document.getElementById('viewAllElections')?.addEventListener('click', (e) => {
+                e.preventDefault();
+                showMessage('📅 Showing all active elections');
+            });
+
+            // nav top links demo
+            document.querySelectorAll('.nav-item').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    showMessage(`🔁 Navigating to ${link.innerText} section (demo)`);
+                });
+            });
+            // footer links demo
+            document.querySelectorAll('.footer-col a').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    showMessage(`ℹ️ More info about ${link.innerText}`);
+                });
+            });
+        })();
+    </script>
+</body>
+
+</html>

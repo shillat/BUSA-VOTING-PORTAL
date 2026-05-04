@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BUSA Online Voting Portal | Administrator Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Body – exact spec */
+        body {
+            position: relative;
+            width: 1280px;
+            height: 1154px;
+            background: #F3FAFF;
+            font-family: 'Inter', 'Public Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+            margin: 0 auto;
+            overflow-x: hidden;
+        }
+
+        /* Main container */
+        .portal-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ========== HEADER / TOP NAVIGATION ========== */
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 40px;
+            background: #FFFFFF;
+            border-bottom: 1px solid #E2EAF2;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .logo-icon {
+            background: #002F6C;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 24px;
+            color: white;
+        }
+
+        .portal-title {
+            font-weight: 700;
+            font-size: 18px;
+            letter-spacing: -0.2px;
+            color: #0B2B44;
+            background: #F0F7FF;
+            padding: 5px 18px;
+            border-radius: 40px;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 32px;
+        }
+
+        .nav-item {
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            color: #4A627A;
+            transition: 0.2s;
+        }
+
+        .nav-item:hover {
+            color: #002F6C;
+        }
+
+        .nav-item.active {
+            color: #002F6C;
+            border-bottom: 2px solid #002F6C;
+            padding-bottom: 6px;
+        }
+
+        .admin-header-badge {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: #F0F7FF;
+            padding: 6px 18px;
+            border-radius: 40px;
+        }
+
+        .admin-header-badge span {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1F2A44;
+        }
+
+        /* ========== MAIN LAYOUT ========== */
+        .dashboard-layout {
+            display: flex;
+            gap: 32px;
+            padding: 28px 40px 32px 40px;
+            flex: 1;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 260px;
+            flex-shrink: 0;
+            background: #FFFFFF;
+            border-radius: 24px;
+            padding: 20px 0;
+            border: 1px solid #E2EAF2;
+            height: fit-content;
+        }
+
+        .sidebar-header {
+            padding: 0 20px 16px 20px;
+            border-bottom: 1px solid #EEF3F8;
+        }
+
+        .sidebar-header h2 {
+            font-size: 20px;
+            font-weight: 800;
+            color: #1A2C3E;
+        }
+
+        .sidebar-welcome {
+            font-size: 13px;
+            color: #6F8FAC;
+            margin-top: 6px;
+        }
+
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            margin-top: 12px;
+        }
+
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 20px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            color: #4A627A;
+            transition: 0.2s;
+        }
+
+        .sidebar-link:hover {
+            background: #F0F7FF;
+            color: #002F6C;
+        }
+
+        .sidebar-link.active {
+            background: #E8F0FE;
+            color: #002F6C;
+            border-left: 3px solid #002F6C;
+        }
+
+        .logout-link {
+            margin-top: 28px;
+            border-top: 1px solid #EEF3F8;
+            padding-top: 16px;
+            color: #C62828;
+        }
+
+        /* MAIN CONTENT */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        /* Welcome + Status Card */
+        .welcome-status {
+            background: linear-gradient(105deg, #002F6C 0%, #0A4175 100%);
+            border-radius: 20px;
+            padding: 18px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+        }
+
+        .welcome-text h3 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .welcome-text p {
+            font-size: 13px;
+            opacity: 0.85;
+        }
+
+        .status-badge {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 6px 16px;
+            border-radius: 40px;
+            font-weight: 700;
+            font-size: 13px;
+        }
+
+        /* Stats Row */
+        .stats-row {
+            display: flex;
+            gap: 20px;
+        }
+
+        .stat-card {
+            background: #FFFFFF;
+            border-radius: 20px;
+            padding: 18px 24px;
+            border: 1px solid #E2EAF2;
+            flex: 1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .stat-info h4 {
+            font-size: 13px;
+            font-weight: 600;
+            color: #6F8FAC;
+            margin-bottom: 6px;
+        }
+
+        .stat-number {
+            font-size: 32px;
+            font-weight: 800;
+            color: #1A2C3E;
+        }
+
+        .health-percent {
+            font-size: 32px;
+            font-weight: 800;
+            color: #2E7D32;
+        }
+
+        .health-note {
+            font-size: 11px;
+            color: #8AA0B8;
+            margin-top: 4px;
+        }
+
+        /* Two Column Layout */
+        .two-col-grid {
+            display: flex;
+            gap: 24px;
+        }
+
+        .col-card {
+            background: #FFFFFF;
+            border-radius: 20px;
+            border: 1px solid #E2EAF2;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 24px;
+            border-bottom: 1px solid #EEF3F8;
+        }
+
+        .card-header h3 {
+            font-size: 16px;
+            font-weight: 800;
+            color: #1A2C3E;
+        }
+
+        .view-link {
+            font-size: 12px;
+            color: #3F7E9C;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        /* Active Elections Table */
+        .elections-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .elections-table th {
+            text-align: left;
+            padding: 12px 24px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #6F8FAC;
+            background: #FAFCFE;
+        }
+
+        .elections-table td {
+            padding: 14px 24px;
+            border-top: 1px solid #EEF3F8;
+            font-size: 13px;
+            color: #1A2C3E;
+        }
+
+        .status-open {
+            background: #E8F5E9;
+            color: #2E7D32;
+            padding: 4px 12px;
+            border-radius: 40px;
+            font-size: 11px;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .status-pending {
+            background: #FFF3E0;
+            color: #E67E22;
+            padding: 4px 12px;
+            border-radius: 40px;
+            font-size: 11px;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .action-manage {
+            background: #F0F4F9;
+            border: none;
+            padding: 5px 14px;
+            border-radius: 40px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* Security Status List */
+        .security-list {
+            padding: 8px 0;
+        }
+
+        .security-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 24px;
+            border-bottom: 1px solid #EEF3F8;
+        }
+
+        .security-item:last-child {
+            border-bottom: none;
+        }
+
+        .security-label {
+            font-weight: 600;
+            font-size: 13px;
+            color: #4A627A;
+        }
+
+        .security-value {
+            font-weight: 700;
+            font-size: 13px;
+            color: #1A2C3E;
+        }
+
+        .security-value.encrypted {
+            color: #2E7D32;
+        }
+
+        /* Recent Activity */
+        .activity-list {
+            padding: 8px 0;
+        }
+
+        .activity-item {
+            padding: 14px 24px;
+            border-bottom: 1px solid #EEF3F8;
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-title {
+            font-weight: 600;
+            font-size: 13px;
+            color: #1A2C3E;
+            margin-bottom: 4px;
+        }
+
+        .activity-meta {
+            font-size: 11px;
+            color: #8AA0B8;
+        }
+
+        /* ========== FOOTER ========== */
+        .footer {
+            background: #FFFFFF;
+            border-top: 1px solid #E2EAF2;
+            padding: 24px 40px 20px;
+            width: 100%;
+        }
+
+        .footer-grid {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 32px;
+        }
+
+        .footer-col h4 {
+            font-weight: 700;
+            font-size: 13px;
+            color: #1A405E;
+            margin-bottom: 10px;
+        }
+
+        .footer-col a {
+            display: block;
+            font-size: 11px;
+            color: #48708E;
+            text-decoration: none;
+            margin-bottom: 6px;
+            transition: color 0.2s;
+        }
+
+        .footer-col a:hover {
+            color: #002F6C;
+        }
+
+        .copyright {
+            text-align: center;
+            font-size: 10px;
+            color: #7C95AF;
+            margin-top: 20px;
+            padding-top: 12px;
+            border-top: 1px solid #E9F0F6;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="portal-container">
+        <!-- Top Navigation -->
+        <div class="top-nav">
+            <div class="logo-area">
+                <div class="logo-icon">B</div>
+                <div class="portal-title">BUSA ONLINE VOTING PORTAL</div>
+            </div>
+            <div class="nav-menu">
+                <a href="#" class="nav-item">Home</a>
+                <a href="#" class="nav-item active">Voter Panel</a>
+                <a href="#" class="nav-item">Admin Panel</a>
+            </div>
+            <div class="admin-header-badge">
+                <span>👤 Administrator</span>
+            </div>
+        </div>
+
+        <!-- Dashboard Layout -->
+        <div class="dashboard-layout">
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <div class="sidebar-header">
+                    <h2>Dashboard</h2>
+                    <div class="sidebar-welcome">Welcome Admin</div>
+                </div>
+                <div class="sidebar-nav">
+                    <a href="#" class="sidebar-link active" id="dashboardLink">Dashboard</a>
+                    <a href="#" class="sidebar-link" id="voterDbLink">Voter Database</a>
+                    <a href="#" class="sidebar-link" id="manageElectionsLink">Manage Elections</a>
+                    <a href="#" class="sidebar-link" id="manageCandidatesLink">Manage Candidates</a>
+                    <a href="#" class="sidebar-link" id="guidelinesLink">Guidelines</a>
+                    <a href="#" class="sidebar-link" id="announcementsLink">Announcements</a>
+                    <a href="#" class="sidebar-link" id="securityLogLink">Security Log</a>
+                    <a href="#" class="sidebar-link logout-link" id="logoutLink">Logout</a>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="main-content">
+                <!-- Welcome Status Card -->
+                <div class="welcome-status">
+                    <div class="welcome-text">
+                        <h3>Verified Status: Active</h3>
+                        <p>Administrator access with full privileges</p>
+                    </div>
+                    <div class="status-badge">✓ ACTIVE</div>
+                </div>
+
+                <!-- Stats Row -->
+                <div class="stats-row">
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <h4>Total Registered Voters</h4>
+                            <div class="stat-number">12,842</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <h4>Active Elections</h4>
+                            <div class="stat-number">3</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <h4>System Health</h4>
+                            <div class="health-percent">100%</div>
+                            <div class="health-note">All protocols nominal</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Two Column Layout: Active Elections + Security Status -->
+                <div class="two-col-grid">
+                    <!-- Active Elections Table -->
+                    <div class="col-card">
+                        <div class="card-header">
+                            <h3>Active Elections</h3>
+                            <a href="#" class="view-link" id="viewAllElections">View All →</a>
+                        </div>
+                        <table class="elections-table">
+                            <thead>
+                                <tr>
+                                    <th>Election Title</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>BUSA Presidential Run-off</td>
+                                    <td><span class="status-open">Open</span></td>
+                                    <td><button class="action-manage"
+                                            data-election="BUSA Presidential Run-off">Manage</button></td>
+                                </tr>
+                                <tr>
+                                    <td>Department of Arts Senate</td>
+                                    <td><span class="status-pending">Pending</span></td>
+                                    <td><button class="action-manage"
+                                            data-election="Department of Arts Senate">Manage</button></td>
+                                </tr>
+                                <tr>
+                                    <td>Faculty of Law Referendum</td>
+                                    <td><span class="status-open">Open</span></td>
+                                    <td><button class="action-manage"
+                                            data-election="Faculty of Law Referendum">Manage</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Security Status Card -->
+                    <div class="col-card">
+                        <div class="card-header">
+                            <h3>Security Status</h3>
+                        </div>
+                        <div class="security-list">
+                            <div class="security-item"><span class="security-label">SSL Protocol</span><span
+                                    class="security-value encrypted">🔒 ENCRYPTED</span></div>
+                            <div class="security-item"><span class="security-label">Blockchain Hash</span><span
+                                    class="security-value">✓ VERIFIED</span></div>
+                            <div class="security-item"><span class="security-label">MFA Validation</span><span
+                                    class="security-value">🟢 ACTIVE</span></div>
+                            <div class="security-item"><span class="security-label">System Audit</span><span
+                                    class="security-value">📋 ONGOING</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Activity Card -->
+                <div class="col-card">
+                    <div class="card-header">
+                        <h3>Recent Activity</h3>
+                    </div>
+                    <div class="activity-list">
+                        <div class="activity-item">
+                            <div class="activity-title">New candidate approved • John Doe - Presidential</div>
+                            <div class="activity-meta">12:45 PM | Today</div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-title">Admin Login Attempt • IP: 192.168.1.104</div>
+                            <div class="activity-meta">10:12 AM | Today</div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-title">Weekly Backup Completed • Stored on Node #4</div>
+                            <div class="activity-meta">03:00 AM | Today</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>BUSA</h4>
+                    <a href="#">About Union</a>
+                    <a href="#">Election Guidelines</a>
+                    <a href="#">Contact Us</a>
+                </div>
+                <div class="footer-col">
+                    <h4>HELP & CENTER</h4>
+                    <a href="#">FAQ</a>
+                    <a href="#">Live Chat</a>
+                    <a href="#">Support Ticket</a>
+                </div>
+                <div class="footer-col">
+                    <h4>PRIVACY POLICY</h4>
+                    <a href="#">Data Protection</a>
+                    <a href="#">Cookie Policy</a>
+                </div>
+                <div class="footer-col">
+                    <h4>TERMS OF SERVICE</h4>
+                    <a href="#">Voter Agreement</a>
+                    <a href="#">Code of Conduct</a>
+                </div>
+            </div>
+            <div class="copyright">
+                © 2026 BUSA ONLINE VOTING PORTAL. ALL RIGHTS RESERVED
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function () {
+            // Toast notification system
+            function showMessage(message, isError = false) {
+                const existingToast = document.querySelector('.custom-toast');
+                if (existingToast) existingToast.remove();
+
+                const toast = document.createElement('div');
+                toast.className = 'custom-toast';
+                toast.textContent = message;
+                toast.style.position = 'fixed';
+                toast.style.bottom = '30px';
+                toast.style.left = '50%';
+                toast.style.transform = 'translateX(-50%)';
+                toast.style.backgroundColor = isError ? '#C62828' : '#1E5A3C';
+                toast.style.color = 'white';
+                toast.style.padding = '12px 28px';
+                toast.style.borderRadius = '60px';
+                toast.style.fontSize = '14px';
+                toast.style.fontWeight = '500';
+                toast.style.fontFamily = 'Inter, sans-serif';
+                toast.style.zIndex = '1000';
+                toast.style.boxShadow = '0 4px 15px rgba(0,0,0,0.2)';
+                document.body.appendChild(toast);
+
+                setTimeout(() => {
+                    toast.style.opacity = '0';
+                    setTimeout(() => toast.remove(), 300);
+                }, 2800);
+            }
+
+            // Manage buttons for elections
+            const manageBtns = document.querySelectorAll('.action-manage');
+            manageBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const election = btn.getAttribute('data-election');
+                    showMessage(`⚙️ Managing election: ${election} (demo: settings panel would open)`, false);
+                });
+            });
+
+            // View All Elections link
+            const viewAllElections = document.getElementById('viewAllElections');
+            if (viewAllElections) {
+                viewAllElections.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    showMessage('📅 Showing all active and upcoming elections', false);
+                });
+            }
+
+            // Sidebar navigation (demo)
+            document.getElementById('dashboardLink')?.addEventListener('click', (e) => {
+                e.preventDefault();
+                showMessage('📊 You are already on the Dashboard', false);
+            });
+            document.getElementById('voterDbLink')?.addEventListener('click', (e) => {
+                e.preventDefault();
+                showMessage('📋 Voter Database: Manage registered voters (demo)', false);
+            });
+            document.getElementById('manageElectionsLink')?.addEventListener('click', (e) => {
+                e.preventDefault();
+                showMessage('🗳️ Manage Elections: Create, schedule, or end elections (demo)', false);
+            });
+            document.getElementById('manageCandidatesLink')?.addEventListener('click', (e) => {
+                e.preventDefault();
+                showMessage('👥 Manage Candidates: Add, edit, or approve candidates (demo)', false);
+            });
+            document.getElementById('guidelinesLink')?.addEventListener('click', (e) => {
+                e.preventDefault();
+                showMessage('📘 Election Guidelines: Review and update voting rules (demo)', false);
+            });
+            document.getElementById('announcementsLink')?.addEventListener('click', (e) => {
+                e.preventDefault();
+                showMessage('📢 Announcements: Post public notices to all voters (demo)', false);
+            });
+            document.getElementById('securityLogLink')?.addEventListener('click', (e) => {
+                e.preventDefault();
+                showMessage('🔐 Security Log: View all admin actions and system events (demo)', false);
+            });
+            document.getElementById('logoutLink')?.addEventListener('click', (e) => {
+                e.preventDefault();
+                showMessage('🔒 Logging out of admin panel... Redirecting to login', false);
+            });
+
+            // Top navigation demo
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => {
+                item.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    showMessage(`🔗 Navigating to ${item.innerText} section (demo)`, false);
+                });
+            });
+
+            // Footer links demo
+            const footerLinks = document.querySelectorAll('.footer-col a');
+            footerLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    showMessage(`📄 ${link.innerText} (information page)`, false);
+                });
+            });
+
+            // Activity items click
+            const activityItems = document.querySelectorAll('.activity-item');
+            activityItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    const title = item.querySelector('.activity-title')?.innerText || 'Activity';
+                    showMessage(`ℹ️ Details: ${title.substring(0, 50)}`, false);
+                });
+            });
+        })();
+    </script>
+</body>
+
+</html>

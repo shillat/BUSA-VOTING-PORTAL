@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BUSA Online Voting Portal | Administrator - Security & Audit Log</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Body – exact spec */
+        body {
+            position: relative;
+            width: 1280px;
+            height: 1285px;
+            background: #FFFFFF;
+            font-family: 'Inter', 'Public Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+            margin: 0 auto;
+            overflow-x: hidden;
+        }
+
+        /* Main container */
+        .portal-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ========== HEADER ========== */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            background: #FFFFFF;
+            border-bottom: 1px solid #E9EDF2;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .logo-icon {
+            background: #002F6C;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 24px;
+            color: white;
+        }
+
+        .portal-title {
+            font-weight: 700;
+            font-size: 18px;
+            letter-spacing: -0.2px;
+            color: #0B2B44;
+            background: #F8FAFE;
+            padding: 5px 18px;
+            border-radius: 40px;
+        }
+
+        .admin-badge {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1F2A44;
+            background: #F0F7FF;
+            padding: 6px 18px;
+            border-radius: 40px;
+            border: 1px solid #DCE5F0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* ========== MAIN LAYOUT ========== */
+        .dashboard-layout {
+            display: flex;
+            gap: 32px;
+            padding: 28px 40px 32px 40px;
+            flex: 1;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 260px;
+            flex-shrink: 0;
+            background: #FFFFFF;
+            border-radius: 24px;
+            padding: 20px 0;
+            border: 1px solid #E9EDF2;
+            height: fit-content;
+        }
+
+        .sidebar-header {
+            padding: 0 20px 16px 20px;
+            border-bottom: 1px solid #F0F4F9;
+        }
+
+        .sidebar-header h2 {
+            font-size: 20px;
+            font-weight: 800;
+            color: #1A2C3E;
+        }
+
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            margin-top: 12px;
+        }
+
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 20px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            color: #4A627A;
+            transition: 0.2s;
+        }
+
+        .sidebar-link:hover {
+            background: #F0F7FF;
+            color: #002F6C;
+        }
+
+        .sidebar-link.active {
+            background: #E8F0FE;
+            color: #002F6C;
+            border-left: 3px solid #002F6C;
+        }
+
+        .logout-link {
+            margin-top: 28px;
+            border-top: 1px solid #F0F4F9;
+            padding-top: 16px;
+            color: #C62828;
+        }
+
+        /* MAIN CONTENT */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        /* Status Card */
+        .status-card {
+            background: linear-gradient(105deg, #002F6C 0%, #0A4175 100%);
+            border-radius: 20px;
+            padding: 18px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+        }
+
+        .status-left h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .status-left p {
+            font-size: 13px;
+            opacity: 0.85;
+        }
+
+        .status-badge {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 6px 16px;
+            border-radius: 40px;
+            font-weight: 700;
+            font-size: 13px;
+        }
+
+        /* Page Header */
+        .page-header h1 {
+            font-size: 24px;
+            font-weight: 800;
+            color: #1A2C3E;
+            margin-bottom: 4px;
+        }
+
+        .page-header p {
+            font-size: 13px;
+            color: #5E7E9C;
+        }
+
+        /* Filter Section */
+        .filter-card {
+            background: #F8FAFE;
+            border-radius: 20px;
+            padding: 20px 24px;
+            border: 1px solid #E9EDF2;
+        }
+
+        .filter-row {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+
+        .filter-group {
+            flex: 1;
+            min-width: 180px;
+        }
+
+        .filter-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: #4A627A;
+            margin-bottom: 6px;
+        }
+
+        .filter-group input,
+        .filter-group select {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1.5px solid #E2E9F2;
+            border-radius: 14px;
+            font-size: 13px;
+            font-family: inherit;
+            background: white;
+            outline: none;
+            transition: 0.2s;
+        }
+
+        .filter-group input:focus,
+        .filter-group select:focus {
+            border-color: #002F6C;
+        }
+
+        .apply-btn {
+            background: #002F6C;
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-top: 22px;
+        }
+
+        .apply-btn:hover {
+            background: #0A4175;
+        }
+
+        /* Audit Log Table */
+        .table-card {
+            background: #FFFFFF;
+            border-radius: 20px;
+            border: 1px solid #E9EDF2;
+            overflow: hidden;
+        }
+
+        .table-header {
+            padding: 16px 24px;
+            border-bottom: 1px solid #F0F4F9;
+            background: #F8FAFE;
+        }
+
+        .table-header h3 {
+            font-size: 16px;
+            font-weight: 800;
+            color: #1A2C3E;
+        }
+
+        .audit-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .audit-table th {
+            text-align: left;
+            padding: 14px 20px;
+            font-size: 12px;
+            font-weight: 700;
+            color: #6F8FAC;
+            background: #FAFCFE;
+            border-bottom: 1px solid #F0F4F9;
+        }
+
+        .audit-table td {
+            padding: 14px 20px;
+            border-bottom: 1px solid #F0F4F9;
+            font-size: 13px;
+            color: #1A2C3E;
+            vertical-align: middle;
+        }
+
+        .audit-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .status-success {
+            background: #E8F5E9;
+            color: #2E7D32;
+            padding: 4px 12px;
+            border-radius: 40px;
+            font-size: 11px;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .status-attempted {
+            background: #FFEBEE;
+            color: #C62828;
+            padding: 4px 12px;
+            border-radius: 40px;
+            font-size: 11px;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 24px;
+            border-top: 1px solid #F0F4F9;
+        }
+
+        .pagination-info {
+            font-size: 12px;
+            color: #6F8FAC;
+        }
+
+        .pagination-controls {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .page-btn {
+            background: white;
+            border: 1px solid #E2E9F2;
+            padding: 6px 14px;
+            border-radius: 40px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .page-btn:hover {
+            background: #F0F7FF;
+            border-color: #002F6C;
+        }
+
+        .page-btn.active {
+            background: #002F6C;
+            color: white;
+            border-color: #002F6C;
+        }
+
+        .page-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* ========== FOOTER ========== */
+        .footer {
+            background: #FFFFFF;
+            border-top: 1px solid #E9EDF2;
+            padding: 20px 40px 18px;
+            width: 100%;
+        }
+
+        .footer-grid {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 32px;
+        }
+
+        .footer-col h4 {
+            font-weight: 700;
+            font-size: 12px;
+            color: #1A405E;
+            margin-bottom: 8px;
+        }
+
+        .footer-col a {
+            display: block;
+            font-size: 10px;
+            color: #48708E;
+            text-decoration: none;
+            margin-bottom: 5px;
+            transition: color 0.2s;
+        }
+
+        .footer-col a:hover {
+            color: #002F6C;
+        }
+
+        .copyright {
+            text-align: center;
+            font-size: 10px;
+            color: #7C95AF;
+            margin-top: 16px;
+            padding-top: 10px;
+            border-top: 1px solid #E9F0F6;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="portal-container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo-area">
+                <div class="logo-icon">B</div>
+                <div class="portal-title">BUSA ONLINE VOTING PORTAL</div>
+            </div>
+            <div class="admin-badge">👤 Administrator • System Integrity</div>
+        </div>
+
+        <!-- Dashboard Layout -->
+        <div class="dashboard-layout">
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <div class="sidebar-header">
+                    <h2>Dashboard</h2>
+                </div>
+                <div class="sidebar-nav">
+                    <a href="#" class="sidebar-link" id="dashboardLink">Dashboard</a>
+                    <a href="#" class="sidebar-link" id="voterDbLink">Voter Database</a>
+                    <a href="#" class="sidebar-link" id="manageElectionsLink">Manage Elections</a>
+                    <a href="#" class="sidebar-link" id="manageCandidatesLink">Manage Candidates</a>
+                    <a href="#" class="sidebar-link" id="guidelinesLink">Guidelines</a>
+                    <a href="#" class="sidebar-link" id="announcementsLink">Announcements</a>
+                    <a href="#" class="sidebar-link active" id="securityLogLink">Security Log</a>
+                    <a href="#" class="sidebar-link logout-link" id="logoutLink">Logout</a>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="main-content">
+                <!-- Status Card -->
+                <div class="status-card">
+                    <div class="status-left">
+                        <h3>Verified Status: Active</h3>
+                        <p>Administrator access with full audit log visibility</p>
+                    </div>
+                    <div class="status-badge">✓ ACTIVE</div>
+                </div>
+
+                <!-- Page Header -->
+                <div class="page-header">
+                    <h1>SECURITY & AUDIT LOG</h1>
+                    <p>Monitor all system activities, user actions, and access attempts</p>
+                </div>
+
+                <!-- Filter Section -->
+                <div class="filter-card">
+                    <div class="filter-row">
+                        <div class="filter-group">
+                            <label>Date Range</label>
+                            <input type="date" id="startDate" placeholder="Start Date">
+                        </div>
+                        <div class="filter-group">
+                            <label>&nbsp;</label>
+                            <input type="date" id="endDate" placeholder="End Date">
+                        </div>
+                        <div class="filter-group">
+                            <label>Action Type</label>
+                            <select id="actionType">
+                                <option value="all">All Actions</option>
+                                <option value="System Login">System Login</option>
+                                <option value="Verified Voter">Verified Voter</option>
+                                <option value="Failed Login Attempt">Failed Login Attempt</option>
+                                <option value="Created Election">Created Election</option>
+                                <option value="Modified Candidate">Modified Candidate</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label>Search Identifier</label>
+                            <input type="text" id="searchIdentifier"
+                                placeholder="Search Admin ID, Voter ID, or IP Address...">
+                        </div>
+                        <div class="filter-group">
+                            <button class="apply-btn" id="applyFiltersBtn">APPLY FILTERS</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Audit Log Table -->
+                <div class="table-card">
+                    <div class="table-header">
+                        <h3>📋 System Audit Trail</h3>
+                    </div>
+                    <table class="audit-table">
+                        <thead>
+                            <tr>
+                                <th>Timestamp</th>
+                                <th>Admin/User</th>
+                                <th>Action Performed</th>
+                                <th>IP Address</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="auditTableBody">
+                            <!-- Dynamic rows -->
+                        </tbody>
+                    </table>
+                    <div class="pagination">
+                        <div class="pagination-info" id="paginationInfo">Showing 1-5 of 128 entries</div>
+                        <div class="pagination-controls" id="paginationControls">
+                            <!-- Pagination buttons injected -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>BUSA</h4>
+                    <a href="#">About Union</a>
+                    <a href="#">Election Guidelines</a>
+                    <a href="#">Contact Us</a>
+                </div>
+                <div class="footer-col">
+                    <h4>HELP & CENTER</h4>
+                    <a href="#">FAQ</a>
+                    <a href="#">Live Chat</a>
+                    <a href="#">Support Ticket</a>
+                </div>
+                <div class="footer-col">
+                    <h4>PRIVACY POLICY</h4>
+                    <a href="#">Data Protection</a>
+                    <a href="#">Cookie Policy</a>
+                </div>
+                <div class="footer-col">
+                    <h4>TERMS OF SERVICE</h4>
+                    <a href="#">Voter Agreement</a>
+                    <a href="#">Code of Conduct</a>
+                </div>
+            </div>
+            <div class="copyright">
+                © 2026 BUSA ONLINE VOTING PORTAL. ALL RIGHTS RESERVED
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function () {
+            // Mock audit log data
+            const allLogs = [
+                { timestamp: "April 14, 2027 • 10:42 AM", user: "Admin_001", action: "System Login", ip: "192.168.1.45", status: "SUCCESS" },
+                { timestamp: "April 14, 2027 • 09:15 AM", user: "registrar_04", action: "Verified Voter: 24/001/BU", ip: "10.0.4.12", status: "SUCCESS" },
+                { timestamp: "April 13, 2027 • 11:58 PM", user: "Unknown", action: "Failed Login Attempt", ip: "45.23.1.202", status: "ATTEMPTED" },
+                { timestamp: "April 13, 2027 • 04:30 PM", user: "Admin_001", action: "Created Election: MP Schools", ip: "192.168.1.45", status: "SUCCESS" },
+                { timestamp: "April 13, 2027 • 02:10 PM", user: "registrar_04", action: "Modified Candidate: John Doe", ip: "10.0.4.12", status: "SUCCESS" },
+                { timestamp: "April 12, 2027 • 08:30 PM", user: "Admin_002", action: "System Login", ip: "192.168.1.67", status: "SUCCESS" },
+                { timestamp: "April 12, 2027 • 03:45 PM", user: "auditor_01", action: "Exported Voter Database", ip: "10.0.4.56", status: "SUCCESS" },
+                { timestamp: "April 11, 2027 • 11:20 AM", user: "Unknown", action: "Failed Login Attempt", ip: "203.0.113.89", status: "ATTEMPTED" }
+            ];
+
+            let filteredLogs = [...allLogs];
+            let currentPage = 0;
+            const rowsPerPage = 5;
+
+            // Helper to show toast messages
+            function showMessage(message, isError = false) {
+                const existingToast = document.querySelector('.custom-toast');
+                if (existingToast) existingToast.remove();
+
+                const toast = document.createElement('div');
+                toast.className = 'custom-toast';
+                toast.textContent = message;
+                toast.style.position = 'fixed';
+                toast.style.bottom = '30px';
+                toast.style.left = '50%';
+                toast.style.transform = 'translateX(-50%)';
+                toast.style.backgroundColor = isError ? '#C62828' : '#1E5A3C';
+                toast.style.color = 'white';
+                toast.style.padding = '12px 28px';
+                toast.style.borderRadius = '60px';
+                toast.style.fontSize = '14px';
+                toast.style.fontWeight = '500';
+                toast.style.fontFamily = 'Inter, sans-serif';
+                toast.style.zIndex = '1000';
+                toast.style.boxShadow = '0 4px 15px rgba(0,0,0,0.2)';
+                document.body.appendChild(toast);
+
+                setTimeout(() => {
+                    toast.style.opacity = '0';
+                    setTimeout(() => toast.remove(), 300);
+                }, 2800);
+            }
+
+            // Render table and pagination
+            function renderTable() {
+                const start = currentPage * rowsPerPage;
+                const paginated = filteredLogs.slice(start, start + rowsPerPage);
+                const tbody = document.getElementById('auditTableBody');
+                if (!tbody) return;
+
+                tbody.innerHTML = '';
+                paginated.forEach(log => {
+                    const row = tbody.insertRow();
+                    row.insertCell(0).innerHTML = log.timestamp;
+                    row.insertCell(1).innerHTML = `<strong>${escapeHtml(log.user)}</strong>`;
+                    row.insertCell(2).innerHTML = escapeHtml(log.action);
+                    row.insertCell(3).innerHTML = log.ip;
+                    const statusClass = log.status === 'SUCCESS' ? 'status-success' : 'status-attempted';
+                    row.insertCell(4).innerHTML = `<span class="${statusClass}">${log.status}</span>`;
+                });
+
+                // Update pagination info
+                const total = filteredLogs.length;
+                const startNum = total === 0 ? 0 : start + 1;
+                const endNum = Math.min(start + rowsPerPage, total);
+                const paginationInfo = document.getElementById('paginationInfo');
+                if (paginationInfo) {
+                    paginationInfo.innerHTML = `Showing ${startNum}-${endNum} of ${total} entries`;
+                }
+
+                // Render pagination controls
+                const totalPages = Math.ceil(total / rowsPerPage);
+                const controlsContainer = document.getElementById('paginationControls');
+                if (controlsContainer) {
+                    controlsContainer.innerHTML = '';
+
+                    // Prev button
+                    const prevBtn = document.createElement('button');
+                    prevBtn.textContent = 'Previous';
+                    prevBtn.className = 'page-btn';
+                    prevBtn.disabled = currentPage === 0;
+                    prevBtn.addEventListener('click', () => {
+                        if (currentPage > 0) {
+                            currentPage--;
+                            renderTable();
+                        }
+                    });
+                    controlsContainer.appendChild(prevBtn);
+
+                    // Page numbers (simple: show up to 5 pages)
+                    const startPage = Math.max(0, currentPage - 2);
+                    const endPage = Math.min(totalPages, startPage + 5);
+                    for (let i = startPage; i < endPage; i++) {
+                        const pageBtn = document.createElement('button');
+                        pageBtn.textContent = (i + 1).toString();
+                        pageBtn.className = 'page-btn';
+                        if (i === currentPage) pageBtn.classList.add('active');
+                        pageBtn.addEventListener('click', () => {
+                            currentPage = i;
+                            renderTable();
+                        });
+                        controlsContainer.appendChild(pageBtn);
+                    }
+
+                    // Next button
+                    const nextBtn = document.createElement('button');
+                    nextBtn.textContent = 'Next';
+                    nextBtn.className = 'page-btn';
+                    nextBtn.disabled = currentPage >= totalPages - 1;
+                    nextBtn.addEventListener('click', () => {
+                        if (currentPage < totalPages - 1) {
+                            currentPage++;
+                            renderTable();
+                        }
+                    });
+                    controlsContainer.appendChild(nextBtn);
+                }
+            }
+
+            function escapeHtml(str) {
+                if (!str) return '';
+                return str.replace(/[&<>]/g, function (m) {
+                    if (m === '&') return '&amp;';
+                    if (m === '<') return '&lt;';
+                    if (m === '>') return '&gt;';
+                    return m;
+                });
+            }
+
+            // Apply filters
+            function applyFilters() {
+                const startDate = document.getElementById('startDate').value;
+                const endDate = document.getElementById('endDate').value;
+                const actionType = document.getElementById('actionType').value;
+                const searchTerm = document.getElementById('searchIdentifier').value.toLowerCase().trim();
+
+                filteredLogs = allLogs.filter(log => {
+                    // Date filter (simplified - check if timestamp contains date range)
+                    let dateMatch = true;
+                    if (startDate && endDate) {
+                        const logDateStr = log.timestamp.split(' •')[0];
+                        const logDate = new Date(logDateStr);
+                        const start = new Date(startDate);
+                        const end = new Date(endDate);
+                        if (logDate < start || logDate > end) dateMatch = false;
+                    }
+
+                    // Action type filter
+                    let actionMatch = true;
+                    if (actionType !== 'all') {
+                        if (!log.action.includes(actionType) && log.action !== actionType) actionMatch = false;
+                    }
+
+                    // Search identifier filter (user, ip, or action)
+                    let searchMatch = true;
+                    if (searchTerm) {
+                        if (!log.user.toLowerCase().includes(searchTerm) &&
+                            !log.ip.toLowerCase().includes(searchTerm) &&
+                            !log.action.toLowerCase().includes(searchTerm)) {
+                            searchMatch = false;
+                        }
+                    }
+
+                    return dateMatch && actionMatch && searchMatch;
+                });
+
+                currentPage = 0;
+                renderTable();
+
+                const resultCount = filteredLogs.length;
+                showMessage(`🔍 Filters applied. Found ${resultCount} matching log entries.`, false);
+            }
+
+            // Reset and show all logs
+            function resetFilters() {
+                document.getElementById('startDate').value = '';
+                document.getElementById('endDate').value = '';
+                document.getElementById('actionType').value = 'all';
+                document.getElementById('searchIdentifier').value = '';
+                filteredLogs = [...allLogs];
+                currentPage = 0;
+                renderTable();
+                showMessage(`📋 Showing all ${filteredLogs.length} audit log entries.`, false);
+            }
+
+            // Apply filters button
+            const applyBtn = document.getElementById('applyFiltersBtn');
+            if (applyBtn) {
+                applyBtn.addEventListener('click', applyFilters);
+            }
+
+            // Clear filters on double-click (optional)
+            const filterCard = document.querySelector('.filter-card');
+            if (filterCard) {
+                // Not adding auto-clear, but provide a subtle way
+            }
+
+            // Sidebar navigation (demo)
+            document.getElementById('dashboardLink')?.addEventListener('click', (e) => {
+                e.preventDefault();
+                showMessage('📊 Navigating to Dashboard (demo)', false);
+            });
+            document.getElementById('voterDbLink')?.addEventListener('click', (e) => {
+                e.preventDefault();
+                showMessage('📋 Voter Database: Manage registered voters (demo)', false);
+            });
+            document.getElementById('manageElectionsLink')?.addEventListener('click', (e) => {
+                e.preventDefault();
+                showMessage('🗳️ Manage Elections: Create, schedule, or end elections (demo)', false);
+            });
+            document.getElementById('manageCandidatesLink')?.addEventListener('click', (e) => {
+                e.preventDefault();
+                showMessage('👥 Manage Candidates: Add, edit, or approve candidates (demo)', false);
+            });
+            document.getElementById('guidelinesLink')?.addEventListener('click', (e) => {
+                e.preventDefault();
+                showMessage('📘 Election Guidelines: Review and update voting rules (demo)', false);
+            });
+            document.getElementById('announcementsLink')?.addEventListener('click', (e) => {
+                e.preventDefault();
+                showMessage('📢 Announcements: Post public notices to all voters (demo)', false);
+            });
+            document.getElementById('logoutLink')?.addEventListener('click', (e) => {
+                e.preventDefault();
+                showMessage('🔒 Logging out of admin panel... Redirecting to login', false);
+            });
+
+            // Footer links demo
+            const footerLinks = document.querySelectorAll('.footer-col a');
+            footerLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    showMessage(`📄 ${link.innerText} (information page)`, false);
+                });
+            });
+
+            // Initial render
+            renderTable();
+        })();
+    </script>
+</body>
+
+</html>

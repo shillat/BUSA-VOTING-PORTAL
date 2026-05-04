@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BUSA Online Voting Portal | Live Election Tally</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Body – exact spec */
+        body {
+            position: relative;
+            width: 1280px;
+            height: 1379px;
+            background: #FFFFFF;
+            font-family: 'Inter', 'Public Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+            margin: 0 auto;
+            overflow-x: hidden;
+        }
+
+        /* Main container */
+        .portal-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ========== HEADER SECTION ========== */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px 48px 20px 48px;
+            border-bottom: 1px solid #EFF3F8;
+            width: 100%;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .logo-icon {
+            background: #002F6C;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 24px;
+            color: white;
+        }
+
+        .portal-title {
+            font-weight: 700;
+            font-size: 18px;
+            letter-spacing: -0.2px;
+            color: #0B2B44;
+            background: #F8FAFE;
+            padding: 5px 18px;
+            border-radius: 40px;
+        }
+
+        .back-link {
+            font-size: 14px;
+            font-weight: 500;
+            color: #2A6F8F;
+            text-decoration: none;
+            border-bottom: 1px dashed #B9D4E3;
+            padding-bottom: 2px;
+            transition: opacity 0.2s;
+        }
+
+        .back-link:hover {
+            opacity: 0.75;
+        }
+
+        /* ========== HERO SECTION - BLOCKCHAIN BANNER ========== */
+        .blockchain-banner {
+            background: linear-gradient(135deg, #0A2540 0%, #1A3A5C 100%);
+            margin: 32px 48px 24px 48px;
+            border-radius: 24px;
+            padding: 20px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .banner-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .shield-icon {
+            font-size: 32px;
+        }
+
+        .banner-title {
+            color: white;
+            font-weight: 700;
+            font-size: 18px;
+            letter-spacing: 0.5px;
+        }
+
+        .banner-sub {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 13px;
+            margin-top: 4px;
+        }
+
+        .audit-btn {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 10px 24px;
+            border-radius: 40px;
+            color: white;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .audit-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        /* ========== LIVE TALLY HEADER ========== */
+        .tally-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            padding: 0 48px;
+            margin-bottom: 20px;
+        }
+
+        .tally-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .live-dot {
+            width: 10px;
+            height: 10px;
+            background: #E63E3E;
+            border-radius: 50%;
+            animation: pulse 1.2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.5;
+                transform: scale(1.2);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .tally-title h1 {
+            font-size: 28px;
+            font-weight: 800;
+            color: #1A2C3E;
+        }
+
+        .timestamp {
+            font-size: 13px;
+            color: #8A9BB0;
+            background: #F5F8FC;
+            padding: 6px 14px;
+            border-radius: 40px;
+        }
+
+        /* ========== STATS CARDS ========== */
+        .stats-row {
+            display: flex;
+            gap: 24px;
+            padding: 0 48px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            flex: 1;
+            background: #F8FAFE;
+            border-radius: 24px;
+            padding: 24px;
+            border: 1px solid #EDF2F7;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #8A9BB0;
+            margin-bottom: 12px;
+        }
+
+        .stat-value {
+            font-size: 42px;
+            font-weight: 800;
+            color: #1A2C3E;
+            margin-bottom: 8px;
+        }
+
+        .stat-sub {
+            font-size: 13px;
+            color: #5E7E9C;
+        }
+
+        .progress-bar {
+            background: #E2E9F2;
+            border-radius: 20px;
+            height: 8px;
+            margin-top: 16px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: #002F6C;
+            width: 84%;
+            height: 100%;
+            border-radius: 20px;
+        }
+
+        /* ========== CANDIDATE SECTIONS ========== */
+        .candidates-grid {
+            padding: 0 48px;
+            display: flex;
+            gap: 32px;
+            margin-bottom: 48px;
+        }
+
+        .race-card {
+            flex: 1;
+            background: #FFFFFF;
+            border: 1px solid #EDF2F7;
+            border-radius: 28px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+        }
+
+        .race-header {
+            background: #F8FAFE;
+            padding: 18px 24px;
+            border-bottom: 1px solid #EDF2F7;
+        }
+
+        .race-header h2 {
+            font-size: 20px;
+            font-weight: 800;
+            color: #1A2C3E;
+        }
+
+        .candidate-item {
+            padding: 20px 24px;
+            border-bottom: 1px solid #F0F4F9;
+        }
+
+        .candidate-item:last-child {
+            border-bottom: none;
+        }
+
+        .candidate-name-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .candidate-name {
+            font-weight: 700;
+            font-size: 18px;
+            color: #1A2C3E;
+        }
+
+        .percentage {
+            font-weight: 800;
+            font-size: 24px;
+            color: #002F6C;
+        }
+
+        .candidate-bar {
+            background: #EFF3F8;
+            border-radius: 12px;
+            height: 10px;
+            overflow: hidden;
+        }
+
+        .bar-fill {
+            background: #002F6C;
+            height: 100%;
+            border-radius: 12px;
+            transition: width 0.3s ease;
+        }
+
+        .candidate-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            font-size: 12px;
+            color: #8A9BB0;
+        }
+
+        /* Faculty Representatives Section */
+        .faculty-section {
+            padding: 0 48px;
+            margin-bottom: 48px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 24px;
+        }
+
+        .section-header h3 {
+            font-size: 22px;
+            font-weight: 800;
+            color: #1A2C3E;
+        }
+
+        .section-sub {
+            font-size: 13px;
+            color: #8A9BB0;
+        }
+
+        .faculty-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+        }
+
+        .faculty-card {
+            background: #FFFFFF;
+            border: 1px solid #EDF2F7;
+            border-radius: 20px;
+            padding: 20px;
+            transition: all 0.2s;
+        }
+
+        .faculty-name {
+            font-weight: 800;
+            font-size: 16px;
+            color: #1A2C3E;
+            margin-bottom: 4px;
+        }
+
+        .faculty-role {
+            font-size: 11px;
+            color: #8A9BB0;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 16px;
+        }
+
+        .faculty-percent {
+            font-weight: 800;
+            font-size: 28px;
+            color: #002F6C;
+            margin-bottom: 12px;
+        }
+
+        .faculty-bar {
+            background: #EFF3F8;
+            border-radius: 10px;
+            height: 6px;
+            margin-bottom: 12px;
+        }
+
+        .faculty-fill {
+            background: #002F6C;
+            height: 100%;
+            border-radius: 10px;
+        }
+
+        .opponent-row {
+            margin-top: 14px;
+            padding-top: 14px;
+            border-top: 1px solid #F0F4F9;
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+        }
+
+        /* ========== FOOTER ========== */
+        .footer {
+            background: #FCFDFF;
+            border-top: 1px solid #ECF3F9;
+            padding: 32px 48px 28px;
+            width: 100%;
+            margin-top: auto;
+        }
+
+        .footer-grid {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 40px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .footer-col h4 {
+            font-weight: 700;
+            font-size: 14px;
+            color: #1A405E;
+            margin-bottom: 14px;
+        }
+
+        .footer-col a {
+            display: block;
+            font-size: 12px;
+            color: #48708E;
+            text-decoration: none;
+            margin-bottom: 10px;
+            transition: color 0.2s;
+        }
+
+        .footer-col a:hover {
+            color: #002F6C;
+        }
+
+        .copyright {
+            text-align: center;
+            font-size: 11px;
+            color: #7C95AF;
+            margin-top: 28px;
+            padding-top: 16px;
+            border-top: 1px solid #E9F0F6;
+        }
+
+        /* Helper */
+        .text-right {
+            text-align: right;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="portal-container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo-area">
+                <div class="logo-icon">B</div>
+                <div class="portal-title">BUSA ONLINE VOTING PORTAL</div>
+            </div>
+            <a href="#" class="back-link" id="backToHome">← Back to Home</a>
+        </div>
+
+        <!-- Blockchain Security Banner -->
+        <div class="blockchain-banner">
+            <div class="banner-left">
+                <span class="shield-icon">🔗</span>
+                <div>
+                    <div class="banner-title">Blockchain Security</div>
+                    <div class="banner-sub">All tallies are cryptographically locked in the ledger.</div>
+                </div>
+            </div>
+            <button class="audit-btn" id="auditLogBtn">View Audit Log</button>
+        </div>
+
+        <!-- Live Tally Header -->
+        <div class="tally-header">
+            <div class="tally-title">
+                <div class="live-dot"></div>
+                <h1>LIVE ELECTION TALLY</h1>
+            </div>
+            <div class="timestamp">Last Updated: 2 mins ago</div>
+        </div>
+
+        <!-- Stats Row -->
+        <div class="stats-row">
+            <div class="stat-card">
+                <div class="stat-label">Total Ballots Cast</div>
+                <div class="stat-value">12,482</div>
+                <div class="stat-sub">of 14,860 total registered</div>
+                <div class="progress-bar">
+                    <div class="progress-fill"></div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Participation Rate</div>
+                <div class="stat-value">84%</div>
+                <div class="stat-sub">14,860 Total Registered Voters</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 84%;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Candidate Races: GUILD PRESIDENT & GEN. SECRETARY -->
+        <div class="candidates-grid">
+            <!-- GUILD PRESIDENT -->
+            <div class="race-card">
+                <div class="race-header">
+                    <h2>GUILD PRESIDENT</h2>
+                </div>
+                <div class="candidate-item">
+                    <div class="candidate-name-row"><span class="candidate-name">Julian MUSAVI</span><span
+                            class="percentage">52.4%</span></div>
+                    <div class="candidate-bar">
+                        <div class="bar-fill" style="width: 52.4%;"></div>
+                    </div>
+                    <div class="candidate-meta"><span>Social Sciences • Humanities</span><span>6,541 votes</span></div>
+                </div>
+                <div class="candidate-item">
+                    <div class="candidate-name-row"><span class="candidate-name">Ssentongo NICHOLAS</span><span
+                            class="percentage">47.6%</span></div>
+                    <div class="candidate-bar">
+                        <div class="bar-fill" style="width: 47.6%; background: #6F8FAC;"></div>
+                    </div>
+                    <div class="candidate-meta"><span>Engineering • Business</span><span>5,941 votes</span></div>
+                </div>
+            </div>
+
+            <!-- GEN. SECRETARY -->
+            <div class="race-card">
+                <div class="race-header">
+                    <h2>GEN. SECRETARY</h2>
+                </div>
+                <div class="candidate-item">
+                    <div class="candidate-name-row"><span class="candidate-name">Sarah OCHEN</span><span
+                            class="percentage">68.2%</span></div>
+                    <div class="candidate-bar">
+                        <div class="bar-fill" style="width: 68.2%;"></div>
+                    </div>
+                    <div class="candidate-meta"><span>Social Sciences • Law</span><span>8,515 votes</span></div>
+                </div>
+                <div class="candidate-item">
+                    <div class="candidate-name-row"><span class="candidate-name">Namubiru BRENDA</span><span
+                            class="percentage">31.8%</span></div>
+                    <div class="candidate-bar">
+                        <div class="bar-fill" style="width: 31.8%; background: #6F8FAC;"></div>
+                    </div>
+                    <div class="candidate-meta"><span>Education • Health Sciences</span><span>3,967 votes</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FACULTY REPRESENTATIVES Section -->
+        <div class="faculty-section">
+            <div class="section-header">
+                <h3>FACULTY REPRESENTATIVES</h3>
+                <div class="section-sub">Two Leading Candidates Shown</div>
+            </div>
+            <div class="faculty-grid">
+                <!-- NATURAL SCIENCES -->
+                <div class="faculty-card">
+                    <div class="faculty-name">Maya OKORO</div>
+                    <div class="faculty-role">NATURAL SCIENCES</div>
+                    <div class="faculty-percent">58%</div>
+                    <div class="faculty-bar">
+                        <div class="faculty-fill" style="width: 58%;"></div>
+                    </div>
+                    <div class="opponent-row"><span>Okello PATRICK</span><span>42%</span></div>
+                </div>
+                <!-- SCIENCE AND TECHNOLOGY -->
+                <div class="faculty-card">
+                    <div class="faculty-name">David KABUGO</div>
+                    <div class="faculty-role">SCIENCE AND TECHNOLOGY</div>
+                    <div class="faculty-percent">65%</div>
+                    <div class="faculty-bar">
+                        <div class="faculty-fill" style="width: 65%;"></div>
+                    </div>
+                    <div class="opponent-row"><span>Waiswa STEPHEN</span><span>35%</span></div>
+                </div>
+                <!-- SOCIAL SCIENCES (placeholder with consistent styling) -->
+                <div class="faculty-card">
+                    <div class="faculty-name">Aisha NAMUGGA</div>
+                    <div class="faculty-role">SOCIAL SCIENCES</div>
+                    <div class="faculty-percent">71%</div>
+                    <div class="faculty-bar">
+                        <div class="faculty-fill" style="width: 71%;"></div>
+                    </div>
+                    <div class="opponent-row"><span>Michael OTIENO</span><span>29%</span></div>
+                </div>
+                <!-- BUSINESS SCHOOL -->
+                <div class="faculty-card">
+                    <div class="faculty-name">Patricia NABIRYE</div>
+                    <div class="faculty-role">BUSINESS SCHOOL</div>
+                    <div class="faculty-percent">63%</div>
+                    <div class="faculty-bar">
+                        <div class="faculty-fill" style="width: 63%;"></div>
+                    </div>
+                    <div class="opponent-row"><span>Robert SSEGUYA</span><span>37%</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>BUSA</h4>
+                    <a href="#">About Union</a>
+                    <a href="#">Election Guidelines</a>
+                    <a href="#">Contact Us</a>
+                </div>
+                <div class="footer-col">
+                    <h4>HELP & CENTER</h4>
+                    <a href="#">FAQ</a>
+                    <a href="#">Live Chat</a>
+                    <a href="#">Support Ticket</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Legal</h4>
+                    <a href="#">PRIVACY POLICY</a>
+                    <a href="#">TERMS OF SERVICE</a>
+                    <a href="#">Cookie Policy</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Resources</h4>
+                    <a href="#">Voter Guide</a>
+                    <a href="#">Announcements</a>
+                </div>
+            </div>
+            <div class="copyright">
+                © 2026 BUSA ONLINE VOTING PORTAL. ALL RIGHTS RESERVED
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function () {
+            // Toast notification system
+            function showMessage(message, isSuccess = false) {
+                const existingToast = document.querySelector('.custom-toast');
+                if (existingToast) existingToast.remove();
+
+                const toast = document.createElement('div');
+                toast.className = 'custom-toast';
+                toast.textContent = message;
+                toast.style.position = 'fixed';
+                toast.style.bottom = '30px';
+                toast.style.left = '50%';
+                toast.style.transform = 'translateX(-50%)';
+                toast.style.backgroundColor = isSuccess ? '#1E5A3C' : '#2A6F8F';
+                toast.style.color = 'white';
+                toast.style.padding = '12px 28px';
+                toast.style.borderRadius = '60px';
+                toast.style.fontSize = '14px';
+                toast.style.fontWeight = '500';
+                toast.style.fontFamily = 'Inter, sans-serif';
+                toast.style.zIndex = '1000';
+                toast.style.boxShadow = '0 4px 15px rgba(0,0,0,0.2)';
+                document.body.appendChild(toast);
+
+                setTimeout(() => {
+                    toast.style.opacity = '0';
+                    setTimeout(() => toast.remove(), 300);
+                }, 2800);
+            }
+
+            // Back to Home button
+            const backBtn = document.getElementById('backToHome');
+            if (backBtn) {
+                backBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    showMessage('🏠 Returning to homepage (demo navigation)', false);
+                });
+            }
+
+            // Audit Log button
+            const auditBtn = document.getElementById('auditLogBtn');
+            if (auditBtn) {
+                auditBtn.addEventListener('click', () => {
+                    showMessage('🔗 Audit log: All tallies cryptographically verified on blockchain. Hash: 0x7f83b1657ff1fc53b92dc18148a1d65dfc2d4b1f', true);
+                });
+            }
+
+            // Handle all footer links with demo message
+            const footerLinks = document.querySelectorAll('.footer-col a');
+            footerLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    showMessage(`📄 ${link.innerText} (information page)`, false);
+                });
+            });
+
+            // Simulate real-time timestamp update every 30 seconds (demo)
+            setInterval(() => {
+                const timestampEl = document.querySelector('.timestamp');
+                if (timestampEl) {
+                    const now = new Date();
+                    timestampEl.textContent = `Last Updated: ${now.getHours()}:${now.getMinutes().toString().padStart(2, '0')} ago (simulated)`;
+                }
+            }, 30000);
+
+            // Add vote tooltip interaction on bars
+            const bars = document.querySelectorAll('.bar-fill, .faculty-fill');
+            bars.forEach(bar => {
+                bar.addEventListener('mouseenter', (e) => {
+                    const width = bar.style.width || getComputedStyle(bar).width;
+                    showMessage(`📊 ${width} of votes recorded`, false);
+                });
+            });
+        })();
+    </script>
+</body>
+
+</html>

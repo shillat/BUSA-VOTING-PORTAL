@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BUSA Online Voting Portal | Thank You for Voting</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Body – exact spec */
+        body {
+            position: relative;
+            width: 1280px;
+            height: 1279px;
+            background: #F3FAFF;
+            font-family: 'Inter', 'Public Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+            margin: 0 auto;
+            overflow-x: hidden;
+        }
+
+        /* Main container */
+        .portal-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ========== HEADER SECTION ========== */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px 48px 20px 48px;
+            border-bottom: 1px solid #DCE5F0;
+            background: #FFFFFF;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .logo-icon {
+            background: #002F6C;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 24px;
+            color: white;
+        }
+
+        .portal-title {
+            font-weight: 700;
+            font-size: 18px;
+            letter-spacing: -0.2px;
+            color: #0B2B44;
+            background: #F0F7FF;
+            padding: 5px 18px;
+            border-radius: 40px;
+        }
+
+        .user-greeting {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1F2A44;
+            background: #FFFFFF;
+            padding: 6px 18px;
+            border-radius: 40px;
+            border: 1px solid #DCE5F0;
+        }
+
+        /* ========== MAIN LAYOUT (Sidebar + Content) ========== */
+        .dashboard-layout {
+            display: flex;
+            gap: 48px;
+            padding: 32px 48px 40px 48px;
+            flex: 1;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 260px;
+            flex-shrink: 0;
+            background: #FFFFFF;
+            border-radius: 28px;
+            padding: 24px 0;
+            border: 1px solid #E2EBF3;
+            height: fit-content;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+        }
+
+        .sidebar-header h2 {
+            font-size: 20px;
+            font-weight: 800;
+            color: #1A2C3E;
+            padding: 0 20px 16px 20px;
+            border-bottom: 1px solid #EFF3F8;
+            margin-bottom: 12px;
+        }
+
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 20px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            color: #4A627A;
+            transition: 0.2s;
+        }
+
+        .sidebar-link:hover {
+            background: #F0F7FF;
+            color: #002F6C;
+        }
+
+        .sidebar-link.active {
+            background: #E8F0FE;
+            color: #002F6C;
+            border-left: 3px solid #002F6C;
+        }
+
+        .logout-link {
+            margin-top: 28px;
+            border-top: 1px solid #EFF3F8;
+            padding-top: 16px;
+            color: #C62828;
+        }
+
+        /* MAIN CONTENT */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 28px;
+        }
+
+        /* Status Card */
+        .status-card {
+            background: linear-gradient(105deg, #002F6C 0%, #0A4175 100%);
+            border-radius: 24px;
+            padding: 20px 28px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+        }
+
+        .status-left h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .status-left p {
+            font-size: 14px;
+            opacity: 0.85;
+        }
+
+        .status-badge {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        /* Thank You Card */
+        .thankyou-card {
+            background: #FFFFFF;
+            border-radius: 28px;
+            border: 1px solid #E2EBF3;
+            padding: 36px 32px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+        }
+
+        .check-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+
+        .thankyou-card h1 {
+            font-size: 32px;
+            font-weight: 800;
+            color: #1A2C3E;
+            margin-bottom: 12px;
+        }
+
+        .thankyou-card p {
+            font-size: 16px;
+            color: #5E7E9C;
+            margin-bottom: 28px;
+            line-height: 1.5;
+        }
+
+        .download-btn {
+            background: #002F6C;
+            color: white;
+            border: none;
+            padding: 14px 32px;
+            border-radius: 48px;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .download-btn:hover {
+            background: #0A4175;
+            transform: translateY(-1px);
+        }
+
+        /* Rating Section */
+        .rating-card {
+            background: #FFFFFF;
+            border-radius: 28px;
+            border: 1px solid #E2EBF3;
+            padding: 28px 32px;
+        }
+
+        .rating-header h3 {
+            font-size: 20px;
+            font-weight: 800;
+            color: #1A2C3E;
+            margin-bottom: 8px;
+        }
+
+        .rating-header p {
+            font-size: 14px;
+            color: #6F8FAC;
+            margin-bottom: 24px;
+        }
+
+        .stars-container {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 28px;
+        }
+
+        .star {
+            font-size: 36px;
+            cursor: pointer;
+            color: #D1D9E6;
+            transition: color 0.2s;
+        }
+
+        .star:hover,
+        .star.active {
+            color: #FFB800;
+        }
+
+        .feedback-label {
+            font-weight: 600;
+            font-size: 14px;
+            color: #1A2C3E;
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .feedback-input {
+            width: 100%;
+            padding: 14px 18px;
+            border: 1.5px solid #E2EBF3;
+            border-radius: 20px;
+            font-family: inherit;
+            font-size: 14px;
+            resize: vertical;
+            margin-bottom: 20px;
+            outline: none;
+            transition: 0.2s;
+        }
+
+        .feedback-input:focus {
+            border-color: #002F6C;
+            box-shadow: 0 0 0 3px rgba(0, 47, 108, 0.08);
+        }
+
+        .submit-feedback-btn {
+            background: #002F6C;
+            color: white;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 48px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        .submit-feedback-btn:hover {
+            background: #0A4175;
+        }
+
+        /* ========== FOOTER ========== */
+        .footer {
+            background: #FFFFFF;
+            border-top: 1px solid #DCE5F0;
+            padding: 28px 48px 24px;
+            width: 100%;
+        }
+
+        .footer-grid {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 40px;
+        }
+
+        .footer-col h4 {
+            font-weight: 700;
+            font-size: 13px;
+            color: #1A405E;
+            margin-bottom: 12px;
+        }
+
+        .footer-col a {
+            display: block;
+            font-size: 11px;
+            color: #48708E;
+            text-decoration: none;
+            margin-bottom: 8px;
+            transition: color 0.2s;
+        }
+
+        .footer-col a:hover {
+            color: #002F6C;
+        }
+
+        .copyright {
+            text-align: center;
+            font-size: 10px;
+            color: #7C95AF;
+            margin-top: 24px;
+            padding-top: 16px;
+            border-top: 1px solid #E9F0F6;
+        }
+
+        .footer-note {
+            text-align: center;
+            font-size: 10px;
+            color: #8AA0B8;
+            margin-top: 16px;
+            letter-spacing: 0.3px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="portal-container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo-area">
+                <div class="logo-icon">B</div>
+                <div class="portal-title">BUSA ONLINE VOTING PORTAL</div>
+            </div>
+            <div class="user-greeting">Kawesi Arthur</div>
+        </div>
+
+        <!-- Dashboard Layout -->
+        <div class="dashboard-layout">
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <div class="sidebar-header">
+                    <h2>Dashboard</h2>
+                </div>
+                <div class="sidebar-nav">
+                    <a href="#" class="sidebar-link" id="profileLink">Profile</a>
+                    <a href="#" class="sidebar-link" id="castVoteLink">Cast Vote</a>
+                    <a href="#" class="sidebar-link" id="reviewLink">Review and Confirm</a>
+                    <a href="#" class="sidebar-link active" id="ratingLink">Rating</a>
+                    <a href="#" class="sidebar-link logout-link" id="logoutLink">Logout</a>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="main-content">
+                <!-- Status Card -->
+                <div class="status-card">
+                    <div class="status-left">
+                        <h3>Verified Status: Active</h3>
+                        <p>Your vote has been recorded</p>
+                    </div>
+                    <div class="status-badge">✓ VERIFIED</div>
+                </div>
+
+                <!-- Thank You Card -->
+                <div class="thankyou-card">
+                    <div class="check-icon">🗳️✓</div>
+                    <h1>Thank You for Voting!</h1>
+                    <p>Your vote has been securely cast and recorded. You can now download your digital voting receipt
+                        below.</p>
+                    <button class="download-btn" id="downloadReceiptBtn">📄 Download Voting Receipt</button>
+                </div>
+
+                <!-- Rating & Feedback Section -->
+                <div class="rating-card">
+                    <div class="rating-header">
+                        <h3>Rate Your Experience</h3>
+                        <p>How would you rate the online voting process?</p>
+                    </div>
+                    <div class="stars-container" id="starRating">
+                        <span class="star" data-rating="1">★</span>
+                        <span class="star" data-rating="2">★</span>
+                        <span class="star" data-rating="3">★</span>
+                        <span class="star" data-rating="4">★</span>
+                        <span class="star" data-rating="5">★</span>
+                    </div>
+                    <label class="feedback-label">Additional Feedback</label>
+                    <textarea class="feedback-input" id="feedbackText" rows="3"
+                        placeholder="Let us know how we can improve..."></textarea>
+                    <button class="submit-feedback-btn" id="submitFeedbackBtn">Submit Feedback</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>BUSA</h4>
+                    <a href="#">Official BUSA 2026 Voting Portal Gateway</a>
+                    <a href="#">Election Guidelines</a>
+                    <a href="#">Contact Us</a>
+                </div>
+                <div class="footer-col">
+                    <h4>HELP & CENTER</h4>
+                    <a href="#">FAQ</a>
+                    <a href="#">Live Chat</a>
+                    <a href="#">Contact Support</a>
+                </div>
+                <div class="footer-col">
+                    <h4>PRIVACY POLICY</h4>
+                    <a href="#">Data Protection</a>
+                    <a href="#">Cookie Policy</a>
+                    <a href="#">Security Disclosure</a>
+                </div>
+                <div class="footer-col">
+                    <h4>TERMS OF SERVICE</h4>
+                    <a href="#">Voter Agreement</a>
+                    <a href="#">Code of Conduct</a>
+                </div>
+            </div>
+            <div class="copyright">
+                © 2024 Electoral Commission. All rights reserved. | © 2026 BUSA ONLINE VOTING PORTAL. ALL RIGHTS
+                RESERVED
+            </div>
+            <div class="footer-note">
+                BUSA • Help & Support • Privacy Policy • Terms of Service • FAQ
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function () {
+            let selectedRating = 0;
+            let feedbackSubmitted = false;
+
+            // Toast notification system
+            function showMessage(message, isError = false) {
+                const existingToast = document.querySelector('.custom-toast');
+                if (existingToast) existingToast.remove();
+
+                const toast = document.createElement('div');
+                toast.className = 'custom-toast';
+                toast.textContent = message;
+                toast.style.position = 'fixed';
+                toast.style.bottom = '30px';
+                toast.style.left = '50%';
+                toast.style.transform = 'translateX(-50%)';
+                toast.style.backgroundColor = isError ? '#C62828' : '#1E5A3C';
+                toast.style.color = 'white';
+                toast.style.padding = '12px 28px';
+                toast.style.borderRadius = '60px';
+                toast.style.fontSize = '14px';
+                toast.style.fontWeight = '500';
+                toast.style.fontFamily = 'Inter, sans-serif';
+                toast.style.zIndex = '1000';
+                toast.style.boxShadow = '0 4px 15px rgba(0,0,0,0.2)';
+                document.body.appendChild(toast);
+
+                setTimeout(() => {
+                    toast.style.opacity = '0';
+                    setTimeout(() => toast.remove(), 300);
+                }, 2800);
+            }
+
+            // Star rating handler
+            const stars = document.querySelectorAll('.star');
+            stars.forEach(star => {
+                star.addEventListener('click', () => {
+                    const rating = parseInt(star.getAttribute('data-rating'));
+                    selectedRating = rating;
+                    stars.forEach((s, index) => {
+                        if (index < rating) {
+                            s.classList.add('active');
+                        } else {
+                            s.classList.remove('active');
+                        }
+                    });
+                    showMessage(`⭐ You rated the process ${rating} out of 5 stars`, false);
+                });
+            });
+
+            // Download Receipt
+            const downloadBtn = document.getElementById('downloadReceiptBtn');
+            if (downloadBtn) {
+                downloadBtn.addEventListener('click', () => {
+                    // Simulate receipt download
+                    showMessage('📄 Your voting receipt is being downloaded (demo: receipt would contain transaction ID and timestamp)', false);
+                    // In a real environment, this would trigger a PDF download
+                });
+            }
+
+            // Submit Feedback
+            const submitFeedbackBtn = document.getElementById('submitFeedbackBtn');
+            const feedbackText = document.getElementById('feedbackText');
+
+            if (submitFeedbackBtn) {
+                submitFeedbackBtn.addEventListener('click', () => {
+                    const feedback = feedbackText.value.trim();
+
+                    if (selectedRating === 0 && feedback === '') {
+                        showMessage('⚠️ Please provide a rating or feedback before submitting.', true);
+                        return;
+                    }
+
+                    if (feedbackSubmitted) {
+                        showMessage('ℹ️ You have already submitted feedback. Thank you!', false);
+                        return;
+                    }
+
+                    let message = '✅ Thank you for your feedback!';
+                    if (selectedRating > 0) message += ` Rating: ${selectedRating}/5.`;
+                    if (feedback) message += ' Your comments have been recorded.';
+
+                    showMessage(message, false);
+                    feedbackSubmitted = true;
+                    submitFeedbackBtn.disabled = true;
+                    submitFeedbackBtn.textContent = 'Feedback Submitted ✓';
+                    submitFeedbackBtn.style.background = '#2E7D32';
+
+                    // Disable star interaction after submission (optional)
+                    stars.forEach(star => {
+                        star.style.cursor = 'default';
+                        star.style.opacity = '0.6';
+                    });
+                    feedbackText.disabled = true;
+                });
+            }
+
+            // Sidebar navigation (demo)
+            document.getElementById('profileLink')?.addEventListener('click', (e) => {
+                e.preventDefault();
+                showMessage('👤 Viewing your voter profile (demo)');
+            });
+            document.getElementById('castVoteLink')?.addEventListener('click', (e) => {
+                e.preventDefault();
+                showMessage('🗳️ You have already cast your vote. Thank you for participating!', false);
+            });
+            document.getElementById('reviewLink')?.addEventListener('click', (e) => {
+                e.preventDefault();
+                showMessage('📋 Your selections have been confirmed and your vote has been cast.', false);
+            });
+            document.getElementById('logoutLink')?.addEventListener('click', (e) => {
+                e.preventDefault();
+                showMessage('🔒 Logging out. Redirecting to home...');
+            });
+
+            // Footer links demo
+            const footerLinks = document.querySelectorAll('.footer-col a');
+            footerLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    showMessage(`📄 ${link.innerText} (information page)`, false);
+                });
+            });
+        })();
+    </script>
+</body>
+
+</html>

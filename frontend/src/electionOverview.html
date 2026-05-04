@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BUSA Online Voting Portal | Election Overview</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Body – exact spec */
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 0px;
+            position: relative;
+            width: 1280px;
+            height: 1695px;
+            min-height: 1695px;
+            background: #FFFFFF;
+            font-family: 'Inter', 'Public Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+            margin: 0 auto;
+            overflow-x: hidden;
+        }
+
+        /* Main container */
+        .portal-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ========== HEADER SECTION ========== */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px 48px 20px 48px;
+            border-bottom: 1px solid #EFF3F8;
+            width: 100%;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .logo-icon {
+            background: #002F6C;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 24px;
+            color: white;
+        }
+
+        .portal-title {
+            font-weight: 700;
+            font-size: 18px;
+            letter-spacing: -0.2px;
+            color: #0B2B44;
+            background: #F8FAFE;
+            padding: 5px 18px;
+            border-radius: 40px;
+        }
+
+        .back-link {
+            font-size: 14px;
+            font-weight: 500;
+            color: #2A6F8F;
+            text-decoration: none;
+            border-bottom: 1px dashed #B9D4E3;
+            padding-bottom: 2px;
+            transition: opacity 0.2s;
+        }
+
+        .back-link:hover {
+            opacity: 0.75;
+        }
+
+        /* ========== PAGE TITLE ========== */
+        .page-title {
+            padding: 32px 48px 16px 48px;
+        }
+
+        .page-title h1 {
+            font-size: 36px;
+            font-weight: 800;
+            color: #1A2C3E;
+            letter-spacing: -0.5px;
+        }
+
+        /* ========== ROLES GRID ========== */
+        .roles-grid {
+            padding: 16px 48px 32px 48px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 32px;
+        }
+
+        .role-card {
+            background: #FFFFFF;
+            border: 1px solid #EDF2F7;
+            border-radius: 28px;
+            overflow: hidden;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.02);
+        }
+
+        .role-card:hover {
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.05);
+            transform: translateY(-2px);
+        }
+
+        .role-header {
+            background: #F8FAFE;
+            padding: 24px 28px 16px 28px;
+            border-bottom: 1px solid #EDF2F7;
+        }
+
+        .role-title {
+            font-size: 26px;
+            font-weight: 800;
+            color: #1A2C3E;
+            margin-bottom: 8px;
+        }
+
+        .role-subtitle {
+            font-size: 14px;
+            color: #8A9BB0;
+            letter-spacing: 0.3px;
+        }
+
+        .role-description {
+            padding: 24px 28px;
+            font-size: 15px;
+            line-height: 1.55;
+            color: #4A627A;
+            border-bottom: 1px solid #F0F4F9;
+            min-height: 110px;
+        }
+
+        .role-footer {
+            padding: 20px 28px;
+        }
+
+        .btn-view {
+            display: inline-block;
+            background: #002F6C;
+            color: white;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 40px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            letter-spacing: 0.3px;
+        }
+
+        .btn-view:hover {
+            background: #0A4175;
+            transform: translateY(-1px);
+        }
+
+        /* ========== VOTING INTEGRITY SECTION ========== */
+        .integrity-section {
+            padding: 48px 48px 56px 48px;
+            background: #F8FAFE;
+            margin: 16px 48px 32px 48px;
+            border-radius: 32px;
+        }
+
+        .integrity-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .integrity-header h2 {
+            font-size: 28px;
+            font-weight: 800;
+            color: #1A2C3E;
+            margin-bottom: 12px;
+        }
+
+        .integrity-header p {
+            font-size: 16px;
+            color: #5E7E9C;
+        }
+
+        .integrity-grid {
+            display: flex;
+            gap: 32px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .integrity-card {
+            flex: 1;
+            min-width: 240px;
+            background: #FFFFFF;
+            border-radius: 24px;
+            padding: 28px 24px;
+            text-align: center;
+            border: 1px solid #E8EDF4;
+            transition: all 0.2s;
+        }
+
+        .integrity-card:hover {
+            transform: translateY(-3px);
+            border-color: #D0DDEB;
+        }
+
+        .integrity-icon {
+            font-size: 42px;
+            margin-bottom: 20px;
+        }
+
+        .integrity-card h3 {
+            font-size: 18px;
+            font-weight: 800;
+            color: #1A2C3E;
+            margin-bottom: 12px;
+        }
+
+        .integrity-card p {
+            font-size: 13px;
+            line-height: 1.5;
+            color: #6F8FAC;
+        }
+
+        /* ========== FOOTER ========== */
+        .footer {
+            background: #FCFDFF;
+            border-top: 1px solid #ECF3F9;
+            padding: 32px 48px 28px;
+            width: 100%;
+            margin-top: auto;
+        }
+
+        .footer-grid {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 40px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .footer-col h4 {
+            font-weight: 700;
+            font-size: 14px;
+            color: #1A405E;
+            margin-bottom: 14px;
+        }
+
+        .footer-col a {
+            display: block;
+            font-size: 12px;
+            color: #48708E;
+            text-decoration: none;
+            margin-bottom: 10px;
+            transition: color 0.2s;
+        }
+
+        .footer-col a:hover {
+            color: #002F6C;
+        }
+
+        .copyright {
+            text-align: center;
+            font-size: 11px;
+            color: #7C95AF;
+            margin-top: 28px;
+            padding-top: 16px;
+            border-top: 1px solid #E9F0F6;
+        }
+
+        /* Helper */
+        .text-center {
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="portal-container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo-area">
+                <div class="logo-icon">B</div>
+                <div class="portal-title">BUSA ONLINE VOTING PORTAL</div>
+            </div>
+            <a href="#" class="back-link" id="backToHome">← Back to Home</a>
+        </div>
+
+        <!-- Page Title -->
+        <div class="page-title">
+            <h1>ELECTION OVERVIEW</h1>
+        </div>
+
+        <!-- Roles Grid -->
+        <div class="roles-grid">
+            <!-- Guild President Card -->
+            <div class="role-card">
+                <div class="role-header">
+                    <div class="role-title">Guild President</div>
+                    <div class="role-subtitle">The highest executive authority</div>
+                </div>
+                <div class="role-description">
+                    The highest executive authority of the Student Union. Responsible for representing all students to
+                    the university administration, leading the Guild Cabinet, and overseeing the strategic direction of
+                    student welfare and campus life.
+                </div>
+                <div class="role-footer">
+                    <button class="btn-view" data-role="Guild President">VIEW CANDIDATES</button>
+                </div>
+            </div>
+
+            <!-- Vice Guild President Card -->
+            <div class="role-card">
+                <div class="role-header">
+                    <div class="role-title">VICE GUILD PRESIDENT</div>
+                    <div class="role-subtitle">Second in command</div>
+                </div>
+                <div class="role-description">
+                    Second in command after the Guild President, assist HE in their duties and assumes the office of the
+                    President when He/She is not available.
+                </div>
+                <div class="role-footer">
+                    <button class="btn-view" data-role="Vice Guild President">VIEW CANDIDATES</button>
+                </div>
+            </div>
+
+            <!-- General Secretary (GS) Card -->
+            <div class="role-card">
+                <div class="role-header">
+                    <div class="role-title">General Secretary (GS)</div>
+                    <div class="role-subtitle">Primary administrative officer</div>
+                </div>
+                <div class="role-description">
+                    The primary administrative officer of the Guild. The GS manages internal communications, maintains
+                    official records, and coordinates between various student committees to ensure operational
+                    efficiency.
+                </div>
+                <div class="role-footer">
+                    <button class="btn-view" data-role="General Secretary">VIEW CANDIDATES</button>
+                </div>
+            </div>
+
+            <!-- MP Schools Card -->
+            <div class="role-card">
+                <div class="role-header">
+                    <div class="role-title">MP Schools</div>
+                    <div class="role-subtitle">Legislative representatives</div>
+                </div>
+                <div class="role-description">
+                    Legislative representatives for individual academic faculties. Members of Parliament for Schools
+                    advocate for specific academic concerns, departmental funding, and school-specific student
+                    facilities.
+                </div>
+                <div class="role-footer">
+                    <button class="btn-view" data-role="MP Schools">VIEW CANDIDATES</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Voting Integrity Section -->
+        <div class="integrity-section">
+            <div class="integrity-header">
+                <h2>Voting Integrity</h2>
+                <p>Ensuring trust, transparency, and accessibility in every vote</p>
+            </div>
+            <div class="integrity-grid">
+                <div class="integrity-card">
+                    <div class="integrity-icon">🔐</div>
+                    <h3>Every vote is cryptographically secured</h3>
+                    <p>Our portal ensures one-person-one-vote through multi-factor biometric authentication.</p>
+                </div>
+                <div class="integrity-card">
+                    <div class="integrity-icon">📊</div>
+                    <h3>Real-time Auditing</h3>
+                    <p>The tallying process is transparent and can be audited by registered observers in real-time
+                        without compromising individual voter privacy.</p>
+                </div>
+                <div class="integrity-card">
+                    <div class="integrity-icon">♿</div>
+                    <h3>Inclusive Access</h3>
+                    <p>Designed for accessibility. Our interface supports screen readers and alternative input methods
+                        for all students.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>BUSA</h4>
+                    <a href="#">About Union</a>
+                    <a href="#">Election Guidelines</a>
+                    <a href="#">Contact Us</a>
+                </div>
+                <div class="footer-col">
+                    <h4>HELP & CENTER</h4>
+                    <a href="#">FAQ</a>
+                    <a href="#">Live Chat</a>
+                    <a href="#">Support Ticket</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Legal</h4>
+                    <a href="#">PRIVACY POLICY</a>
+                    <a href="#">TERMS OF SERVICE</a>
+                    <a href="#">Cookie Policy</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Resources</h4>
+                    <a href="#">Voter Guide</a>
+                    <a href="#">Announcements</a>
+                </div>
+            </div>
+            <div class="copyright">
+                © 2026 BUSA ONLINE VOTING PORTAL. ALL RIGHTS RESERVED
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function () {
+            // Toast notification system
+            function showMessage(message, isSuccess = false) {
+                const existingToast = document.querySelector('.custom-toast');
+                if (existingToast) existingToast.remove();
+
+                const toast = document.createElement('div');
+                toast.className = 'custom-toast';
+                toast.textContent = message;
+                toast.style.position = 'fixed';
+                toast.style.bottom = '30px';
+                toast.style.left = '50%';
+                toast.style.transform = 'translateX(-50%)';
+                toast.style.backgroundColor = isSuccess ? '#1E5A3C' : '#2A6F8F';
+                toast.style.color = 'white';
+                toast.style.padding = '12px 28px';
+                toast.style.borderRadius = '60px';
+                toast.style.fontSize = '14px';
+                toast.style.fontWeight = '500';
+                toast.style.fontFamily = 'Inter, sans-serif';
+                toast.style.zIndex = '1000';
+                toast.style.boxShadow = '0 4px 15px rgba(0,0,0,0.2)';
+                document.body.appendChild(toast);
+
+                setTimeout(() => {
+                    toast.style.opacity = '0';
+                    setTimeout(() => toast.remove(), 300);
+                }, 2800);
+            }
+
+            // Back to Home button
+            const backBtn = document.getElementById('backToHome');
+            if (backBtn) {
+                backBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    showMessage('🏠 Returning to homepage (demo navigation)', false);
+                });
+            }
+
+            // View Candidates buttons
+            const viewButtons = document.querySelectorAll('.btn-view');
+            viewButtons.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const role = btn.getAttribute('data-role') || 'position';
+                    showMessage(`📋 Viewing candidates for ${role} (demo - candidate list would appear)`, true);
+                });
+            });
+
+            // Handle all footer links with demo message
+            const footerLinks = document.querySelectorAll('.footer-col a');
+            footerLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    showMessage(`📄 ${link.innerText} (information page)`, false);
+                });
+            });
+
+            // Add hover effect on integrity cards (cosmetic)
+            const integrityCards = document.querySelectorAll('.integrity-card');
+            integrityCards.forEach(card => {
+                card.addEventListener('click', () => {
+                    const title = card.querySelector('h3')?.innerText || 'feature';
+                    showMessage(`ℹ️ More info about: ${title}`, false);
+                });
+            });
+        })();
+    </script>
+</body>
+
+</html>
