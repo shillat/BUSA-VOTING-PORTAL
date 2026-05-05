@@ -1,7 +1,7 @@
 import React from 'react';
 import busaLogo from './assets/busaLogo.jpg';
 
-const LogoMark = ({ size = 120, radius = 20, background = '#FFFFFF' }) => {
+const LogoMark = ({ size = 80, radius = 12, background = '#FFFFFF' }) => {
   return (
     <img
       src={busaLogo}

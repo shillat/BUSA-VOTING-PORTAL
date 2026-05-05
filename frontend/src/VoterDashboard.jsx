@@ -41,7 +41,7 @@ const VoterDashboard = () => {
       {/* Header */}
       <div className="header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '24px 48px 20px 48px', borderBottom: '1px solid #E9EDF2', background: '#FFFFFF' }}>
         <div className="logo-area" style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-          <LogoMark />
+          <LogoMark size={60} />
           <div className="portal-title" style={{ fontWeight: '700', fontSize: '18px', letterSpacing: '-0.2px', color: '#0B2B44', background: '#F8FAFE', padding: '5px 18px', borderRadius: '40px' }}>BUSA ONLINE VOTING PORTAL</div>
         </div>
         <div className="user-greeting" style={{ fontSize: '15px', fontWeight: '600', color: '#1F2A44', background: '#FFFFFF', padding: '6px 18px', borderRadius: '40px', border: '1px solid #E9EDF2' }}>{voter?.name || 'Student'}</div>

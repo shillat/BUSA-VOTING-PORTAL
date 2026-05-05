@@ -1521,12 +1521,16 @@ table {
     background: #F8FAFC !important;
     color: #1F2A44 !important;
     transition: all 0.3s ease !important;
+    border-left: none !important;
+    text-align: center !important;
   }
 
   .sidebar-link.active {
     background: #002F6C !important;
     color: white !important;
     border-color: #002F6C !important;
+    text-align: center !important;
+    justify-content: center !important;
   }
 
   .sidebar-link:hover {
@@ -1684,6 +1688,9 @@ table {
     background: #002F6C !important;
     color: white !important;
     border-color: #002F6C !important;
+    text-align: center !important;
+    justify-content: center !important;
+    border-left: none !important;
   }
 
   .portal-container .sidebar-link:hover {

@@ -3,6 +3,7 @@ import { useNavigate, useLocation, Link, NavLink } from 'react-router-dom';
 import { authAPI, utils } from './api';
 import Navbar from './Navbar';
 import Footer from './Footer';
+import busaLogo from './assets/busaLogo.jpg';
 
 const Login = () => {
   const [loginType, setLoginType] = useState('voter');
@@ -64,19 +65,21 @@ const Login = () => {
       <div style={{ display: 'flex', justifyContent: 'center', margin: '80px 0' }}>
         <div className="card" style={{ width: '480px', maxWidth: '100%', textAlign: 'center', padding: '40px' }}>
           <div style={{
-            background: '#002F6C',
-            width: '64px',
-            height: '64px',
-            borderRadius: '16px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
             margin: '0 auto 20px',
-            fontSize: '18px',
-            color: 'white',
-            fontWeight: 'bold'
+            textAlign: 'center'
           }}>
-            LOGO
+            <img
+              src={busaLogo}
+              alt="BUSA Logo"
+              style={{
+                width: '80px',
+                height: '80px',
+                borderRadius: '12px',
+                objectFit: 'contain',
+                background: '#002F6C',
+                padding: '8px'
+              }}
+            />
           </div>
 
           <h2 style={{ fontSize: '24px', color: 'black', marginBottom: '30px', fontWeight: '800' }}>
