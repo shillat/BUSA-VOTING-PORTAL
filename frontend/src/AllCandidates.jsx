@@ -74,7 +74,7 @@ const AllCandidates = () => {
                   <div key={cIdx} className="candidate-card" style={{ flex: '1', minWidth: '280px', maxWidth: '380px', background: '#FFFFFF', border: '1px solid #EDF2F7', borderRadius: '28px', overflow: 'hidden', boxShadow: '0 4px 12px rgba(0, 0, 0, 0.02)', transition: 'all 0.25s ease' }}>
                     {cand.photo_url ? (
                       <img
-                        src={`http://localhost:5000${cand.photo_url}`}
+                        src={`https://busa-voting-portal.onrender.com${cand.photo_url}`}
                         alt={cand.name}
                         style={{ width: '100%', height: '350px', objectFit: 'cover', objectPosition: 'center top' }}
                         onError={(e) => { e.target.style.display = 'none'; }}

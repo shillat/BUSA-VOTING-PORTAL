@@ -296,7 +296,7 @@ const ManageCandidates = () => {
                 <div className="candidate-header" style={{ background: 'linear-gradient(135deg, #002F6C 0%, #1A4A7A 100%)', padding: '20px', color: 'white', textAlign: 'center', position: 'relative' }}>
                   {candidate.photo_url ? (
                     <img
-                      src={`http://localhost:5000${candidate.photo_url}`}
+                      src={`https://busa-voting-portal.onrender.com${candidate.photo_url}`}
                       alt={candidate.name}
                       style={{ width: '80px', height: '80px', borderRadius: '50%', objectFit: 'cover', border: '3px solid white', marginBottom: '10px' }}
                     />

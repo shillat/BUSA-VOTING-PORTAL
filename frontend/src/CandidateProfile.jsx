@@ -104,7 +104,7 @@ const CandidateProfile = () => {
                     <div style={{ textAlign: 'center' }}>
                         {candidate.photo_url ? (
                             <img
-                                src={`http://localhost:5000${candidate.photo_url}`}
+                                src={`https://busa-voting-portal.onrender.com${candidate.photo_url}`}
                                 alt={candidate.name}
                                 style={{
                                     width: '320px',

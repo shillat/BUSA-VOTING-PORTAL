@@ -263,7 +263,7 @@ const Home = () => {
               <div key={idx} className="card" style={{ padding: 0, overflow: 'hidden' }}>
                 {cand.photo_url ? (
                   <img
-                    src={`http://localhost:5000${cand.photo_url}`}
+                    src={`https://busa-voting-portal.onrender.com${cand.photo_url}`}
                     alt={cand.name}
                     style={{ width: '100%', height: '320px', objectFit: 'cover', objectPosition: 'center top' }}
                     onError={(e) => { e.target.style.display = 'none'; }}

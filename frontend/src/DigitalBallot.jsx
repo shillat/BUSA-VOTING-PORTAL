@@ -129,7 +129,7 @@ const DigitalBallot = () => {
                     <div key={candidate.id} className="candidate-card" style={{ flex: '1', minWidth: '300px', padding: '28px 24px', borderRight: '1px solid #F0F4F9', borderBottom: '1px solid #F0F4F9', textAlign: 'center' }}>
                       {candidate.photo_url ? (
                         <img 
-                          src={`http://localhost:5000${candidate.photo_url}`} 
+                          src={`https://busa-voting-portal.onrender.com${candidate.photo_url}`} 
                           alt={candidate.name} 
                           style={{ width: '100px', height: '100px', borderRadius: '50%', objectFit: 'cover', border: '3px solid #F0F4F9', marginBottom: '16px' }} 
                         />
