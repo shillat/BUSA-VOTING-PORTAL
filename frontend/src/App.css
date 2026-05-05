@@ -105,7 +105,6 @@ body {
 .container nav a.active,
 .nav-item.active {
   color: #002F6C !important;
-  border-bottom: 2px solid #002F6C;
   padding-bottom: 4px;
 }
 
@@ -1364,7 +1363,10 @@ table {
   }
 
   /* Touch optimizations */
-  input, select, button, .btn {
+  input,
+  select,
+  button,
+  .btn {
     min-height: 44px !important;
     touch-action: manipulation !important;
     -webkit-tap-highlight-color: transparent !important;
@@ -1381,7 +1383,7 @@ table {
     overflow-x: hidden !important;
   }
 
-/* Admin dashboard mobile fixes */
+  /* Admin dashboard mobile fixes */
   .dashboard-layout {
     flex-direction: column !important;
     padding: 20px 16px !important;
@@ -1796,7 +1798,8 @@ table {
     font-size: 12px !important;
   }
 
-  th, td {
+  th,
+  td {
     padding: 8px 12px !important;
   }
 
@@ -2043,7 +2046,7 @@ table {
     font-size: 12px !important;
   }
 
-/* Mobile Table Fixes */
+  /* Mobile Table Fixes */
   table {
     display: block;
     overflow-x: auto;
