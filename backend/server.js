@@ -6,12 +6,46 @@ const sqlite3 = require('sqlite3').verbose();
 const fs = require('fs');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const { URL } = require('url');
 
 const app = express();
 
-// CORS - allow frontend on any port (dev & prod)
+const configuredOrigins = (process.env.ALLOWED_ORIGINS || '')
+  .split(',')
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+
+const defaultOrigins = new Set([
+  'https://busa-voting-portal.vercel.app',
+  'http://localhost:5173',
+  'http://127.0.0.1:5173',
+  'http://localhost:3000',
+  'http://127.0.0.1:3000',
+]);
+
+configuredOrigins.forEach((origin) => defaultOrigins.add(origin));
+
+const isAllowedOrigin = (origin) => {
+  if (!origin) return true;
+  if (defaultOrigins.has(origin)) return true;
+
+  try {
+    const parsed = new URL(origin);
+    return parsed.hostname.endsWith('.vercel.app');
+  } catch (error) {
+    return false;
+  }
+};
+
+// CORS - allow local dev, production domain, and Vercel preview deployments
 app.use(cors({
-  origin: 'https://busa-voting-portal.vercel.app',
+  origin: (origin, callback) => {
+    if (isAllowedOrigin(origin)) {
+      callback(null, true);
+      return;
+    }
+    callback(new Error(`Origin not allowed by CORS: ${origin}`));
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
