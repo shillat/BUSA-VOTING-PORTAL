@@ -110,7 +110,9 @@ const upload = multer({
   limits: { fileSize: 2 * 1024 * 1024 } // 2MB limit
 });
 
-const dbPath = path.resolve(__dirname, 'database.sqlite');
+const dbPath = process.env.RENDER_DISK_PATH ? 
+  path.join(process.env.RENDER_DISK_PATH, 'database.sqlite') : 
+  path.resolve(__dirname, 'database.sqlite');
 const db = new sqlite3.Database(dbPath, (err) => {
   if (err) console.error('Database connection error:', err);
   else {
