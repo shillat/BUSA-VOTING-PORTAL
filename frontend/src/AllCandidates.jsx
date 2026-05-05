@@ -69,9 +69,9 @@ const AllCandidates = () => {
           candidateCategories.map((cat, idx) => (
             <div key={idx} style={{ marginBottom: '64px' }}>
               <div style={{ fontSize: '28px', fontWeight: '800', color: '#1A2C3E', paddingBottom: '16px', borderBottom: '3px solid #002F6C', marginBottom: '32px', display: 'inline-block' }}>{cat.title}</div>
-              <div style={{ display: 'flex', gap: '32px', flexWrap: 'wrap' }}>
+              <div className="candidates-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '32px' }}>
                 {cat.candidates.map((cand, cIdx) => (
-                  <div key={cIdx} className="candidate-card" style={{ flex: '1', minWidth: '280px', maxWidth: '380px', background: '#FFFFFF', border: '1px solid #EDF2F7', borderRadius: '28px', overflow: 'hidden', boxShadow: '0 4px 12px rgba(0, 0, 0, 0.02)', transition: 'all 0.25s ease' }}>
+                  <div key={cIdx} className="candidate-card" style={{ background: '#FFFFFF', border: '1px solid #EDF2F7', borderRadius: '28px', overflow: 'hidden', boxShadow: '0 4px 12px rgba(0, 0, 0, 0.02)', transition: 'all 0.25s ease' }}>
                     {cand.photo_url ? (
                       <img
                         src={`https://busa-voting-portal.onrender.com${cand.photo_url}`}
