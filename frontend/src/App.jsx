@@ -134,12 +134,13 @@ const Home = () => {
           backgroundSize: 'cover',
           backgroundPosition: 'center right',
           transition: 'background-image 1s ease-in-out',
-          position: 'relative'
+          position: 'relative',
+          minHeight: '300px'
         }}>
-          <div style={{ position: 'relative', zIndex: 1 }}>
+          <div style={{ position: 'relative', zIndex: 1, padding: '20px 16px' }}>
             <p className="small">BUGEMA University Elections 2027</p>
-            <h1>Your Voice Shapes<br />Our Shared<br />Future.</h1>
-            <p className="small">A secure, transparent, and accessible voting platform designed for the student community. Exercise your right with confidence.</p>
+            <h1 style={{ fontSize: 'clamp(24px, 5vw, 36px)', fontWeight: '800', lineHeight: '1.2', marginBottom: '12px' }}>Your Voice Shapes<br />Our Shared<br />Future.</h1>
+            <p style={{ fontSize: 'clamp(14px, 2.5vw, 16px)', lineHeight: '1.4' }}>A secure, transparent, and accessible voting platform designed for the student community. Exercise your right with confidence.</p>
             <Link to="/register" className="btn">Register to Vote</Link>
           </div>
         </div>

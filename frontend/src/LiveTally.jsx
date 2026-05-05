@@ -51,35 +51,35 @@ const LiveTally = () => {
       <Navbar />
 
       {/* Blockchain Security Banner */}
-      <div style={{ background: 'linear-gradient(135deg, #0A2540 0%, #1A3A5C 100%)', margin: '32px 48px 24px 48px', borderRadius: '24px', padding: '20px 32px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-          <span style={{ fontSize: '32px' }}>🔗</span>
+      <div style={{ background: 'linear-gradient(135deg, #0A2540 0%, #1A3A5C 100%)', margin: '20px 16px 16px 16px', borderRadius: '16px', padding: '16px 16px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <span style={{ fontSize: '24px' }}>🔗</span>
           <div>
-            <div style={{ color: 'white', fontWeight: '700', fontSize: '18px', letterSpacing: '0.5px' }}>Blockchain Security</div>
-            <div style={{ color: 'rgba(255, 255, 255, 0.7)', fontSize: '13px', marginTop: '4px' }}>All tallies are cryptographically locked in the ledger.</div>
+            <div style={{ color: 'white', fontWeight: '700', fontSize: '16px', letterSpacing: '0.3px', lineHeight: '1.3' }}>Blockchain Security</div>
+            <div style={{ color: 'rgba(255, 255, 255, 0.7)', fontSize: '12px', marginTop: '2px', lineHeight: '1.3' }}>All tallies are cryptographically locked in ledger.</div>
           </div>
         </div>
-        <button onClick={handleAuditLog} style={{ background: 'rgba(255, 255, 255, 0.15)', border: '1px solid rgba(255, 255, 255, 0.3)', padding: '10px 24px', borderRadius: '40px', color: 'white', fontWeight: '600', fontSize: '14px', cursor: 'pointer' }}>View Audit Log</button>
+        <button onClick={handleAuditLog} style={{ background: 'rgba(255, 255, 255, 0.15)', border: '1px solid rgba(255, 255, 255, 0.3)', padding: '8px 16px', borderRadius: '20px', color: 'white', fontWeight: '600', fontSize: '13px', cursor: 'pointer', alignSelf: 'flex-start' }}>View Audit Log</button>
       </div>
 
       {/* Live Tally Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', padding: '0 48px', marginBottom: '20px' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '0 16px', marginBottom: '16px', gap: '12px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
           <div style={{ width: '10px', height: '10px', background: '#E63E3E', borderRadius: '50%', animation: 'pulse 1.2s infinite' }}></div>
-          <h1 style={{ fontSize: '28px', fontWeight: '800', color: 'black', margin: 0 }}>LIVE ELECTION TALLY</h1>
+          <h1 style={{ fontSize: '20px', fontWeight: '800', color: 'black', margin: 0, lineHeight: '1.2' }}>LIVE ELECTION TALLY</h1>
         </div>
         <div style={{ fontSize: '13px', color: 'black', background: '#F5F8FC', padding: '6px 14px', borderRadius: '40px' }}>Last Updated: {lastUpdated}</div>
       </div>
 
       {/* Stats Row */}
-      <div style={{ display: 'flex', gap: '24px', padding: '0 48px', marginBottom: '40px' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', padding: '0 24px', marginBottom: '32px' }}>
         {[
           { label: "Total Ballots Cast", value: stats.total_votes.toLocaleString(), sub: `of ${stats.total_voters.toLocaleString()} total registered`, percent: participationRate },
           { label: "Participation Rate", value: `${participationRate}%`, sub: `${stats.total_voters.toLocaleString()} Total Registered Voters`, percent: participationRate }
         ].map((stat, idx) => (
-          <div key={idx} style={{ flex: '1', background: '#F8FAFE', borderRadius: '24px', padding: '24px', border: '1px solid #EDF2F7' }}>
+          <div key={idx} style={{ background: '#F8FAFE', borderRadius: '16px', padding: '20px', border: '1px solid #EDF2F7' }}>
             <div style={{ fontSize: '14px', fontWeight: '600', textTransform: 'uppercase', color: 'black', marginBottom: '12px' }}>{stat.label}</div>
-            <div style={{ fontSize: '42px', fontWeight: '800', color: '#1A2C3E', marginBottom: '8px' }}>{stat.value}</div>
+            <div style={{ fontSize: '32px', fontWeight: '800', color: '#1A2C3E', marginBottom: '6px', lineHeight: '1.2' }}>{stat.value}</div>
             <div style={{ fontSize: '13px', color: 'black' }}>{stat.sub}</div>
             <div style={{ background: '#E2E9F2', borderRadius: '20px', height: '8px', marginTop: '16px', overflow: 'hidden' }}>
               <div style={{ 
@@ -95,16 +95,16 @@ const LiveTally = () => {
       </div>
 
       {/* Candidate Races */}
-      <div style={{ padding: '0 48px', display: 'flex', flexWrap: 'wrap', gap: '32px', marginBottom: '48px' }}>
+      <div style={{ padding: '0 24px', display: 'flex', flexDirection: 'column', gap: '20px', marginBottom: '32px' }}>
         {!loading && activeResults.length === 0 ? (
-          <div style={{ width: '100%', textAlign: 'center', padding: '60px', background: '#F8FAFE', borderRadius: '24px', border: '1px dashed #CBD5E1' }}>
+          <div style={{ width: '100%', textAlign: 'center', padding: '40px 20px', background: '#F8FAFE', borderRadius: '16px', border: '1px dashed #CBD5E1' }}>
             <div style={{ fontSize: '48px', marginBottom: '20px' }}>🗳️</div>
             <h3 style={{ color: 'black', marginBottom: '8px' }}>No Active Election Sessions</h3>
             <p style={{ color: 'black' }}>Results will appear here in real-time once polling begins.</p>
           </div>
         ) : (
           activeResults.map((item, idx) => (
-            <div key={idx} style={{ flex: '1', minWidth: '450px', background: '#FFFFFF', border: '1px solid #EDF2F7', borderRadius: '28px', overflow: 'hidden', boxShadow: '0 4px 12px rgba(0, 0, 0, 0.03)' }}>
+            <div key={idx} style={{ width: '100%', background: '#FFFFFF', border: '1px solid #EDF2F7', borderRadius: '16px', overflow: 'hidden', boxShadow: '0 2px 8px rgba(0, 0, 0, 0.03)' }}>
               <div style={{ background: '#F8FAFE', padding: '18px 24px', borderBottom: '1px solid #EDF2F7', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <h2 style={{ fontSize: '20px', fontWeight: '800', color: 'black', margin: 0 }}>{item.election.title.toUpperCase()}</h2>
                 <span style={{ fontSize: '12px', background: '#E2E8F0', padding: '4px 10px', borderRadius: '20px', color: '#475569', fontWeight: '600' }}>{item.total_votes} TOTAL VOTES</span>

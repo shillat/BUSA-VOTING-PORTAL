@@ -52,12 +52,12 @@ const AllCandidates = () => {
       <Navbar />
 
       {/* Page Title */}
-      <div style={{ padding: '40px 48px 20px 48px' }}>
-        <h1 style={{ fontSize: '42px', fontWeight: '800', color: 'black', letterSpacing: '-0.5px', margin: 0 }}>ALL CANDIDATES</h1>
+      <div style={{ padding: '20px 24px 16px 24px' }}>
+        <h1 style={{ fontSize: '28px', fontWeight: '800', color: 'black', letterSpacing: '-0.5px', margin: 0, lineHeight: '1.2' }}>ALL CANDIDATES</h1>
       </div>
 
       {/* Candidates Sections */}
-      <div style={{ padding: '16px 48px 48px 48px' }}>
+      <div style={{ padding: '16px 24px 48px 24px' }}>
         {!loading && candidateCategories.length === 0 ? (
           <div style={{ textAlign: 'center', padding: '100px 20px', background: '#F8FAFE', borderRadius: '32px', border: '1px dashed #CBD5E1' }}>
             <div style={{ fontSize: '64px', marginBottom: '24px' }}>👥</div>
@@ -68,8 +68,8 @@ const AllCandidates = () => {
         ) : (
           candidateCategories.map((cat, idx) => (
             <div key={idx} style={{ marginBottom: '64px' }}>
-              <div style={{ fontSize: '28px', fontWeight: '800', color: '#1A2C3E', paddingBottom: '16px', borderBottom: '3px solid #002F6C', marginBottom: '32px', display: 'inline-block' }}>{cat.title}</div>
-              <div className="candidates-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '32px' }}>
+              <div style={{ fontSize: '20px', fontWeight: '800', color: '#1A2C3E', paddingBottom: '12px', borderBottom: '2px solid #002F6C', marginBottom: '24px', display: 'inline-block', lineHeight: '1.3' }}>{cat.title}</div>
+              <div className="candidates-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
                 {cat.candidates.map((cand, cIdx) => (
                   <div key={cIdx} className="candidate-card" style={{ background: '#FFFFFF', border: '1px solid #EDF2F7', borderRadius: '28px', overflow: 'hidden', boxShadow: '0 4px 12px rgba(0, 0, 0, 0.02)', transition: 'all 0.25s ease' }}>
                     {cand.photo_url ? (

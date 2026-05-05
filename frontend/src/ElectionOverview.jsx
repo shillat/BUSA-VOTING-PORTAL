@@ -35,11 +35,11 @@ const ElectionOverview = () => {
     <div className="container">
       <Navbar />
 
-      <div style={{ padding: '32px 48px 16px 48px' }}>
-        <h1 style={{ fontSize: '36px', fontWeight: '800', color: 'black', margin: 0 }}>ELECTION OVERVIEW</h1>
+      <div style={{ padding: '20px 24px 16px 24px' }}>
+        <h1 style={{ fontSize: '28px', fontWeight: '800', color: 'black', margin: 0, lineHeight: '1.2' }}>ELECTION OVERVIEW</h1>
       </div>
 
-      <div className="roles-grid" style={{ padding: '16px 48px 32px 48px', display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '32px' }}>
+      <div className="roles-grid" style={{ padding: '16px 24px 32px 24px', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px' }}>
         {roles.map((role, idx) => (
           <div key={idx} className="role-card" style={{ background: '#FFFFFF', border: '1px solid #EDF2F7', borderRadius: '28px', overflow: 'hidden', boxShadow: '0 10px 30px -10px rgba(0, 0, 0, 0.05)', transition: 'transform 0.3s ease, box-shadow 0.3s ease', cursor: 'pointer' }} onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-5px)'; e.currentTarget.style.boxShadow = '0 20px 40px -10px rgba(0, 0, 0, 0.1)'; }} onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 10px 30px -10px rgba(0, 0, 0, 0.05)'; }}>
             <div style={{ background: '#F8FAFE', padding: '24px 28px 16px 28px', borderBottom: '1px solid #EDF2F7' }}>
@@ -56,14 +56,14 @@ const ElectionOverview = () => {
         ))}
       </div>
 
-      <div style={{ padding: '48px 48px 56px 48px', background: '#F8FAFE', margin: '16px 48px 32px 48px', borderRadius: '32px' }}>
+      <div style={{ padding: '32px 24px 40px 24px', background: '#F8FAFE', margin: '16px 24px 32px 24px', borderRadius: '20px' }}>
         <div style={{ textAlign: 'center', marginBottom: '40px' }}>
-          <h2 style={{ fontSize: '28px', fontWeight: '800', color: 'black', marginBottom: '12px' }}>Voting Integrity</h2>
-          <p style={{ fontSize: '18px', color: 'black' }}>Ensuring trust, transparency, and accessibility in every vote</p>
+          <h2 style={{ fontSize: '22px', fontWeight: '800', color: 'black', marginBottom: '12px', lineHeight: '1.3' }}>Voting Integrity</h2>
+          <p style={{ fontSize: '16px', color: 'black', lineHeight: '1.4' }}>Ensuring trust, transparency, and accessibility in every vote</p>
         </div>
-        <div style={{ display: 'flex', gap: '32px', justifyContent: 'center', flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', alignItems: 'center' }}>
           {integrityItems.map((item, idx) => (
-            <div key={idx} style={{ flex: '1', minWidth: '240px', background: '#FFFFFF', borderRadius: '24px', padding: '28px 24px', textAlign: 'center', border: '1px solid #E8EDF4', boxShadow: '0 10px 30px -10px rgba(0, 0, 0, 0.05)', transition: 'transform 0.3s ease, box-shadow 0.3s ease', cursor: 'pointer' }} onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-5px)'; e.currentTarget.style.boxShadow = '0 20px 40px -10px rgba(0, 0, 0, 0.1)'; }} onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 10px 30px -10px rgba(0, 0, 0, 0.05)'; }}>
+            <div key={idx} style={{ width: '100%', maxWidth: '320px', background: '#FFFFFF', borderRadius: '16px', padding: '20px', textAlign: 'center', border: '1px solid #E8EDF4', boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)', transition: 'transform 0.3s ease, box-shadow 0.3s ease', cursor: 'pointer' }} onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = '0 8px 24px rgba(0, 0, 0, 0.1)'; }} onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.05)'; }}>
               <div style={{ fontSize: '42px', marginBottom: '20px' }}>{item.icon}</div>
               <h3 style={{ fontSize: '18px', fontWeight: '800', color: 'black', marginBottom: '12px' }}>{item.title}</h3>
               <p style={{ fontSize: '18px', lineHeight: '1.5', color: 'black' }}>{item.desc}</p>

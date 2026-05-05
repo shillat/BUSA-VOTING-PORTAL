@@ -118,7 +118,7 @@ const Registration = () => {
           {/* Student Category */}
           <div className="input-group">
             <label>📋 CHECK Category</label>
-            <div style={{ display: 'flex', gap: '24px', marginTop: '6px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '6px' }}>
               <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: '500' }}>
                 <input
                   type="radio"
