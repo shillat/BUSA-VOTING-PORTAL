@@ -22,12 +22,16 @@ const Navbar = () => {
         onClick={toggleMenu}
         style={{
           display: 'none',
-          background: 'none',
+          background: '#002F6C',
           border: 'none',
-          fontSize: '24px',
+          fontSize: '20px',
           cursor: 'pointer',
-          color: '#1A2C3E'
+          color: 'white',
+          padding: '8px 12px',
+          borderRadius: '4px',
+          fontWeight: 'bold'
         }}
+        aria-label="Toggle menu"
       >
         {isMenuOpen ? '✕' : '☰'}
       </button>
