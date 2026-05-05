@@ -114,6 +114,22 @@ const upload = multer({
 const dbPath = process.env.RENDER_DISK_PATH ? 
   path.join(process.env.RENDER_DISK_PATH, 'database.sqlite') : 
   path.resolve(__dirname, 'database.sqlite');
+
+// Ensure directory exists
+if (process.env.RENDER_DISK_PATH) {
+  try {
+    if (!fs.existsSync(process.env.RENDER_DISK_PATH)) {
+      fs.mkdirSync(process.env.RENDER_DISK_PATH, { recursive: true });
+      console.log('Created directory:', process.env.RENDER_DISK_PATH);
+    }
+  } catch (error) {
+    console.error('Failed to create directory:', error);
+    // Fallback to local path
+    const dbPath = path.resolve(__dirname, 'database.sqlite');
+  }
+}
+
+console.log('Database path:', dbPath);
 const db = new sqlite3.Database(dbPath, (err) => {
   if (err) console.error('Database connection error:', err);
   else {
