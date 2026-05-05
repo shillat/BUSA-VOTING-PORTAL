@@ -17,6 +17,7 @@ const configuredOrigins = (process.env.ALLOWED_ORIGINS || '')
 
 const defaultOrigins = new Set([
   'https://busa-voting-portal.vercel.app',
+  'https://busa-voting-portal-cwwgearkj-shillah-naigagas-projects.vercel.app',
   'http://localhost:5173',
   'http://127.0.0.1:5173',
   'http://localhost:3000',
