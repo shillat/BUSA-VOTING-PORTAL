@@ -1526,15 +1526,11 @@ table {
   }
 
   .sidebar-link.active {
-    background: #002F6C !important;
-    color: white !important;
-    border-color: #002F6C !important;
+    background: transparent !important;
+    color: #002F6C !important;
+    border: none !important;
     text-align: center !important;
     justify-content: center !important;
-    border: 2px solid #002F6C !important;
-    box-sizing: border-box !important;
-    max-width: 100% !important;
-    overflow: hidden !important;
   }
 
   .sidebar-link:hover {
@@ -1689,16 +1685,11 @@ table {
   }
 
   .portal-container .sidebar-link.active {
-    background: #002F6C !important;
-    color: white !important;
-    border-color: #002F6C !important;
+    background: transparent !important;
+    color: #002F6C !important;
+    border: none !important;
     text-align: center !important;
     justify-content: center !important;
-    border-left: none !important;
-    border: 2px solid #002F6C !important;
-    box-sizing: border-box !important;
-    max-width: 100% !important;
-    overflow: hidden !important;
   }
 
   .portal-container .sidebar-link:hover {
