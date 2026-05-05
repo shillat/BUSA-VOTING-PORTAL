@@ -46,43 +46,43 @@ const IntroPreloader = ({ onComplete }) => {
       </div>
 
       <div className="animation-stage">
-        {/* Human Hand Animation */}
-        <div className="human-hand">
-          <div className="arm">
-            <div className="sleeve"></div>
-            <div className="palm">
-              <div className="finger thumb"></div>
-              <div className="finger index"></div>
-              <div className="finger middle"></div>
-              <div className="finger ring"></div>
-              <div className="finger pinky"></div>
-            </div>
+        {/* Hand Back (Arm, Palm, Fingers) */}
+        <div className="hand hand-back">
+          <div className="sleeve"></div>
+          <div className="palm">
+            <div className="finger thumb"></div>
+            <div className="finger index"></div>
+            <div className="finger middle"></div>
+            <div className="finger ring"></div>
+            <div className="finger pinky"></div>
           </div>
         </div>
 
-        {/* Voting Box */}
-        <div className="voting-box">
-          <div className="box-id">
-            <div className="box-slot"></div>
-          </div>
-          <div className="box-body">
-            <div className="box-paper">
-              <div className="paper-lines"></div>
-              <div className="paper-check">✓</div>
-            </div>
-          </div>
+        {/* Ballot */}
+        <div className="ballot">
+          <div className="ballot-lines"></div>
+          <svg className="ballot-check" viewBox="0 0 24 24">
+            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" />
+          </svg>
         </div>
 
-        {/* Success Elements */}
-        <div className="success-elements">
-          <div className="check-circle">
-            <div className="check-mark">✓</div>
+        {/* Hand Front (for depth) */}
+        <div className="hand hand-front">
+          <div className="palm-front"></div>
+        </div>
+
+        {/* Box */}
+        <div className="box-container">
+          <div className="box-top-opening"></div>
+          <div className="box-front">
+            <div className="box-logo">BUSA</div>
           </div>
-          <div className="dots">
-            <div className="dot dot-1"></div>
-            <div className="dot dot-2"></div>
-            <div className="dot dot-3"></div>
-          </div>
+          <div className="box-top-lip"></div>
+        </div>
+
+        {/* Success Glow */}
+        <div className="success-glow">
+          <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" /></svg>
         </div>
       </div>
     </div>
