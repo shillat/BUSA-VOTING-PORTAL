@@ -6,7 +6,7 @@ import LogoMark from './LogoMark';
 const Registration = () => {
   const [formData, setFormData] = useState({
     campus: '',
-    studentCategory: 'Regular Student',
+    studentCategory: '',
     fullName: '',
     department: '',
     regNumber: '',
@@ -89,8 +89,10 @@ const Registration = () => {
 
       {/* Registration Form */}
       <div className="validation-card">
-        <div className="brand-head">
-          <LogoMark size={56} radius={20} />
+        <div className="brand-head" style={{ textAlign: 'center' }}>
+          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '16px' }}>
+            <LogoMark size={56} radius={20} />
+          </div>
           <div>
             <div className="reg-title">Voter Registration & Validation</div>
             <div className="reg-sub">Verify your identity to be eligible for upcoming elections</div>
@@ -118,8 +120,8 @@ const Registration = () => {
           {/* Student Category */}
           <div className="input-group">
             <label>📋 CHECK Category</label>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '6px' }}>
-              <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: '500' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '6px', alignItems: 'center' }}>
+              <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: '500', justifyContent: 'center' }}>
                 <input
                   type="radio"
                   name="studentCategory"
@@ -128,7 +130,7 @@ const Registration = () => {
                   onChange={handleChange}
                 /> Regular Student
               </label>
-              <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: '500' }}>
+              <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: '500', justifyContent: 'center' }}>
                 <input
                   type="radio"
                   name="studentCategory"

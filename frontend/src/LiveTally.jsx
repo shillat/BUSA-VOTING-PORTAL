@@ -65,7 +65,7 @@ const LiveTally = () => {
       {/* Live Tally Header */}
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '0 16px', marginBottom: '16px', gap: '12px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <div style={{ width: '10px', height: '10px', background: '#E63E3E', borderRadius: '50%', animation: 'pulse 1.2s infinite' }}></div>
+          <div style={{ width: '10px', height: '10px', background: '#4CAF50', borderRadius: '50%', animation: 'pulse 1.2s infinite' }}></div>
           <h1 style={{ fontSize: '20px', fontWeight: '800', color: 'black', margin: 0, lineHeight: '1.2' }}>LIVE ELECTION TALLY</h1>
         </div>
         <div style={{ fontSize: '13px', color: 'black', background: '#F5F8FC', padding: '6px 14px', borderRadius: '40px' }}>Last Updated: {lastUpdated}</div>

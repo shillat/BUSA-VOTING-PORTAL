@@ -1531,6 +1531,10 @@ table {
     border-color: #002F6C !important;
     text-align: center !important;
     justify-content: center !important;
+    border: 2px solid #002F6C !important;
+    box-sizing: border-box !important;
+    max-width: 100% !important;
+    overflow: hidden !important;
   }
 
   .sidebar-link:hover {
@@ -1691,6 +1695,10 @@ table {
     text-align: center !important;
     justify-content: center !important;
     border-left: none !important;
+    border: 2px solid #002F6C !important;
+    box-sizing: border-box !important;
+    max-width: 100% !important;
+    overflow: hidden !important;
   }
 
   .portal-container .sidebar-link:hover {
