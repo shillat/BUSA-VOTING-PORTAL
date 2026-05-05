@@ -46,29 +46,34 @@ const IntroPreloader = ({ onComplete }) => {
       </div>
 
       <div className="animation-stage">
-        {/* Hand Back (Arm, Palm, Fingers) */}
-        <div className="hand hand-back">
-          <div className="sleeve"></div>
-          <div className="palm">
-            <div className="finger thumb"></div>
-            <div className="finger index"></div>
-            <div className="finger middle"></div>
-            <div className="finger ring"></div>
-            <div className="finger pinky"></div>
+        {/* Hand with Ballot */}
+        <div className="hand-with-ballot">
+          {/* Hand Back */}
+          <div className="hand hand-back">
+            <div className="sleeve"></div>
+            <div className="palm">
+              <div className="finger thumb"></div>
+              <div className="finger index"></div>
+              <div className="finger middle"></div>
+              <div className="finger ring"></div>
+              <div className="finger pinky"></div>
+            </div>
           </div>
-        </div>
 
-        {/* Ballot */}
-        <div className="ballot">
-          <div className="ballot-lines"></div>
-          <svg className="ballot-check" viewBox="0 0 24 24">
-            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" />
-          </svg>
-        </div>
+          {/* Ballot held by hand */}
+          <div className="ballot-held">
+            <div className="ballot-lines"></div>
+            <svg className="ballot-check" viewBox="0 0 24 24">
+              <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" />
+            </svg>
+          </div>
 
-        {/* Hand Front (for depth) */}
-        <div className="hand hand-front">
-          <div className="palm-front"></div>
+          {/* Hand Front (gripping) */}
+          <div className="hand hand-front">
+            <div className="finger thumb-grip"></div>
+            <div className="finger index-grip"></div>
+            <div className="finger middle-grip"></div>
+          </div>
         </div>
 
         {/* Box */}

@@ -111,23 +111,32 @@
   clip-path: polygon(0 50%, 100% 50%, 100% 100%, 0 100%);
 }
 
-/* Ballot */
-.ballot {
+/* Hand with Ballot Container */
+.hand-with-ballot {
   position: absolute;
   bottom: 160px;
   left: 50%;
-  margin-left: -35px;
-  width: 70px; height: 100px;
+  margin-left: 20px;
+  width: 200px;
+  height: 120px;
+  animation: handMove 7s ease-in-out infinite;
+  opacity: 0;
+}
+
+/* Ballot held by hand */
+.ballot-held {
+  position: absolute;
+  top: 20px; left: 30px;
+  width: 70px; height: 90px;
   background: #FFFFFF;
   border-radius: 4px;
   border: 2px solid #E9EDF2;
   box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-  z-index: 2;
+  z-index: 3;
   display: flex;
   justify-content: center;
   align-items: center;
-  animation: ballotMove 7s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-  opacity: 0;
+  transform: rotate(-5deg);
 }
 .ballot-check {
   width: 35px; height: 35px;
@@ -224,14 +233,36 @@
   animation: pinkyMove 7s ease-in-out infinite;
 }
 
-/* Front palm for depth */
-.palm-front {
+/* Gripping fingers on front hand */
+.thumb-grip {
   position: absolute;
-  top: 22px; left: 20px;
-  width: 60px; height: 45px;
+  top: 35px; left: 45px;
+  width: 20px; height: 25px;
   background: #F2C4A7;
-  border-radius: 20px;
-  opacity: 0.8;
+  border-radius: 8px;
+  transform: rotate(-25deg);
+  z-index: 4;
+  animation: thumbGrip 7s ease-in-out infinite;
+}
+
+.index-grip {
+  position: absolute;
+  top: 30px; left: 55px;
+  width: 16px; height: 35px;
+  background: #F2C4A7;
+  border-radius: 6px 6px 10px 10px;
+  z-index: 4;
+  animation: indexGrip 7s ease-in-out infinite;
+}
+
+.middle-grip {
+  position: absolute;
+  top: 28px; left: 65px;
+  width: 15px; height: 38px;
+  background: #F2C4A7;
+  border-radius: 6px 6px 10px 10px;
+  z-index: 4;
+  animation: middleGrip 7s ease-in-out infinite;
 }
 
 /* Success Glow */
@@ -316,11 +347,32 @@
   45% { transform: translateX(0) translateY(5px) rotate(0deg); opacity: 1; }
   55% { transform: translateX(0) translateY(10px) rotate(-1deg); opacity: 1; }
   65% { transform: translateX(0) translateY(15px) rotate(2deg); opacity: 1; }
-  70% { transform: translateX(0) translateY(80px) rotate(0deg); opacity: 1; }
-  75% { transform: translateX(0) translateY(120px) rotate(0deg); opacity: 1; }
-  80% { transform: translateX(0) translateY(140px) rotate(0deg); opacity: 1; }
-  85% { transform: translateX(0) translateY(150px) rotate(0deg); opacity: 0; }
-  100% { transform: translateX(0) translateY(150px) rotate(0deg); opacity: 0; }
+  70% { transform: translateX(0) translateY(80px) rotate(5deg); opacity: 1; }
+  75% { transform: translateX(0) translateY(120px) rotate(10deg); opacity: 1; }
+  80% { transform: translateX(0) translateY(140px) rotate(15deg); opacity: 1; }
+  85% { transform: translateX(0) translateY(150px) rotate(20deg); opacity: 0; }
+  100% { transform: translateX(0) translateY(150px) rotate(20deg); opacity: 0; }
+}
+
+@keyframes thumbGrip {
+  0%, 45% { transform: rotate(-25deg) translateY(0); }
+  55% { transform: rotate(-20deg) translateY(-5px); }
+  65% { transform: rotate(-10deg) translateY(-10px); }
+  75%, 100% { transform: rotate(-5deg) translateY(-15px); }
+}
+
+@keyframes indexGrip {
+  0%, 45% { transform: translateY(0) rotate(0deg); }
+  55% { transform: translateY(-5px) rotate(5deg); }
+  65% { transform: translateY(-10px) rotate(10deg); }
+  75%, 100% { transform: translateY(-15px) rotate(15deg); }
+}
+
+@keyframes middleGrip {
+  0%, 45% { transform: translateY(0) rotate(0deg); }
+  55% { transform: translateY(-5px) rotate(-2deg); }
+  65% { transform: translateY(-10px) rotate(-5deg); }
+  75%, 100% { transform: translateY(-15px) rotate(-8deg); }
 }
 
 @keyframes glowPop {
