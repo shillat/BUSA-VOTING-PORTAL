@@ -4,12 +4,12 @@
   "description": "BUSA Online Voting Portal Backend",
   "main": "server.js",
   "scripts": {
-    "start": "node setupDb.js && node server.js",
+    "start": "node -e \"const path = require('path'); const fs = require('fs'); const dbPath = process.env.RENDER_DISK_PATH ? path.join(process.env.RENDER_DISK_PATH, 'database.sqlite') : path.resolve(__dirname, 'database.sqlite'); if (process.env.RENDER_DISK_PATH && !fs.existsSync(process.env.RENDER_DISK_PATH)) { fs.mkdirSync(process.env.RENDER_DISK_PATH, { recursive: true }); console.log('Created directory:', process.env.RENDER_DISK_PATH); } require('./setupDb.js');\" && node server.js",
     "dev": "nodemon server.js",
     "setup-db": "node setupDb.js",
     "build": "npm install --build-from-source",
     "postinstall": "npm run rebuild",
-    "rebuild": "npm rebuild sqlite3",
+    "rebuild": "npm rebuild sqlite3 && npm rebuild better-sqlite3",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "engines": {
@@ -25,6 +25,7 @@
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^6.0.0",
+    "better-sqlite3": "^9.2.2",
     "cors": "^2.8.6",
     "express": "^5.2.1",
     "jsonwebtoken": "^9.0.3",

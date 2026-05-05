@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const multer = require('multer');
 const path = require('path');
-const sqlite3 = require('sqlite3').verbose();
+const DatabaseWrapper = require('./db-wrapper');
 const fs = require('fs');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
@@ -111,12 +111,11 @@ const upload = multer({
   limits: { fileSize: 2 * 1024 * 1024 } // 2MB limit
 });
 
-const dbPath = process.env.RENDER_DISK_PATH ? 
-  path.join(process.env.RENDER_DISK_PATH, 'database.sqlite') : 
-  path.resolve(__dirname, 'database.sqlite');
+let dbPath = path.resolve(__dirname, 'database.sqlite');
 
-// Ensure directory exists
+// Ensure directory exists for Render
 if (process.env.RENDER_DISK_PATH) {
+  dbPath = path.join(process.env.RENDER_DISK_PATH, 'database.sqlite');
   try {
     if (!fs.existsSync(process.env.RENDER_DISK_PATH)) {
       fs.mkdirSync(process.env.RENDER_DISK_PATH, { recursive: true });
@@ -125,26 +124,15 @@ if (process.env.RENDER_DISK_PATH) {
   } catch (error) {
     console.error('Failed to create directory:', error);
     // Fallback to local path
-    const dbPath = path.resolve(__dirname, 'database.sqlite');
+    dbPath = path.resolve(__dirname, 'database.sqlite');
   }
 }
 
 console.log('Database path:', dbPath);
-const db = new sqlite3.Database(dbPath, (err) => {
+const db = new DatabaseWrapper(dbPath, (err) => {
   if (err) console.error('Database connection error:', err);
   else {
     console.log('Connected to SQLite database.');
-    // Schema update: ensure candidates table has faculty and slogan columns
-    db.run("ALTER TABLE candidates ADD COLUMN faculty TEXT", (err) => {
-      if (err && !err.message.includes('duplicate column name')) {
-        // Ignore error if column already exists
-      }
-    });
-    db.run("ALTER TABLE candidates ADD COLUMN slogan TEXT", (err) => {
-      if (err && !err.message.includes('duplicate column name')) {
-        // Ignore error if column already exists
-      }
-    });
   }
 });
 
