@@ -75,9 +75,7 @@ const Login = () => {
                 width: '80px',
                 height: '80px',
                 borderRadius: '12px',
-                objectFit: 'contain',
-                background: '#002F6C',
-                padding: '8px'
+                objectFit: 'contain'
               }}
             />
           </div>

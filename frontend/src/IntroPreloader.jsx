@@ -41,44 +41,46 @@ const IntroPreloader = ({ onComplete }) => {
           {renderStaggeredText('Welcome to BUSA', 0.8)}
         </h1>
         <p className="subtitle">
-          {renderStaggeredText('Your vote secures your voice at Bugema University', 1.2)}
+          {renderStaggeredText('Your voice shapes our future', 1.2)}
         </p>
       </div>
 
       <div className="animation-stage">
-        {/* Hand Back (Arm, Palm, Fingers) */}
-        <div className="hand hand-back">
-          <div className="sleeve"></div>
-          <div className="palm"></div>
-          <div className="finger f1"></div>
-          <div className="finger f2"></div>
-        </div>
-
-        {/* Ballot */}
-        <div className="ballot">
-          <div className="ballot-lines"></div>
-          <svg className="ballot-check" viewBox="0 0 24 24">
-            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" />
-          </svg>
-        </div>
-
-        {/* Hand Front (Thumb) */}
-        <div className="hand hand-front">
-          <div className="thumb"></div>
-        </div>
-
-        {/* Box */}
-        <div className="box-container">
-          <div className="box-top-opening"></div>
-          <div className="box-front">
-            <div className="box-logo">BUSA</div>
+        {/* Voting Box Animation */}
+        <div className="voting-box">
+          <div className="box-lid">
+            <div className="box-slot"></div>
           </div>
-          <div className="box-top-lip"></div>
+          <div className="box-body">
+            <div className="box-paper">
+              <div className="paper-lines"></div>
+              <div className="paper-check">✓</div>
+            </div>
+          </div>
         </div>
 
-        {/* Success Glow */}
-        <div className="success-glow">
-          <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" /></svg>
+        {/* University Elements */}
+        <div className="university-elements">
+          <div className="cap">
+            <div className="cap-top"></div>
+            <div className="cap-bottom"></div>
+          </div>
+          <div className="scroll">
+            <div className="scroll-text">BUSA</div>
+            <div className="scroll-ribbon"></div>
+          </div>
+        </div>
+
+        {/* Success Elements */}
+        <div className="success-elements">
+          <div className="check-circle">
+            <div className="check-mark">✓</div>
+          </div>
+          <div className="dots">
+            <div className="dot dot-1"></div>
+            <div className="dot dot-2"></div>
+            <div className="dot dot-3"></div>
+          </div>
         </div>
       </div>
     </div>
