@@ -46,9 +46,23 @@ const IntroPreloader = ({ onComplete }) => {
       </div>
 
       <div className="animation-stage">
-        {/* Voting Box Animation */}
+        {/* Human Hand Animation */}
+        <div className="human-hand">
+          <div className="arm">
+            <div className="sleeve"></div>
+            <div className="palm">
+              <div className="finger thumb"></div>
+              <div className="finger index"></div>
+              <div className="finger middle"></div>
+              <div className="finger ring"></div>
+              <div className="finger pinky"></div>
+            </div>
+          </div>
+        </div>
+
+        {/* Voting Box */}
         <div className="voting-box">
-          <div className="box-lid">
+          <div className="box-id">
             <div className="box-slot"></div>
           </div>
           <div className="box-body">
@@ -56,18 +70,6 @@ const IntroPreloader = ({ onComplete }) => {
               <div className="paper-lines"></div>
               <div className="paper-check">✓</div>
             </div>
-          </div>
-        </div>
-
-        {/* University Elements */}
-        <div className="university-elements">
-          <div className="cap">
-            <div className="cap-top"></div>
-            <div className="cap-bottom"></div>
-          </div>
-          <div className="scroll">
-            <div className="scroll-text">BUSA</div>
-            <div className="scroll-ribbon"></div>
           </div>
         </div>
 
