@@ -905,7 +905,7 @@ table {
 
   .nav-links a {
     padding: 12px 0;
-    border-bottom: 1px solid #f0f0f0;
+    border-bottom: none;
     text-align: center;
   }
 
@@ -1529,6 +1529,7 @@ table {
     background: transparent !important;
     color: #002F6C !important;
     border: none !important;
+    border-bottom: none !important;
     text-align: center !important;
     justify-content: center !important;
   }
@@ -1688,6 +1689,7 @@ table {
     background: transparent !important;
     color: #002F6C !important;
     border: none !important;
+    border-bottom: none !important;
     text-align: center !important;
     justify-content: center !important;
   }

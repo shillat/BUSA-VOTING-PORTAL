@@ -84,7 +84,6 @@ const Registration = () => {
           <LogoMark size={48} radius={14} />
           <div className="portal-title">BUSA ONLINE VOTING PORTAL</div>
         </div>
-        <a href="#" className="back-link" onClick={() => navigate('/')}>← Back to Home</a>
       </div>
 
       {/* Registration Form */}
@@ -126,6 +125,7 @@ const Registration = () => {
                   value="Regular Student"
                   checked={formData.studentCategory === 'Regular Student'}
                   onChange={handleChange}
+                  style={{ width: '16px', height: '16px' }}
                 /> Regular Student
               </label>
               <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: '500', justifyContent: 'flex-start' }}>
@@ -135,6 +135,7 @@ const Registration = () => {
                   value="In-service Student"
                   checked={formData.studentCategory === 'In-service Student'}
                   onChange={handleChange}
+                  style={{ width: '16px', height: '16px' }}
                 /> In-service Student
               </label>
             </div>
@@ -254,8 +255,38 @@ const Registration = () => {
 
         {/* Legal Disclaimer */}
         <div className="legal-disclaimer">
-          ⚖️ By proceeding, you verify that the information provided is accurate and belongs to you.
+          ⚖️ By proceeding, you verify that information provided is accurate and belongs to you.
         </div>
+        
+        {/* Back to Home Button */}
+        <button
+          type="button"
+          onClick={() => navigate('/')}
+          style={{
+            width: '100%',
+            padding: '16px 24px',
+            background: '#002F6C',
+            color: 'white',
+            border: 'none',
+            borderRadius: '12px',
+            fontSize: '16px',
+            fontWeight: '600',
+            cursor: 'pointer',
+            marginTop: '24px',
+            marginBottom: '16px',
+            transition: 'all 0.3s ease'
+          }}
+          onMouseOver={(e) => {
+            e.target.style.background = '#0A4175';
+            e.target.style.transform = 'translateY(-2px)';
+          }}
+          onMouseOut={(e) => {
+            e.target.style.background = '#002F6C';
+            e.target.style.transform = 'translateY(0)';
+          }}
+        >
+          ← Back to Home
+        </button>
       </div>
 
       {/* Footer */}
