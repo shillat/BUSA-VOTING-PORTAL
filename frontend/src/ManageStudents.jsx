@@ -25,7 +25,7 @@ const ManageStudents = () => {
 
   const fetchStudents = async () => {
     try {
-      const token = localStorage.getItem('adminToken');
+      const token = localStorage.getItem('authToken');
       const response = await fetch('/api/students', {
         headers: {
           'Authorization': `Bearer ${token}`
@@ -49,7 +49,7 @@ const ManageStudents = () => {
     e.preventDefault();
     
     try {
-      const token = localStorage.getItem('adminToken');
+      const token = localStorage.getItem('authToken');
       const url = editingStudent ? `/api/students/${editingStudent.reg_no}` : '/api/students';
       const method = editingStudent ? 'PUT' : 'POST';
       
@@ -96,7 +96,7 @@ const ManageStudents = () => {
     if (!confirm('Are you sure you want to delete this student?')) return;
     
     try {
-      const token = localStorage.getItem('adminToken');
+      const token = localStorage.getItem('authToken');
       const response = await fetch(`/api/students/${regNo}`, {
         method: 'DELETE',
         headers: {
