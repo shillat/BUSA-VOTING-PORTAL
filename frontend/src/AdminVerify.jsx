@@ -6,6 +6,14 @@ import LogoMark from './LogoMark';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
 
+// Ensure HTTPS for production deployments
+const getApiBaseUrl = () => {
+  if (window.location.protocol === 'https:' && API_BASE_URL.startsWith('http://')) {
+    return API_BASE_URL.replace('http://', 'https://');
+  }
+  return API_BASE_URL;
+};
+
 const AdminVerify = () => {
   const [registrations, setRegistrations] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -153,7 +161,7 @@ const AdminVerify = () => {
                                   const originalUrl = registration.evidence_url;
                                   // Extract filename from the path
                                   const filename = originalUrl.split('/').pop();
-                                  const finalUrl = `${API_BASE_URL}/uploads/${filename}`;
+                                  const finalUrl = `${getApiBaseUrl()}/uploads/${filename}`;
                                   console.log('Original URL:', originalUrl);
                                   console.log('Extracted filename:', filename);
                                   console.log('Final URL:', finalUrl);
@@ -189,7 +197,7 @@ const AdminVerify = () => {
                                     📄 Document Preview
                                   </div>
                                   <a 
-                                    href={`${API_BASE_URL}${registration.evidence_url.replace('/api/uploads', '/uploads')}`}
+                                    href={`${getApiBaseUrl()}/uploads/${registration.evidence_url.split('/').pop()}`}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     style={{ 
