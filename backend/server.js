@@ -253,6 +253,16 @@ const db = new sqlite3.Database(dbPath, (err) => {
       db.run("INSERT OR IGNORE INTO admin_users (admin_id, password_hash, name, email, role) VALUES (?, ?, ?, ?, ?)", 
         ['admin', adminPassword, 'System Administrator', 'admin@busa.edu', 'super_admin']);
       
+      // Seed student data if not exists
+      const studentStmt = db.prepare("INSERT OR IGNORE INTO students_master VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+      studentStmt.run("24/BSE/BU/R/0008", "Atukwatse Blessing", "atukwatseblessing@gmail.com", "Regular", true, 2027, "main", "CI");
+      studentStmt.run("24/BSE/BU/R/0003", "Naigaga Shillah", "shillahnaigaga5@gmail.com", "Regular", false, 2027, "main", "CI");
+      studentStmt.run("22/BTH/BU/H/0012", "Kakande Charlse", "charlsek@gmail.com", "In-Service", true, 2025, "main", "RS");
+      studentStmt.run("19/BTH/BU/H/0012", "Nakamya Diana", "diana@gmail.com", "In-Service", false, 2022, "main", "RS");
+      studentStmt.run("21/EDS/BU/R/0003", "Kamya Lawrence", "lawrencekamya@gmail.com", "Regular", true, 2026, "EDS");
+      studentStmt.run("21/EDS/BU/H/0003", "Katongore Lawrence", "lawrence@gmail.com", "In-Service", true, 2026, "virtual", "EDS");
+      studentStmt.finalize();
+      
       console.log('Database schema initialized successfully!');
     });
   }
