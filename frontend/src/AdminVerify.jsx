@@ -136,15 +136,53 @@ const AdminVerify = () => {
                         <div><strong>Applied:</strong> {formatDate(registration.created_at)}</div>
                         {registration.evidence_url && (
                           <div>
-                            <strong>Evidence:</strong> 
-                            <a 
-                              href={`http://localhost:5000${registration.evidence_url}`} 
-                              target="_blank" 
-                              rel="noopener noreferrer"
-                              style={{ color: '#2A6F8F', marginLeft: '8px' }}
-                            >
-                              View Document
-                            </a>
+                            <strong>Evidence:</strong>
+                            <div style={{ marginTop: '8px' }}>
+                              {registration.evidence_url.toLowerCase().endsWith('.jpg') || 
+                               registration.evidence_url.toLowerCase().endsWith('.jpeg') || 
+                               registration.evidence_url.toLowerCase().endsWith('.png') ? (
+                                <img 
+                                  src={`http://localhost:5000${registration.evidence_url}`}
+                                  alt="Bankslip"
+                                  style={{ 
+                                    width: '200px', 
+                                    height: '150px', 
+                                    objectFit: 'cover', 
+                                    border: '1px solid #E2E9F2',
+                                    borderRadius: '8px',
+                                    cursor: 'pointer'
+                                  }}
+                                  onClick={() => window.open(`http://localhost:5000${registration.evidence_url}`, '_blank')}
+                                />
+                              ) : (
+                                <div style={{
+                                  padding: '20px',
+                                  border: '1px solid #E2E9F2',
+                                  borderRadius: '8px',
+                                  backgroundColor: '#F8FAFC',
+                                  textAlign: 'center'
+                                }}>
+                                  <div style={{ fontSize: '14px', color: '#64748B', marginBottom: '8px' }}>
+                                    📄 Document Preview
+                                  </div>
+                                  <a 
+                                    href={`http://localhost:5000${registration.evidence_url}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    style={{ 
+                                      color: '#2A6F8F',
+                                      textDecoration: 'none',
+                                      fontWeight: '600'
+                                    }}
+                                  >
+                                    Open Document
+                                  </a>
+                                </div>
+                              )}
+                            </div>
+                            <div style={{ marginTop: '8px', fontSize: '12px', color: '#64748B' }}>
+                              Click image to view full size
+                            </div>
                           </div>
                         )}
                       </div>
