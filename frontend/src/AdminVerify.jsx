@@ -149,19 +149,34 @@ const AdminVerify = () => {
                               {registration.evidence_url.toLowerCase().endsWith('.jpg') || 
                                registration.evidence_url.toLowerCase().endsWith('.jpeg') || 
                                registration.evidence_url.toLowerCase().endsWith('.png') ? (
-                                <img 
-                                  src={`${API_BASE_URL}${registration.evidence_url.replace('/api/uploads', '/uploads')}`}
-                                  alt="Bankslip"
-                                  style={{ 
-                                    width: '200px', 
-                                    height: '150px', 
-                                    objectFit: 'cover', 
-                                    border: '1px solid #E2E9F2',
-                                    borderRadius: '8px',
-                                    cursor: 'pointer'
-                                  }}
-                                  onClick={() => window.open(`${API_BASE_URL}${registration.evidence_url.replace('/api/uploads', '/uploads')}`, '_blank')}
-                                />
+                                (() => {
+                                  const originalUrl = registration.evidence_url;
+                                  // Extract filename from the path
+                                  const filename = originalUrl.split('/').pop();
+                                  const finalUrl = `${API_BASE_URL}/uploads/${filename}`;
+                                  console.log('Original URL:', originalUrl);
+                                  console.log('Extracted filename:', filename);
+                                  console.log('Final URL:', finalUrl);
+                                  return (
+                                    <img 
+                                      src={finalUrl}
+                                      alt="Bankslip"
+                                      style={{ 
+                                        width: '200px', 
+                                        height: '150px', 
+                                        objectFit: 'cover', 
+                                        border: '1px solid #E2E9F2',
+                                        borderRadius: '8px',
+                                        cursor: 'pointer'
+                                      }}
+                                      onClick={() => window.open(finalUrl, '_blank')}
+                                      onError={(e) => {
+                                        console.error('Image failed to load:', finalUrl);
+                                        e.target.style.display = 'none';
+                                      }}
+                                    />
+                                  );
+                                })()
                               ) : (
                                 <div style={{
                                   padding: '20px',
