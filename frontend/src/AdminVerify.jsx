@@ -159,12 +159,24 @@ const AdminVerify = () => {
                                registration.evidence_url.toLowerCase().endsWith('.png') ? (
                                 (() => {
                                   const originalUrl = registration.evidence_url;
-                                  // Extract filename from the path
-                                  const filename = originalUrl.split('/').pop();
-                                  const finalUrl = `${getApiBaseUrl()}/uploads/${filename}`;
+                                  let finalUrl;
+                                  
+                                  // Check if the evidence URL already includes the full path
+                                  if (originalUrl.startsWith('/uploads/')) {
+                                    // URL already has /uploads/, just add base URL
+                                    finalUrl = `${getApiBaseUrl()}${originalUrl}`;
+                                  } else if (originalUrl.startsWith('/api/uploads/')) {
+                                    // URL has /api/uploads/, replace with /uploads/
+                                    finalUrl = `${getApiBaseUrl()}${originalUrl.replace('/api/uploads', '/uploads')}`;
+                                  } else {
+                                    // Extract filename and construct URL
+                                    const filename = originalUrl.split('/').pop();
+                                    finalUrl = `${getApiBaseUrl()}/uploads/${filename}`;
+                                  }
+                                  
                                   console.log('Original URL:', originalUrl);
-                                  console.log('Extracted filename:', filename);
                                   console.log('Final URL:', finalUrl);
+                                  console.log('API Base URL:', getApiBaseUrl());
                                   return (
                                     <img 
                                       src={finalUrl}
@@ -196,18 +208,35 @@ const AdminVerify = () => {
                                   <div style={{ fontSize: '14px', color: '#64748B', marginBottom: '8px' }}>
                                     📄 Document Preview
                                   </div>
-                                  <a 
-                                    href={`${getApiBaseUrl()}/uploads/${registration.evidence_url.split('/').pop()}`}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    style={{ 
-                                      color: '#2A6F8F',
-                                      textDecoration: 'none',
-                                      fontWeight: '600'
-                                    }}
-                                  >
-                                    Open Document
-                                  </a>
+                                  {(() => {
+                                  const originalUrl = registration.evidence_url;
+                                  let finalUrl;
+                                  
+                                  // Use same logic as image URL construction
+                                  if (originalUrl.startsWith('/uploads/')) {
+                                    finalUrl = `${getApiBaseUrl()}${originalUrl}`;
+                                  } else if (originalUrl.startsWith('/api/uploads/')) {
+                                    finalUrl = `${getApiBaseUrl()}${originalUrl.replace('/api/uploads', '/uploads')}`;
+                                  } else {
+                                    const filename = originalUrl.split('/').pop();
+                                    finalUrl = `${getApiBaseUrl()}/uploads/${filename}`;
+                                  }
+                                  
+                                  return (
+                                    <a 
+                                      href={finalUrl}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      style={{ 
+                                        color: '#2A6F8F',
+                                        textDecoration: 'none',
+                                        fontWeight: '600'
+                                      }}
+                                    >
+                                      Open Document
+                                    </a>
+                                  );
+                                })()}
                                 </div>
                               )}
                             </div>
