@@ -163,15 +163,18 @@ const AdminVerify = () => {
                                   
                                   // Check if the evidence URL already includes the full path
                                   if (originalUrl.startsWith('/uploads/')) {
-                                    // URL already has /uploads/, just add base URL
-                                    finalUrl = `${getApiBaseUrl()}${originalUrl}`;
+                                    // URL already has /uploads/, construct proper URL without /api/
+                                    const baseUrl = getApiBaseUrl().replace('/api', '');
+                                    finalUrl = `${baseUrl}${originalUrl}`;
                                   } else if (originalUrl.startsWith('/api/uploads/')) {
                                     // URL has /api/uploads/, replace with /uploads/
-                                    finalUrl = `${getApiBaseUrl()}${originalUrl.replace('/api/uploads', '/uploads')}`;
+                                    const baseUrl = getApiBaseUrl().replace('/api', '');
+                                    finalUrl = `${baseUrl}${originalUrl.replace('/api/uploads', '/uploads')}`;
                                   } else {
                                     // Extract filename and construct URL
                                     const filename = originalUrl.split('/').pop();
-                                    finalUrl = `${getApiBaseUrl()}/uploads/${filename}`;
+                                    const baseUrl = getApiBaseUrl().replace('/api', '');
+                                    finalUrl = `${baseUrl}/uploads/${filename}`;
                                   }
                                   
                                   console.log('Original URL:', originalUrl);
@@ -214,12 +217,15 @@ const AdminVerify = () => {
                                   
                                   // Use same logic as image URL construction
                                   if (originalUrl.startsWith('/uploads/')) {
-                                    finalUrl = `${getApiBaseUrl()}${originalUrl}`;
+                                    const baseUrl = getApiBaseUrl().replace('/api', '');
+                                    finalUrl = `${baseUrl}${originalUrl}`;
                                   } else if (originalUrl.startsWith('/api/uploads/')) {
-                                    finalUrl = `${getApiBaseUrl()}${originalUrl.replace('/api/uploads', '/uploads')}`;
+                                    const baseUrl = getApiBaseUrl().replace('/api', '');
+                                    finalUrl = `${baseUrl}${originalUrl.replace('/api/uploads', '/uploads')}`;
                                   } else {
                                     const filename = originalUrl.split('/').pop();
-                                    finalUrl = `${getApiBaseUrl()}/uploads/${filename}`;
+                                    const baseUrl = getApiBaseUrl().replace('/api', '');
+                                    finalUrl = `${baseUrl}/uploads/${filename}`;
                                   }
                                   
                                   return (
