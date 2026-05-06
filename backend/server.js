@@ -432,7 +432,7 @@ app.get('/api/admin/verify', (req, res) => {
   });
 });
 
-app.post('/api/admin/approve/:id', (req, res) => {
+app.post('/api/admin/approve/:id', authenticateToken, (req, res) => {
   const { id } = req.params;
   db.get("SELECT s.email FROM voter_registrations v JOIN students_master s ON v.reg_no = s.reg_no WHERE v.id = ?", [id], async (err, row) => {
     if (!row) return res.status(404).json({ error: 'Record not found' });
@@ -448,7 +448,7 @@ app.post('/api/admin/approve/:id', (req, res) => {
   });
 });
 
-app.post('/api/admin/reject/:id', (req, res) => {
+app.post('/api/admin/reject/:id', authenticateToken, (req, res) => {
   const { id } = req.params;
   const { reason = "Your bank slip was rejected." } = req.body;
 
