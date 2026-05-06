@@ -108,7 +108,7 @@ const storage = multer.diskStorage({
 });
 const upload = multer({
   storage,
-  limits: { fileSize: 2 * 1024 * 1024 } // 2MB limit
+  limits: { fileSize: 10 * 1024 * 1024 } // 10MB limit
 });
 
 let dbPath = path.resolve(__dirname, 'database.sqlite');
@@ -285,7 +285,7 @@ app.post('/api/register', (req, res, next) => {
   // Catch Multer file size errors specifically if needed
   upload.single('evidence_file')(req, res, (err) => {
     if (err instanceof multer.MulterError && err.code === 'LIMIT_FILE_SIZE') {
-      return res.status(400).json({ error: 'File size exceeds 2MB limit.' });
+      return res.status(400).json({ error: 'File size exceeds 10MB limit.' });
     } else if (err) {
       return res.status(500).json({ error: 'File upload error.' });
     }
