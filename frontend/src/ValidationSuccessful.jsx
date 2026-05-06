@@ -14,6 +14,176 @@ const ValidationSuccessful = () => {
   });
   const [qrCodeUrl, setQrCodeUrl] = useState('');
 
+  const handlePrintId = () => {
+    const printWindow = window.open('', '_blank');
+    const cardHtml = document.querySelector('.print-area').innerHTML;
+    
+    printWindow.document.write(`
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>Voter ID Card - ${voterData.name}</title>
+        <style>
+          body {
+            margin: 0;
+            padding: 20px;
+            background: white;
+            font-family: 'Inter', sans-serif;
+          }
+          * {
+            -webkit-print-color-adjust: exact;
+            color-adjust: exact;
+          }
+          .credential-card {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border: 2px solid #E8EDF4;
+            border-radius: 32px;
+            overflow: hidden;
+            page-break-inside: avoid;
+          }
+          .card-header {
+            background: linear-gradient(135deg, #002F6C 0%, #0A4175 100%);
+            padding: 24px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+          }
+          .card-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+          }
+          .card-logo-text {
+            color: white;
+            font-weight: 700;
+            font-size: 20px;
+            letter-spacing: 1px;
+          }
+          .card-badge {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 6px 16px;
+            border-radius: 40px;
+            font-size: 12px;
+            font-weight: 600;
+            color: white;
+            text-transform: uppercase;
+          }
+          .card-body {
+            padding: 36px 40px;
+            display: flex;
+            gap: 48px;
+          }
+          .info-column {
+            flex: 1.2;
+          }
+          .credential-title {
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: black;
+            margin-bottom: 24px;
+          }
+          .info-row {
+            margin-bottom: 28px;
+          }
+          .info-label {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: black;
+            margin-bottom: 6px;
+          }
+          .info-value {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1A2C3E;
+          }
+          .token-value {
+            font-family: monospace;
+            font-size: 24px;
+            font-weight: 800;
+            color: #002F6C;
+            letter-spacing: 1px;
+          }
+          .status-active {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #E8F5E9;
+            padding: 6px 16px;
+            border-radius: 40px;
+            font-weight: 700;
+            font-size: 14px;
+            color: #2E7D32;
+          }
+          .status-dot {
+            width: 8px;
+            height: 8px;
+            background: #2E7D32;
+            border-radius: 50%;
+          }
+          .qrcode-column {
+            flex: 0.8;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: #F9FBFE;
+            border-radius: 24px;
+            padding: 24px;
+            border: 1px solid #EDF2F7;
+          }
+          .qrcode-box {
+            width: 160px;
+            height: 160px;
+            background: white;
+            border: 2px solid #E0E8F0;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+          }
+          .qrcode-box img {
+            width: 130px;
+            height: 130px;
+          }
+          .qr-label {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: black;
+            text-align: center;
+          }
+          @media print {
+            body { margin: 0; padding: 10px; }
+            .credential-card { margin: 0; }
+          }
+        </style>
+      </head>
+      <body>
+        ${cardHtml}
+        <script>
+          window.onload = function() {
+            window.print();
+            window.onafterprint = function() {
+              window.close();
+            };
+          };
+        </script>
+      </body>
+      </html>
+    `);
+    
+    printWindow.document.close();
+  };
+
   useEffect(() => {
     if (location.state) {
       setVoterData(prev => ({
@@ -52,70 +222,177 @@ const ValidationSuccessful = () => {
     <>
       <style>{`
         @media print {
-          body * {
-            visibility: hidden;
+          body, html {
+            margin: 0 !important;
+            padding: 0 !important;
+            background: white !important;
           }
-          .print-area, .print-area * {
-            visibility: visible;
+          
+          * {
+            -webkit-print-color-adjust: exact !important;
+            color-adjust: exact !important;
           }
-          .print-area {
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 100%;
-            padding: 20px;
-          }
+          
+          body > *:not(.print-area),
+          .print-area > *:not(.credential-card),
+          .credential-card > *:not(.card-body),
+          .card-body > *:not(.info-column):not(.qrcode-column),
           .no-print {
             display: none !important;
+            visibility: hidden !important;
+            height: 0 !important;
+            width: 0 !important;
+            overflow: hidden !important;
+          }
+          
+          .print-area {
+            position: relative !important;
+            left: auto !important;
+            top: auto !important;
+            width: 100% !important;
+            padding: 20px !important;
+            margin: 0 !important;
+            background: white !important;
+            display: block !important;
+            visibility: visible !important;
+          }
+          
+          .credential-card {
+            width: 100% !important;
+            max-width: 800px !important;
+            margin: 0 auto !important;
+            display: block !important;
+            visibility: visible !important;
+            background: white !important;
+            border: 2px solid #E8EDF4 !important;
+            page-break-inside: avoid !important;
+          }
+          
+          .card-header,
+          .card-body,
+          .info-column,
+          .qrcode-column,
+          .info-row,
+          .qrcode-box,
+          .divider {
+            display: block !important;
+            visibility: visible !important;
+            background: inherit !important;
+          }
+          
+          .card-footer,
+          .card-body > .divider:last-of-type,
+          .card-body > .card-footer {
+            display: none !important;
+            visibility: hidden !important;
+            height: 0 !important;
+            width: 0 !important;
+            overflow: hidden !important;
+          }
+          
+          .card-body {
+            display: flex !important;
+            gap: 20px !important;
+            padding: 20px !important;
+          }
+          
+          .info-column {
+            flex: 1 !important;
+          }
+          
+          .qrcode-column {
+            flex: 0.8 !important;
+          }
+        }
+        
+        /* Mobile Responsiveness */
+        @media (max-width: 1024px) {
+          .main-content {
+            padding: 40px 60px 60px !important;
+          }
+          
+          .credential-card {
+            width: 90% !important;
           }
         }
         
         @media (max-width: 768px) {
+          /* Header */
           .top-header {
-            padding: 16px 20px !important;
+            padding: 20px 24px !important;
             flex-direction: column;
             gap: 16px;
+            text-align: center;
+          }
+          
+          .logo-area {
+            justify-content: center;
           }
           
           .portal-title {
             font-size: 16px !important;
-            padding: 4px 16px !important;
+            padding: 6px 16px !important;
           }
           
+          .back-link {
+            align-self: center;
+            font-size: 14px !important;
+          }
+          
+          /* Main Content */
           .main-content {
-            padding: 24px 20px 32px !important;
+            padding: 32px 24px 40px !important;
+            min-height: auto;
           }
           
+          /* Success Badge */
           .success-badge {
-            padding: 8px 20px !important;
-            margin-bottom: 24px !important;
+            padding: 10px 24px !important;
+            margin-bottom: 28px !important;
+            border-radius: 50px !important;
+          }
+          
+          .success-icon {
+            font-size: 20px !important;
           }
           
           .success-text {
             font-size: 16px !important;
           }
           
+          /* Title */
           h1 {
-            font-size: 28px !important;
-            margin-bottom: 8px !important;
+            font-size: 32px !important;
+            margin-bottom: 12px !important;
+            line-height: 1.2 !important;
           }
           
           .main-title p {
             font-size: 16px !important;
-            padding: 0 16px;
+            line-height: 1.6 !important;
+            padding: 0 20px;
+            margin-bottom: 32px !important;
           }
           
+          /* Credential Card */
           .credential-card {
             width: 100% !important;
-            border-radius: 20px !important;
+            max-width: 500px !important;
+            border-radius: 24px !important;
             margin: 0 auto 32px !important;
+            box-shadow: 0 10px 25px -8px rgba(0, 0, 0, 0.1) !important;
           }
           
           .card-header {
-            padding: 16px 20px !important;
+            padding: 20px 24px !important;
             flex-direction: column;
-            gap: 12px;
+            gap: 16px;
             text-align: center;
+            border-radius: 24px 24px 0 0 !important;
+          }
+          
+          .card-logo {
+            justify-content: center;
           }
           
           .card-logo-text {
@@ -124,111 +401,285 @@ const ValidationSuccessful = () => {
           
           .card-badge {
             font-size: 11px !important;
-            padding: 4px 12px !important;
+            padding: 6px 16px !important;
+            align-self: center;
           }
           
+          /* Card Body */
           .card-body {
-            padding: 24px 20px !important;
+            padding: 28px 24px 24px !important;
             flex-direction: column !important;
-            gap: 24px !important;
+            gap: 32px !important;
           }
           
           .info-column {
             flex: 1 !important;
+            text-align: center;
           }
           
           .credential-title {
-            font-size: 13px !important;
+            font-size: 12px !important;
+            margin-bottom: 24px !important;
+            text-align: center;
+          }
+          
+          .info-row {
             margin-bottom: 20px !important;
+            text-align: left;
           }
           
           .info-label {
-            font-size: 11px !important;
-            margin-bottom: 4px !important;
+            font-size: 10px !important;
+            margin-bottom: 6px !important;
+            text-align: left;
           }
           
           .info-value {
             font-size: 16px !important;
-            margin-bottom: 20px !important;
+            margin-bottom: 0 !important;
+            text-align: left;
           }
           
           .token-value {
-            font-size: 20px !important;
+            font-size: 18px !important;
+            word-break: break-all;
           }
           
           .status-active {
-            font-size: 13px !important;
-            padding: 4px 12px !important;
+            font-size: 12px !important;
+            padding: 6px 16px !important;
+            justify-content: center;
+            margin: 16px 0 !important;
+            display: inline-flex !important;
           }
           
+          /* QR Code */
           .qrcode-column {
             flex: 1 !important;
-            padding: 20px !important;
+            padding: 24px 20px !important;
+            text-align: center;
+            align-self: center;
           }
           
           .qrcode-box {
-            width: 140px !important;
-            height: 140px !important;
-            margin-bottom: 12px !important;
+            width: 150px !important;
+            height: 150px !important;
+            margin: 0 auto 16px !important;
+            border-radius: 16px !important;
           }
           
           .qrcode-box img,
           .qr-pattern {
-            width: 110px !important;
-            height: 110px !important;
+            width: 120px !important;
+            height: 120px !important;
+            border-radius: 8px !important;
           }
           
           .qr-label {
             font-size: 11px !important;
+            text-align: center;
           }
           
+          /* Divider */
           .divider {
-            margin: 0 20px 20px 20px !important;
+            margin: 0 24px 20px 24px !important;
           }
           
+          /* Card Footer */
           .card-footer {
-            padding: 0 20px 24px 20px !important;
+            padding: 0 24px 28px 24px !important;
             flex-direction: column !important;
-            gap: 16px !important;
+            gap: 20px !important;
+            text-align: center;
           }
           
           .security-note {
             font-size: 12px !important;
-            padding: 8px 16px !important;
+            padding: 12px 20px !important;
             text-align: center;
+            justify-content: center;
+            border-radius: 50px !important;
+            width: fit-content;
+            margin: 0 auto;
           }
           
           .action-buttons {
             flex-direction: column !important;
-            gap: 12px !important;
+            gap: 16px !important;
             width: 100%;
           }
           
           .btn-primary,
           .btn-secondary {
             width: 100%;
-            padding: 12px 24px !important;
+            padding: 14px 28px !important;
             font-size: 15px !important;
             text-align: center;
+            border-radius: 50px !important;
           }
           
+          /* Footer */
           .footer-links {
             display: none !important;
           }
         }
         
         @media (max-width: 480px) {
+          /* Header */
+          .top-header {
+            padding: 16px 20px !important;
+            gap: 12px;
+          }
+          
+          .portal-title {
+            font-size: 14px !important;
+            padding: 4px 12px !important;
+          }
+          
+          .back-link {
+            font-size: 13px !important;
+          }
+          
+          /* Main Content */
+          .main-content {
+            padding: 24px 20px 32px !important;
+          }
+          
+          /* Success Badge */
+          .success-badge {
+            padding: 8px 20px !important;
+            margin-bottom: 20px !important;
+          }
+          
+          .success-icon {
+            font-size: 18px !important;
+          }
+          
+          .success-text {
+            font-size: 14px !important;
+          }
+          
+          /* Title */
+          h1 {
+            font-size: 26px !important;
+            margin-bottom: 10px !important;
+          }
+          
+          .main-title p {
+            font-size: 14px !important;
+            padding: 0 12px;
+            margin-bottom: 24px !important;
+          }
+          
+          /* Credential Card */
+          .credential-card {
+            border-radius: 20px !important;
+            margin-bottom: 24px !important;
+          }
+          
+          .card-header {
+            padding: 16px 20px !important;
+            gap: 12px;
+            border-radius: 20px 20px 0 0 !important;
+          }
+          
+          .card-logo-text {
+            font-size: 16px !important;
+          }
+          
+          .card-badge {
+            font-size: 10px !important;
+            padding: 4px 12px !important;
+          }
+          
+          /* Card Body */
+          .card-body {
+            padding: 24px 20px 20px !important;
+            gap: 24px !important;
+          }
+          
+          .credential-title {
+            font-size: 11px !important;
+            margin-bottom: 20px !important;
+          }
+          
+          .info-row {
+            margin-bottom: 16px !important;
+          }
+          
+          .info-label {
+            font-size: 9px !important;
+            margin-bottom: 4px !important;
+          }
+          
+          .info-value {
+            font-size: 14px !important;
+          }
+          
+          .token-value {
+            font-size: 16px !important;
+          }
+          
+          .status-active {
+            font-size: 11px !important;
+            padding: 4px 12px !important;
+            margin: 12px 0 !important;
+          }
+          
+          /* QR Code */
+          .qrcode-column {
+            padding: 20px 16px !important;
+          }
+          
+          .qrcode-box {
+            width: 120px !important;
+            height: 120px !important;
+            margin-bottom: 12px !important;
+            border-radius: 12px !important;
+          }
+          
+          .qrcode-box img,
+          .qr-pattern {
+            width: 90px !important;
+            height: 90px !important;
+            border-radius: 6px !important;
+          }
+          
+          .qr-label {
+            font-size: 10px !important;
+          }
+          
+          /* Divider */
+          .divider {
+            margin: 0 20px 16px 20px !important;
+          }
+          
+          /* Card Footer */
+          .card-footer {
+            padding: 0 20px 20px 20px !important;
+            gap: 16px !important;
+          }
+          
+          .security-note {
+            font-size: 11px !important;
+            padding: 10px 16px !important;
+          }
+          
+          .btn-primary,
+          .btn-secondary {
+            padding: 12px 24px !important;
+            font-size: 14px !important;
+          }
+        }
+        
+        @media (max-width: 360px) {
           .top-header {
             padding: 12px 16px !important;
           }
           
           .portal-title {
-            font-size: 14px !important;
-            padding: 3px 12px !important;
-          }
-          
-          .back-link {
-            font-size: 14px !important;
+            font-size: 12px !important;
+            padding: 3px 10px !important;
           }
           
           .main-content {
@@ -236,22 +687,28 @@ const ValidationSuccessful = () => {
           }
           
           h1 {
-            font-size: 24px !important;
+            font-size: 22px !important;
           }
           
           .card-body {
-            padding: 20px 16px !important;
+            padding: 20px 16px 16px !important;
           }
           
           .qrcode-box {
-            width: 120px !important;
-            height: 120px !important;
+            width: 100px !important;
+            height: 100px !important;
           }
           
           .qrcode-box img,
           .qr-pattern {
-            width: 90px !important;
-            height: 90px !important;
+            width: 75px !important;
+            height: 75px !important;
+          }
+          
+          .btn-primary,
+          .btn-secondary {
+            padding: 10px 20px !important;
+            font-size: 13px !important;
           }
         }
       `}</style>
@@ -349,7 +806,7 @@ const ValidationSuccessful = () => {
             </div>
             <div className="action-buttons" style={{ display: 'flex', gap: '20px' }}>
               <button className="btn-primary" onClick={() => navigate('/login')} style={{ background: '#002F6C', color: 'white', border: 'none', padding: '14px 32px', borderRadius: '48px', fontWeight: '700', fontSize: '16px', cursor: 'pointer' }}>Proceed to Login</button>
-              <button className="btn-secondary" onClick={() => window.print()} style={{ background: 'transparent', color: '#1A2C3E', border: '2px solid #DCE3EC', padding: '12px 28px', borderRadius: '48px', fontWeight: '700', fontSize: '16px', cursor: 'pointer' }}>PRINT Voter ID</button>
+              <button className="btn-secondary" onClick={handlePrintId} style={{ background: 'transparent', color: '#1A2C3E', border: '2px solid #DCE3EC', padding: '12px 28px', borderRadius: '48px', fontWeight: '700', fontSize: '16px', cursor: 'pointer' }}>PRINT Voter ID</button>
             </div>
           </div>
           </div>

@@ -10,53 +10,94 @@ const ValidationFailed = () => {
   return (
     <>
       <style>{`
+        /* Mobile Responsiveness */
+        @media (max-width: 1024px) {
+          .main-content {
+            padding: 50px 60px 70px !important;
+          }
+          
+          .error-card {
+            width: 90% !important;
+          }
+        }
+        
         @media (max-width: 768px) {
+          /* Header */
           .top-header {
-            padding: 16px 20px !important;
+            padding: 20px 24px !important;
             flex-direction: column;
             gap: 16px;
+            text-align: center;
+          }
+          
+          .logo-area {
+            justify-content: center;
           }
           
           .portal-title {
             font-size: 16px !important;
-            padding: 4px 16px !important;
+            padding: 6px 16px !important;
           }
           
+          .back-link {
+            align-self: center;
+            font-size: 14px !important;
+          }
+          
+          /* Main Content */
           .main-content {
-            padding: 32px 20px 40px !important;
+            padding: 40px 24px 50px !important;
+            min-height: auto;
           }
           
+          /* Error Badge */
           .error-badge {
-            padding: 8px 20px !important;
-            margin-bottom: 24px !important;
+            padding: 10px 24px !important;
+            margin-bottom: 28px !important;
+            border-radius: 50px !important;
+          }
+          
+          .error-icon {
+            font-size: 20px !important;
           }
           
           .error-text {
             font-size: 16px !important;
           }
           
+          /* Title */
           h1 {
-            font-size: 32px !important;
-            margin-bottom: 12px !important;
+            font-size: 36px !important;
+            margin-bottom: 16px !important;
+            line-height: 1.2 !important;
           }
           
           .main-title p {
             font-size: 16px !important;
-            padding: 0 16px;
             line-height: 1.6 !important;
+            padding: 0 20px;
+            margin-bottom: 40px !important;
           }
           
+          /* Error Card */
           .error-card {
             width: 100% !important;
-            border-radius: 20px !important;
-            margin: 0 auto 32px !important;
+            max-width: 500px !important;
+            border-radius: 24px !important;
+            margin: 0 auto 40px !important;
+            box-shadow: 0 10px 25px -8px rgba(198, 40, 40, 0.15) !important;
           }
           
           .card-header {
-            padding: 16px 20px !important;
+            padding: 20px 24px !important;
             flex-direction: column;
-            gap: 12px;
+            gap: 16px;
             text-align: center;
+            border-radius: 24px 24px 0 0 !important;
+          }
+          
+          .card-header-left {
+            justify-content: center;
           }
           
           .access-denied-icon {
@@ -69,11 +110,174 @@ const ValidationFailed = () => {
           
           .card-badge {
             font-size: 11px !important;
+            padding: 6px 16px !important;
+            align-self: center;
+          }
+          
+          /* Card Body */
+          .card-body {
+            padding: 32px 24px 28px !important;
+          }
+          
+          .error-message {
+            margin-bottom: 32px !important;
+            text-align: center;
+          }
+          
+          .error-message-icon {
+            font-size: 56px !important;
+            margin-bottom: 20px !important;
+          }
+          
+          .error-message h3 {
+            font-size: 20px !important;
+            margin-bottom: 16px !important;
+            padding: 0 16px;
+          }
+          
+          .error-message p {
+            font-size: 16px !important;
+            line-height: 1.6 !important;
+            padding: 0 20px;
+            margin: 0 auto !important;
+          }
+          
+          /* Warning Box */
+          .warning-box {
+            padding: 20px 24px !important;
+            margin: 24px 0 !important;
+            border-radius: 16px !important;
+          }
+          
+          .warning-box p {
+            font-size: 13px !important;
+            line-height: 1.6 !important;
+            margin-bottom: 12px !important;
+          }
+          
+          .small-note {
+            font-size: 11px !important;
+            margin-top: 12px !important;
+          }
+          
+          /* Divider */
+          .divider {
+            margin: 24px 0 20px !important;
+          }
+          
+          /* Action Buttons */
+          .action-buttons {
+            flex-direction: column !important;
+            gap: 16px !important;
+            width: 100%;
+            margin-top: 20px !important;
+          }
+          
+          .btn-primary,
+          .btn-secondary {
+            width: 100%;
+            padding: 14px 28px !important;
+            font-size: 15px !important;
+            text-align: center;
+            border-radius: 50px !important;
+          }
+          
+          /* Help Link */
+          .help-link {
+            margin-top: 24px !important;
+            text-align: center;
+          }
+          
+          .help-link a {
+            font-size: 13px !important;
+            padding: 8px 16px;
+          }
+          
+          /* Footer */
+          .footer-links {
+            display: none !important;
+          }
+        }
+        
+        @media (max-width: 480px) {
+          /* Header */
+          .top-header {
+            padding: 16px 20px !important;
+            gap: 12px;
+          }
+          
+          .portal-title {
+            font-size: 14px !important;
             padding: 4px 12px !important;
           }
           
+          .back-link {
+            font-size: 13px !important;
+          }
+          
+          /* Main Content */
+          .main-content {
+            padding: 32px 20px 40px !important;
+          }
+          
+          /* Error Badge */
+          .error-badge {
+            padding: 8px 20px !important;
+            margin-bottom: 20px !important;
+          }
+          
+          .error-icon {
+            font-size: 18px !important;
+          }
+          
+          .error-text {
+            font-size: 14px !important;
+          }
+          
+          /* Title */
+          h1 {
+            font-size: 30px !important;
+            margin-bottom: 12px !important;
+          }
+          
+          .main-title p {
+            font-size: 14px !important;
+            padding: 0 12px;
+            margin-bottom: 32px !important;
+          }
+          
+          /* Error Card */
+          .error-card {
+            border-radius: 20px !important;
+            margin-bottom: 32px !important;
+          }
+          
+          .card-header {
+            padding: 16px 20px !important;
+            gap: 12px;
+            border-radius: 20px 20px 0 0 !important;
+          }
+          
+          .access-denied-icon {
+            font-size: 20px !important;
+          }
+          
+          .access-denied-text {
+            font-size: 16px !important;
+          }
+          
+          .card-badge {
+            font-size: 10px !important;
+            padding: 4px 12px !important;
+          }
+          
+          /* Card Body */
           .card-body {
-            padding: 32px 20px 24px !important;
+            padding: 28px 20px 24px !important;
+          }
+          
+          .error-message {
+            margin-bottom: 24px !important;
           }
           
           .error-message-icon {
@@ -82,73 +286,70 @@ const ValidationFailed = () => {
           }
           
           .error-message h3 {
-            font-size: 20px !important;
+            font-size: 18px !important;
             margin-bottom: 12px !important;
+            padding: 0 12px;
           }
           
           .error-message p {
-            font-size: 16px !important;
-            line-height: 1.6 !important;
+            font-size: 14px !important;
             padding: 0 16px;
           }
           
+          /* Warning Box */
           .warning-box {
             padding: 16px 20px !important;
             margin: 20px 0 !important;
+            border-radius: 12px !important;
           }
           
           .warning-box p {
-            font-size: 13px !important;
+            font-size: 12px !important;
             line-height: 1.5 !important;
+            margin-bottom: 10px !important;
           }
           
           .small-note {
-            font-size: 11px !important;
+            font-size: 10px !important;
+            margin-top: 10px !important;
           }
           
+          /* Divider */
           .divider {
             margin: 20px 0 16px !important;
           }
           
+          /* Action Buttons */
           .action-buttons {
-            flex-direction: column !important;
             gap: 12px !important;
-            width: 100%;
+            margin-top: 16px !important;
           }
           
           .btn-primary,
           .btn-secondary {
-            width: 100%;
             padding: 12px 24px !important;
-            font-size: 15px !important;
-            text-align: center;
+            font-size: 14px !important;
           }
           
+          /* Help Link */
           .help-link {
             margin-top: 20px !important;
           }
           
           .help-link a {
-            font-size: 13px !important;
-          }
-          
-          .footer-links {
-            display: none !important;
+            font-size: 12px !important;
+            padding: 6px 12px;
           }
         }
         
-        @media (max-width: 480px) {
+        @media (max-width: 360px) {
           .top-header {
             padding: 12px 16px !important;
           }
           
           .portal-title {
-            font-size: 14px !important;
-            padding: 3px 12px !important;
-          }
-          
-          .back-link {
-            font-size: 14px !important;
+            font-size: 12px !important;
+            padding: 3px 10px !important;
           }
           
           .main-content {
@@ -156,7 +357,7 @@ const ValidationFailed = () => {
           }
           
           h1 {
-            font-size: 28px !important;
+            font-size: 26px !important;
           }
           
           .card-body {
@@ -168,7 +369,7 @@ const ValidationFailed = () => {
           }
           
           .error-message h3 {
-            font-size: 18px !important;
+            font-size: 16px !important;
           }
           
           .warning-box {
@@ -178,7 +379,11 @@ const ValidationFailed = () => {
           .btn-primary,
           .btn-secondary {
             padding: 10px 20px !important;
-            font-size: 14px !important;
+            font-size: 13px !important;
+          }
+          
+          .help-link a {
+            font-size: 11px !important;
           }
         }
       `}</style>

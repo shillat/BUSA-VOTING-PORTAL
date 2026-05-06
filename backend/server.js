@@ -259,8 +259,10 @@ const db = new sqlite3.Database(dbPath, (err) => {
       studentStmt.run("24/BSE/BU/R/0003", "Naigaga Shillah", "shillahnaigaga5@gmail.com", "Regular", false, 2027, "main", "CI");
       studentStmt.run("22/BTH/BU/H/0012", "Kakande Charlse", "charlsek@gmail.com", "In-Service", true, 2025, "main", "RS");
       studentStmt.run("19/BTH/BU/H/0012", "Nakamya Diana", "diana@gmail.com", "In-Service", false, 2022, "main", "RS");
-      studentStmt.run("21/EDS/BU/R/0003", "Kamya Lawrence", "lawrencekamya@gmail.com", "Regular", true, 2026, "EDS");
-      studentStmt.run("21/EDS/BU/H/0003", "Katongore Lawrence", "lawrence@gmail.com", "In-Service", true, 2026, "virtual", "EDS");
+      studentStmt.run("21/EDS/BU/R/0003", "Kamya Lawrence", "lawrencekamya@gmail.com", "Regular", true, 2026, "main", "EDS");
+      studentStmt.run("21/EDS/BU/H/0003", "Katongore Lawrence", "lawrence@gmail.com", "In-Service", true, 2026, "main", "EDS");
+      studentStmt.run("22/EDA/BU/H/0004", "Nakalyoowa Brenda", "brenda@gmail.com", "In-Service", true, 2027, "main", "EDA");
+      studentStmt.run("21/BTH/BU/H/0003", "Frank Musambi", "frank@gmail.com", "In-Service", false, 2027, "main", "RS");
       studentStmt.finalize();
       
       console.log('Database schema initialized successfully!');
@@ -623,6 +625,141 @@ app.post('/api/voter/qr-login', (req, res) => {
   } catch (error) {
     return res.status(400).json({ error: 'Invalid QR code data format' });
   }
+});
+
+// STUDENT MANAGEMENT ENDPOINTS
+
+// Get All Students
+app.get('/api/students', authenticateToken, (req, res) => {
+  const query = `
+    SELECT reg_no, name, email, type, is_registered_sem, year_of_study, campus, department 
+    FROM students_master 
+    ORDER BY reg_no ASC
+  `;
+
+  db.all(query, (err, students) => {
+    if (err) return res.status(500).json({ error: 'Database error' });
+    res.json(students);
+  });
+});
+
+// Add New Student
+app.post('/api/students', authenticateToken, (req, res) => {
+  const { reg_no, name, email, type, is_registered_sem, year_of_study, campus, department } = req.body;
+  const adminId = req.user.admin_id;
+
+  // Validation
+  if (!reg_no || !name || !email || !type || !year_of_study || !campus) {
+    return res.status(400).json({ error: 'Registration number, name, email, type, year of study, and campus are required' });
+  }
+
+  // Check if student already exists
+  const checkQuery = 'SELECT reg_no FROM students_master WHERE reg_no = ?';
+  db.get(checkQuery, [reg_no], (err, existing) => {
+    if (err) return res.status(500).json({ error: 'Database error' });
+    
+    if (existing) {
+      return res.status(400).json({ error: 'Student with this registration number already exists' });
+    }
+
+    // Insert new student
+    const insertQuery = `
+      INSERT INTO students_master (reg_no, name, email, type, is_registered_sem, year_of_study, campus, department) 
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    `;
+
+    db.run(insertQuery, [reg_no, name, email, type, is_registered_sem || false, year_of_study, campus, department || null], function(err) {
+      if (err) return res.status(500).json({ error: 'Database error' });
+
+      logSecurityEvent('admin', adminId, 'STUDENT_ADDED', req.ip, req.get('User-Agent'), `Added student: ${reg_no}`);
+      res.json({
+        success: true,
+        message: 'Student added successfully',
+        student: {
+          reg_no,
+          name,
+          email,
+          type,
+          is_registered_sem: is_registered_sem || false,
+          year_of_study,
+          campus,
+          department
+        }
+      });
+    });
+  });
+});
+
+// Update Student
+app.put('/api/students/:reg_no', authenticateToken, (req, res) => {
+  const { reg_no } = req.params;
+  const { name, email, type, is_registered_sem, year_of_study, campus, department } = req.body;
+  const adminId = req.user.admin_id;
+
+  // Check if student exists
+  const checkQuery = 'SELECT reg_no FROM students_master WHERE reg_no = ?';
+  db.get(checkQuery, [reg_no], (err, existing) => {
+    if (err) return res.status(500).json({ error: 'Database error' });
+    
+    if (!existing) {
+      return res.status(404).json({ error: 'Student not found' });
+    }
+
+    // Update student
+    const updateQuery = `
+      UPDATE students_master 
+      SET name = ?, email = ?, type = ?, is_registered_sem = ?, year_of_study = ?, campus = ?, department = ? 
+      WHERE reg_no = ?
+    `;
+
+    db.run(updateQuery, [name, email, type, is_registered_sem, year_of_study, campus, department, reg_no], function(err) {
+      if (err) return res.status(500).json({ error: 'Database error' });
+
+      logSecurityEvent('admin', adminId, 'STUDENT_UPDATED', req.ip, req.get('User-Agent'), `Updated student: ${reg_no}`);
+      res.json({
+        success: true,
+        message: 'Student updated successfully',
+        student: {
+          reg_no,
+          name,
+          email,
+          type,
+          is_registered_sem,
+          year_of_study,
+          campus,
+          department
+        }
+      });
+    });
+  });
+});
+
+// Delete Student
+app.delete('/api/students/:reg_no', authenticateToken, (req, res) => {
+  const { reg_no } = req.params;
+  const adminId = req.user.admin_id;
+
+  // Check if student exists
+  const checkQuery = 'SELECT reg_no FROM students_master WHERE reg_no = ?';
+  db.get(checkQuery, [reg_no], (err, existing) => {
+    if (err) return res.status(500).json({ error: 'Database error' });
+    
+    if (!existing) {
+      return res.status(404).json({ error: 'Student not found' });
+    }
+
+    // Delete student
+    const deleteQuery = 'DELETE FROM students_master WHERE reg_no = ?';
+    db.run(deleteQuery, [reg_no], function(err) {
+      if (err) return res.status(500).json({ error: 'Database error' });
+
+      logSecurityEvent('admin', adminId, 'STUDENT_DELETED', req.ip, req.get('User-Agent'), `Deleted student: ${reg_no}`);
+      res.json({
+        success: true,
+        message: 'Student deleted successfully'
+      });
+    });
+  });
 });
 
 // ELECTION MANAGEMENT ENDPOINTS
