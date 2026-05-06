@@ -150,7 +150,7 @@ const AdminVerify = () => {
                                registration.evidence_url.toLowerCase().endsWith('.jpeg') || 
                                registration.evidence_url.toLowerCase().endsWith('.png') ? (
                                 <img 
-                                  src={`${API_BASE_URL}${registration.evidence_url}`}
+                                  src={`${API_BASE_URL}${registration.evidence_url.replace('/api/uploads', '/uploads')}`}
                                   alt="Bankslip"
                                   style={{ 
                                     width: '200px', 
@@ -160,7 +160,7 @@ const AdminVerify = () => {
                                     borderRadius: '8px',
                                     cursor: 'pointer'
                                   }}
-                                  onClick={() => window.open(`${API_BASE_URL}${registration.evidence_url}`, '_blank')}
+                                  onClick={() => window.open(`${API_BASE_URL}${registration.evidence_url.replace('/api/uploads', '/uploads')}`, '_blank')}
                                 />
                               ) : (
                                 <div style={{
@@ -174,7 +174,7 @@ const AdminVerify = () => {
                                     📄 Document Preview
                                   </div>
                                   <a 
-                                    href={`${API_BASE_URL}${registration.evidence_url}`}
+                                    href={`${API_BASE_URL}${registration.evidence_url.replace('/api/uploads', '/uploads')}`}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     style={{ 
