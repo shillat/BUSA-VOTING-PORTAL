@@ -16,7 +16,6 @@ import ManageAnnouncements from './ManageAnnouncements';
 import ManageElections from './ManageElections';
 import ManageCandidates from './ManageCandidates';
 import ManageGuidelines from './ManageGuidelines';
-import ManageStudents from './ManageStudents';
 import ManageElectionCalendar from './ManageElectionCalendar';
 import AllCandidates from './AllCandidates';
 import ElectionCalendar from './ElectionCalendar';
@@ -409,11 +408,6 @@ function App() {
             <Route path="/admin/verify" element={
               <ProtectedRoute requiredRole="admin">
                 <AdminVerify />
-              </ProtectedRoute>
-            } />
-            <Route path="/manage-students" element={
-              <ProtectedRoute requiredRole="admin">
-                <ManageStudents />
               </ProtectedRoute>
             } />
 

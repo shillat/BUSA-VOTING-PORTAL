@@ -206,7 +206,7 @@ const Registration = () => {
               </select>
               {formData.onCampus === 'false' && (
                 <div className="small-note" style={{ marginTop: '10px' }}>
-                  ⚠️ Bank slip evidence is required for remote students
+                  ⚠️ Registration card for previous session is required for remote students
                 </div>
               )}
             </div>
@@ -215,7 +215,7 @@ const Registration = () => {
           {/* File Upload for Remote In-Service Students */}
           {formData.studentCategory === 'In-service Student' && formData.onCampus === 'false' && (
             <div className="input-group">
-              <label>📄 Current Session Bank Slip <span className="label-hint">(Required for remote students)</span></label>
+              <label>📄 Previous Session Registration Card <span className="label-hint">(Required for remote students)</span></label>
               <input
                 type="file"
                 name="evidenceFile"
@@ -224,7 +224,7 @@ const Registration = () => {
                 required
               />
               <div className="small-note">
-                Upload your current session bank slip (PDF or image, max 2MB)
+                Upload your previous session registration card (PDF or image, max 2MB)
               </div>
             </div>
           )}

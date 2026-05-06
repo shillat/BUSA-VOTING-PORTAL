@@ -20,10 +20,9 @@ const ElectionOverview = () => {
 
   const roles = [
     { title: "Guild President", subtitle: "The highest executive authority", description: "The highest executive authority of the Student Union. Responsible for representing all students to the university administration, leading the Guild Cabinet, and overseeing the strategic direction of student welfare." },
-    { title: "VICE GUILD PRESIDENT", subtitle: "Second in command", description: "Second in command after the Guild President, assist HE in their duties and assumes the office of the President when He/She is not available." },
-    { title: "General Secretary (GS)", subtitle: "Primary administrative officer", description: "The primary administrative officer of the Guild. The GS manages internal communications, maintains official records, and coordinates between various student committees." },
-    { title: "MP Schools", subtitle: "Legislative representatives", description: "Legislative representatives for individual academic faculties. Members of Parliament for Schools advocate for specific academic concerns, departmental funding, and facilities." }
-  ];
+     { title: "MP Schools", subtitle: "Legislative representatives", description: "Legislative representatives for individual academic faculties. Members of Parliament for Schools advocate for specific academic concerns, departmental funding, and facilities." },
+  { title: "Regional Member of Parliament", subtitle: "Constituency-based legislative representative", description: "Elected representatives for each of the four administrative regions. Regional MPs act as the primary legislative link between students and the university council, advocating for regional resource allocation, faculty-specific infrastructure development, and student welfare initiatives."}
+    ];
 
   const integrityItems = [
     { icon: "🔐", title: "Every vote is cryptographically secured", desc: "Our portal ensures one-person-one-vote through multi-factor biometric authentication." },
