@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const multer = require('multer');
 const path = require('path');
-const DatabaseWrapper = require('./db-wrapper');
+const sqlite3 = require('sqlite3').verbose();
 const fs = require('fs');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
@@ -129,10 +129,132 @@ if (process.env.RENDER_DISK_PATH) {
 }
 
 console.log('Database path:', dbPath);
-const db = new DatabaseWrapper(dbPath, (err) => {
-  if (err) console.error('Database connection error:', err);
-  else {
+const db = new sqlite3.Database(dbPath, (err) => {
+  if (err) {
+    console.error('Database connection error:', err);
+  } else {
     console.log('Connected to SQLite database.');
+    
+    // Initialize database schema
+    db.serialize(() => {
+      // Create tables if they don't exist
+      db.run(`CREATE TABLE IF NOT EXISTS students_master (
+        reg_no TEXT PRIMARY KEY,
+        name TEXT,
+        email TEXT,
+        type TEXT,
+        is_registered_sem BOOLEAN,
+        expected_grad_year INTEGER,
+        campus TEXT,
+        department TEXT
+      )`);
+      
+      db.run(`CREATE TABLE IF NOT EXISTS voter_registrations (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        reg_no TEXT UNIQUE,
+        voter_id TEXT,
+        password_hash TEXT,
+        evidence_url TEXT,
+        status TEXT,
+        rejection_reason TEXT,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      )`);
+      
+      db.run(`CREATE TABLE IF NOT EXISTS admin_users (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        admin_id TEXT UNIQUE,
+        password_hash TEXT,
+        name TEXT,
+        email TEXT,
+        role TEXT DEFAULT 'admin',
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      )`);
+      
+      db.run(`CREATE TABLE IF NOT EXISTS elections (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        title TEXT,
+        description TEXT,
+        start_date DATETIME,
+        end_date DATETIME,
+        status TEXT DEFAULT 'upcoming',
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        created_by INTEGER
+      )`);
+      
+      db.run(`CREATE TABLE IF NOT EXISTS candidates (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        election_id INTEGER,
+        name TEXT,
+        position TEXT,
+        manifesto TEXT,
+        faculty TEXT,
+        slogan TEXT,
+        photo_url TEXT,
+        votes_count INTEGER DEFAULT 0,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      )`);
+      
+      db.run(`CREATE TABLE IF NOT EXISTS votes (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        election_id INTEGER,
+        voter_reg_no TEXT,
+        candidate_id INTEGER,
+        voted_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        ip_address TEXT,
+        UNIQUE(election_id, voter_reg_no)
+      )`);
+      
+      db.run(`CREATE TABLE IF NOT EXISTS announcements (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        title TEXT,
+        content TEXT,
+        type TEXT,
+        target_audience TEXT DEFAULT 'all',
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        created_by TEXT
+      )`);
+      
+      db.run(`CREATE TABLE IF NOT EXISTS guidelines (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        title TEXT,
+        content TEXT,
+        category TEXT,
+        is_published BOOLEAN DEFAULT 0,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        created_by TEXT
+      )`);
+      
+      db.run(`CREATE TABLE IF NOT EXISTS security_logs (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_type TEXT,
+        user_id TEXT,
+        action TEXT,
+        ip_address TEXT,
+        user_agent TEXT,
+        timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+        details TEXT
+      )`);
+      
+      // Add columns if they don't exist
+      db.run("ALTER TABLE candidates ADD COLUMN faculty TEXT", (err) => {
+        if (err && !err.message.includes('duplicate column name')) {
+          // Ignore error if column already exists
+        }
+      });
+      db.run("ALTER TABLE candidates ADD COLUMN slogan TEXT", (err) => {
+        if (err && !err.message.includes('duplicate column name')) {
+          // Ignore error if column already exists
+        }
+      });
+      
+      // Seed admin user if not exists
+      const adminPassword = bcrypt.hashSync('admin123', 10);
+      db.run("INSERT OR IGNORE INTO admin_users (admin_id, password_hash, name, email, role) VALUES (?, ?, ?, ?, ?)", 
+        ['admin', adminPassword, 'System Administrator', 'admin@busa.edu', 'super_admin']);
+      
+      console.log('Database schema initialized successfully!');
+    });
   }
 });
 
