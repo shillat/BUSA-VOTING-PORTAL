@@ -4,6 +4,8 @@ import { voterAPI, authAPI, utils } from './api';
 import AdminTopNavbar from './AdminTopNavbar';
 import LogoMark from './LogoMark';
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
+
 const AdminVerify = () => {
   const [registrations, setRegistrations] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -39,7 +41,10 @@ const AdminVerify = () => {
       setProcessing(true);
       await voterAPI.approveRegistration(id);
       utils.showToast('Registration approved successfully', false);
-      fetchPendingRegistrations(); // Refresh list
+      // Redirect to admin dashboard after successful approval
+      setTimeout(() => {
+        navigate('/admin/dashboard');
+      }, 1500); // Wait 1.5 seconds to show success message
     } catch (err) {
       setError('Failed to approve registration');
       utils.showToast('Failed to approve registration', true);
@@ -56,7 +61,10 @@ const AdminVerify = () => {
       setProcessing(true);
       await voterAPI.rejectRegistration(id, reason);
       utils.showToast('Registration rejected successfully', false);
-      fetchPendingRegistrations(); // Refresh list
+      // Redirect to admin dashboard after successful rejection
+      setTimeout(() => {
+        navigate('/admin/dashboard');
+      }, 1500); // Wait 1.5 seconds to show success message
     } catch (err) {
       setError('Failed to reject registration');
       utils.showToast('Failed to reject registration', true);
@@ -142,7 +150,7 @@ const AdminVerify = () => {
                                registration.evidence_url.toLowerCase().endsWith('.jpeg') || 
                                registration.evidence_url.toLowerCase().endsWith('.png') ? (
                                 <img 
-                                  src={`http://localhost:5000${registration.evidence_url}`}
+                                  src={`${API_BASE_URL}${registration.evidence_url}`}
                                   alt="Bankslip"
                                   style={{ 
                                     width: '200px', 
@@ -152,7 +160,7 @@ const AdminVerify = () => {
                                     borderRadius: '8px',
                                     cursor: 'pointer'
                                   }}
-                                  onClick={() => window.open(`http://localhost:5000${registration.evidence_url}`, '_blank')}
+                                  onClick={() => window.open(`${API_BASE_URL}${registration.evidence_url}`, '_blank')}
                                 />
                               ) : (
                                 <div style={{
@@ -166,7 +174,7 @@ const AdminVerify = () => {
                                     📄 Document Preview
                                   </div>
                                   <a 
-                                    href={`http://localhost:5000${registration.evidence_url}`}
+                                    href={`${API_BASE_URL}${registration.evidence_url}`}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     style={{ 
