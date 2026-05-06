@@ -236,7 +236,7 @@ const Home = () => {
         <div className="card">
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <h3>Announcements</h3>
-            <Link to="/announcements" className="small" style={{ cursor: 'pointer', fontWeight: 600, color: '#002F6C', textDecoration: 'none' }}>View All →</Link>
+            <Link to="/announcements" className="btn">View All</Link>
           </div>
 
           {announcements.length === 0 ? (
