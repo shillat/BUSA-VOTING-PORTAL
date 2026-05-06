@@ -1,13 +1,13 @@
-const sqlite3 = require('sqlite3').verbose();
+const Database = require('better-sqlite3');
 const path = require('path');
 const bcrypt = require('bcrypt');
 
 const dbPath = process.env.RENDER_DISK_PATH ? 
   path.join(process.env.RENDER_DISK_PATH, 'database.sqlite') : 
   path.resolve(__dirname, 'database.sqlite');
-const db = new sqlite3.Database(dbPath);
+const db = new Database(dbPath);
 
-db.serialize(() => {
+try {
   /*
   // Drop existing tables to refresh schema
   db.run("DROP TABLE IF EXISTS votes");
@@ -184,6 +184,9 @@ db.serialize(() => {
   adminStmt.finalize();
 
   console.log("Database initialized with comprehensive schema for voting system!");
-});
 
-db.close();
+} catch (err) {
+  console.error('Database setup error:', err);
+} finally {
+  db.close();
+}

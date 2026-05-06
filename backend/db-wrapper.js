@@ -5,44 +5,6 @@ class DatabaseWrapper {
   constructor(dbPath, callback) {
     try {
       this.db = new Database(dbPath);
-      
-      // Create additional tables if they don't exist
-      try {
-        this.db.exec("ALTER TABLE candidates ADD COLUMN faculty TEXT");
-      } catch (err) {
-        // Ignore error if column already exists
-      }
-      try {
-        this.db.exec("ALTER TABLE candidates ADD COLUMN slogan TEXT");
-      } catch (err) {
-        // Ignore error if column already exists
-      }
-      
-      // Create additional tables if they don't exist
-      this.db.exec(`CREATE TABLE IF NOT EXISTS guidelines (
-          id INTEGER PRIMARY KEY AUTOINCREMENT,
-          title TEXT,
-          content TEXT,
-          category TEXT,
-          is_published BOOLEAN DEFAULT 0,
-          created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-          updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-          created_by TEXT
-        )`);
-        
-      this.db.exec(`CREATE TABLE IF NOT EXISTS election_calendar (
-          id INTEGER PRIMARY KEY AUTOINCREMENT,
-          title TEXT,
-          description TEXT,
-          event_date DATETIME,
-          event_type TEXT,
-          location TEXT,
-          is_published BOOLEAN DEFAULT 0,
-          created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-          updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-          created_by TEXT
-        )`);
-      
       console.log('Connected to SQLite database.');
       if (callback) callback(null);
     } catch (err) {
