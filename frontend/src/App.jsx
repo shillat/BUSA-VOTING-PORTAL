@@ -234,10 +234,7 @@ const Home = () => {
         </div>
 
         <div className="card">
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <h3>Announcements</h3>
-            <Link to="/announcements" className="btn">View All</Link>
-          </div>
+          <h3>Announcements</h3>
 
           {announcements.length === 0 ? (
             <p className="small" style={{ marginTop: '15px' }}>No announcements have been posted yet. Please check back shortly.</p>
@@ -247,6 +244,8 @@ const Home = () => {
               <p className="small">{announcement.content.substring(0, 100)}{announcement.content.length > 100 ? '...' : ''}</p>
             </div>
           ))}
+          
+          <Link to="/announcements" className="btn" style={{ marginTop: '20px' }}>View All</Link>
         </div>
       </div>
 
