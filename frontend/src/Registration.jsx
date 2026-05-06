@@ -55,7 +55,7 @@ const Registration = () => {
       if (response && response.voter_id) {
         // Validation Successful (got a Voter ID immediately)
         utils.showToast('Validation Successful!', false);
-        navigate('/validation-successful', { state: { voterId: response.voter_id } });
+        navigate('/validation-successful', { state: { voterId: response.voter_id, regNo: formData.regNumber } });
       } else {
         // Registration Pending (e.g., Remote In-Service)
         utils.showToast('Registration submitted for review.', false);

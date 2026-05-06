@@ -567,6 +567,64 @@ app.post('/api/voter/login', (req, res) => {
   });
 });
 
+// QR Code Login
+app.post('/api/voter/qr-login', (req, res) => {
+  const { qrData } = req.body;
+  const ipAddress = req.ip;
+  const userAgent = req.get('User-Agent');
+
+  if (!qrData) {
+    return res.status(400).json({ error: 'QR data is required' });
+  }
+
+  try {
+    const parsedData = JSON.parse(qrData);
+    
+    if (!parsedData.regNo || !parsedData.voterId || parsedData.type !== 'voter_login') {
+      return res.status(400).json({ error: 'Invalid QR code format' });
+    }
+
+    const query = `
+      SELECT vr.*, s.name, s.email, s.type, s.campus, s.department 
+      FROM voter_registrations vr 
+      JOIN students_master s ON vr.reg_no = s.reg_no 
+      WHERE vr.reg_no = ? AND vr.voter_id = ? AND vr.status = 'Approved'
+    `;
+
+    db.get(query, [parsedData.regNo, parsedData.voterId], (err, voter) => {
+      if (err) return res.status(500).json({ error: 'Database error' });
+
+      if (!voter) {
+        logSecurityEvent('voter', parsedData.regNo, 'QR_LOGIN_FAILED', ipAddress, userAgent, 'Voter not found or not approved');
+        return res.status(401).json({ error: 'Invalid QR code or account not approved' });
+      }
+
+      const token = jwt.sign(
+        { reg_no: voter.reg_no, name: voter.name, type: 'voter' },
+        JWT_SECRET,
+        { expiresIn: '24h' }
+      );
+
+      logSecurityEvent('voter', voter.reg_no, 'QR_LOGIN_SUCCESS', ipAddress, userAgent);
+      res.json({
+        success: true,
+        token,
+        voter: {
+          reg_no: voter.reg_no,
+          voter_id: voter.voter_id,
+          name: voter.name,
+          email: voter.email,
+          student_type: voter.type,
+          campus: voter.campus,
+          department: voter.department
+        }
+      });
+    });
+  } catch (error) {
+    return res.status(400).json({ error: 'Invalid QR code data format' });
+  }
+});
+
 // ELECTION MANAGEMENT ENDPOINTS
 
 // Create Election

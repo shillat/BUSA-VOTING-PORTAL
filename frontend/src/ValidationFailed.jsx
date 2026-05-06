@@ -8,7 +8,181 @@ const ValidationFailed = () => {
   const errorMessage = location.state?.error || "Your identity could not be verified in the student database.";
 
   return (
-    <div className="portal-container" style={{ width: '100%', maxWidth: '1280px', margin: '0 auto', fontFamily: "'Inter', sans-serif" }}>
+    <>
+      <style>{`
+        @media (max-width: 768px) {
+          .top-header {
+            padding: 16px 20px !important;
+            flex-direction: column;
+            gap: 16px;
+          }
+          
+          .portal-title {
+            font-size: 16px !important;
+            padding: 4px 16px !important;
+          }
+          
+          .main-content {
+            padding: 32px 20px 40px !important;
+          }
+          
+          .error-badge {
+            padding: 8px 20px !important;
+            margin-bottom: 24px !important;
+          }
+          
+          .error-text {
+            font-size: 16px !important;
+          }
+          
+          h1 {
+            font-size: 32px !important;
+            margin-bottom: 12px !important;
+          }
+          
+          .main-title p {
+            font-size: 16px !important;
+            padding: 0 16px;
+            line-height: 1.6 !important;
+          }
+          
+          .error-card {
+            width: 100% !important;
+            border-radius: 20px !important;
+            margin: 0 auto 32px !important;
+          }
+          
+          .card-header {
+            padding: 16px 20px !important;
+            flex-direction: column;
+            gap: 12px;
+            text-align: center;
+          }
+          
+          .access-denied-icon {
+            font-size: 24px !important;
+          }
+          
+          .access-denied-text {
+            font-size: 18px !important;
+          }
+          
+          .card-badge {
+            font-size: 11px !important;
+            padding: 4px 12px !important;
+          }
+          
+          .card-body {
+            padding: 32px 20px 24px !important;
+          }
+          
+          .error-message-icon {
+            font-size: 48px !important;
+            margin-bottom: 16px !important;
+          }
+          
+          .error-message h3 {
+            font-size: 20px !important;
+            margin-bottom: 12px !important;
+          }
+          
+          .error-message p {
+            font-size: 16px !important;
+            line-height: 1.6 !important;
+            padding: 0 16px;
+          }
+          
+          .warning-box {
+            padding: 16px 20px !important;
+            margin: 20px 0 !important;
+          }
+          
+          .warning-box p {
+            font-size: 13px !important;
+            line-height: 1.5 !important;
+          }
+          
+          .small-note {
+            font-size: 11px !important;
+          }
+          
+          .divider {
+            margin: 20px 0 16px !important;
+          }
+          
+          .action-buttons {
+            flex-direction: column !important;
+            gap: 12px !important;
+            width: 100%;
+          }
+          
+          .btn-primary,
+          .btn-secondary {
+            width: 100%;
+            padding: 12px 24px !important;
+            font-size: 15px !important;
+            text-align: center;
+          }
+          
+          .help-link {
+            margin-top: 20px !important;
+          }
+          
+          .help-link a {
+            font-size: 13px !important;
+          }
+          
+          .footer-links {
+            display: none !important;
+          }
+        }
+        
+        @media (max-width: 480px) {
+          .top-header {
+            padding: 12px 16px !important;
+          }
+          
+          .portal-title {
+            font-size: 14px !important;
+            padding: 3px 12px !important;
+          }
+          
+          .back-link {
+            font-size: 14px !important;
+          }
+          
+          .main-content {
+            padding: 24px 16px 32px !important;
+          }
+          
+          h1 {
+            font-size: 28px !important;
+          }
+          
+          .card-body {
+            padding: 24px 16px 20px !important;
+          }
+          
+          .error-message-icon {
+            font-size: 40px !important;
+          }
+          
+          .error-message h3 {
+            font-size: 18px !important;
+          }
+          
+          .warning-box {
+            padding: 14px 16px !important;
+          }
+          
+          .btn-primary,
+          .btn-secondary {
+            padding: 10px 20px !important;
+            font-size: 14px !important;
+          }
+        }
+      `}</style>
+      <div className="portal-container" style={{ width: '100%', maxWidth: '1280px', margin: '0 auto', fontFamily: "'Inter', sans-serif" }}>
       {/* Header */}
       <div className="top-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '28px 48px 20px 48px', borderBottom: '1px solid #EFF3F8' }}>
         <div className="logo-area" style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
@@ -107,7 +281,8 @@ const ValidationFailed = () => {
           © 2026 BUSA ONLINE VOTING PORTAL. All rights reserved.
         </div>
       </div>
-    </div>
+      </div>
+    </>
   );
 };
 
