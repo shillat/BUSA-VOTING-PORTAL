@@ -58,6 +58,28 @@ const ReviewSelection = () => {
 
       await Promise.all(votePromises);
 
+      // Submit reviews for each selection
+      const reviewPromises = Object.keys(selections).map(electionId => {
+        const candidate = selections[electionId];
+        if (candidate.id !== 'placeholder') {
+          return fetch('/api/reviews', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+            },
+            body: JSON.stringify({
+              election_id: electionId,
+              candidate_id: candidate.id,
+              review_text: `Voted for ${candidate.name} in ${ballotData.find(e => e.id === electionId)?.title || 'election'}`
+            })
+          });
+        }
+        return Promise.resolve();
+      });
+
+      await Promise.all(reviewPromises);
+
       utils.showToast('🗳️ Your ballot has been officially cast! Thank you.', false);
       setSubmitted(true);
       setTimeout(() => {

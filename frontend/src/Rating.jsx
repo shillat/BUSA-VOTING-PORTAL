@@ -21,13 +21,37 @@ const Rating = () => {
     utils.showToast('📄 Your voting receipt is being downloaded (demo: receipt would contain transaction ID and timestamp)', false);
   };
 
-  const handleSubmitFeedback = () => {
+  const handleSubmitFeedback = async () => {
     if (selectedRating === 0 && !feedback.trim()) {
       utils.showToast('⚠️ Please provide a rating or feedback before submitting.', true);
       return;
     }
-    setSubmitted(true);
-    utils.showToast('✅ Thank you for your feedback! Your comments have been recorded.', false);
+
+    try {
+      const response = await fetch('/api/ratings', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+        },
+        body: JSON.stringify({
+          rating: selectedRating,
+          feedback: feedback.trim()
+        })
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setSubmitted(true);
+        utils.showToast('✅ Thank you for your feedback! Your comments have been recorded.', false);
+      } else {
+        utils.showToast(data.error || 'Failed to submit rating', true);
+      }
+    } catch (error) {
+      console.error('Error submitting rating:', error);
+      utils.showToast('Failed to submit rating. Please try again.', true);
+    }
   };
 
   return (

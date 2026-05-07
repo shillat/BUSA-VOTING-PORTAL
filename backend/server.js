@@ -7,6 +7,8 @@ const fs = require('fs');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { URL } = require('url');
+const nodemailer = require('nodemailer');
+const { PDFDocument, rgb, StandardFonts } = require('pdf-lib');
 
 const app = express();
 
@@ -236,6 +238,27 @@ const db = new sqlite3.Database(dbPath, (err) => {
         details TEXT
       )`);
       
+      db.run(`CREATE TABLE IF NOT EXISTS voter_ratings (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        voter_reg_no TEXT,
+        rating INTEGER,
+        feedback TEXT,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (voter_reg_no) REFERENCES voter_registrations(reg_no)
+      )`);
+      
+      db.run(`CREATE TABLE IF NOT EXISTS voter_reviews (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        voter_reg_no TEXT,
+        election_id INTEGER,
+        candidate_id INTEGER,
+        review_text TEXT,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (voter_reg_no) REFERENCES voter_registrations(reg_no),
+        FOREIGN KEY (election_id) REFERENCES elections(id),
+        FOREIGN KEY (candidate_id) REFERENCES candidates(id)
+      )`);
+      
       // Add columns if they don't exist
       db.run("ALTER TABLE candidates ADD COLUMN faculty TEXT", (err) => {
         if (err && !err.message.includes('duplicate column name')) {
@@ -272,13 +295,36 @@ const db = new sqlite3.Database(dbPath, (err) => {
 
 app.use('/uploads', express.static(uploadFolder));
 
-// Helper to simulate sending email
-const sendEmail = (email, subject, message) => {
-  console.log(`\n--- MOCK EMAIL SENDER ---`);
-  console.log(`To: ${email}`);
-  console.log(`Subject: ${subject}`);
-  console.log(`Message: ${message}`);
-  console.log(`-------------------------\n`);
+// Email transporter configuration
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.EMAIL_USER || 'busa.voting.system@gmail.com',
+    pass: process.env.EMAIL_PASS || 'your-app-password'
+  }
+});
+
+// Helper to send real email
+const sendEmail = async (email, subject, message) => {
+  try {
+    const mailOptions = {
+      from: process.env.EMAIL_USER || 'busa.voting.system@gmail.com',
+      to: email,
+      subject: subject,
+      text: message
+    };
+    
+    const info = await transporter.sendMail(mailOptions);
+    console.log(`Email sent successfully to ${email}:`, info.messageId);
+  } catch (error) {
+    console.error('Failed to send email:', error);
+    // Fallback to console logging for development
+    console.log(`\n--- EMAIL FALLBACK (Mock) ---`);
+    console.log(`To: ${email}`);
+    console.log(`Subject: ${subject}`);
+    console.log(`Message: ${message}`);
+    console.log(`-------------------------\n`);
+  }
 };
 
 app.post('/api/register', (req, res, next) => {
@@ -1331,6 +1377,287 @@ app.delete('/api/admin/calendar/:id', authenticateToken, (req, res) => {
     logSecurityEvent('admin', adminId, 'CALENDAR_EVENT_DELETED', req.ip, req.get('User-Agent'), `ID: ${id}`);
     res.json({ success: true, message: 'Calendar event deleted' });
   });
+});
+
+// RATINGS AND REVIEWS ENDPOINTS
+
+// Submit Rating
+app.post('/api/ratings', authenticateToken, (req, res) => {
+  const { rating, feedback } = req.body;
+  const voterRegNo = req.user.reg_no;
+
+  if (!rating || rating < 1 || rating > 5) {
+    return res.status(400).json({ error: 'Rating must be between 1 and 5' });
+  }
+
+  // Check if already rated
+  db.get("SELECT id FROM voter_ratings WHERE voter_reg_no = ?", [voterRegNo], (err, existing) => {
+    if (err) return res.status(500).json({ error: 'Database error' });
+
+    if (existing) {
+      return res.status(400).json({ error: 'You have already submitted a rating' });
+    }
+
+    db.run(
+      "INSERT INTO voter_ratings (voter_reg_no, rating, feedback) VALUES (?, ?, ?)",
+      [voterRegNo, rating, feedback || ''],
+      function (err) {
+        if (err) return res.status(500).json({ error: 'Database error' });
+        res.json({ success: true, message: 'Rating submitted successfully' });
+      }
+    );
+  });
+});
+
+// Submit Review
+app.post('/api/reviews', authenticateToken, (req, res) => {
+  const { election_id, candidate_id, review_text } = req.body;
+  const voterRegNo = req.user.reg_no;
+
+  if (!election_id || !candidate_id || !review_text) {
+    return res.status(400).json({ error: 'Election ID, candidate ID, and review text are required' });
+  }
+
+  db.run(
+    "INSERT INTO voter_reviews (voter_reg_no, election_id, candidate_id, review_text) VALUES (?, ?, ?, ?)",
+    [voterRegNo, election_id, candidate_id, review_text],
+    function (err) {
+      if (err) return res.status(500).json({ error: 'Database error' });
+      res.json({ success: true, message: 'Review submitted successfully' });
+    }
+  );
+});
+
+// Get Ratings for Admin
+app.get('/api/admin/ratings', authenticateToken, (req, res) => {
+  const query = `
+    SELECT vr.*, s.name as student_name, s.email 
+    FROM voter_ratings vr 
+    JOIN voter_registrations vreg ON vr.voter_reg_no = vreg.reg_no
+    JOIN students_master s ON vreg.reg_no = s.reg_no
+    ORDER BY vr.created_at DESC
+  `;
+
+  db.all(query, (err, rows) => {
+    if (err) return res.status(500).json({ error: 'Database error' });
+    res.json(rows || []);
+  });
+});
+
+// Get Reviews for Admin
+app.get('/api/admin/reviews', authenticateToken, (req, res) => {
+  const query = `
+    SELECT vr.*, s.name as student_name, e.title as election_title, c.name as candidate_name
+    FROM voter_reviews vr
+    JOIN voter_registrations vreg ON vr.voter_reg_no = vreg.reg_no
+    JOIN students_master s ON vreg.reg_no = s.reg_no
+    LEFT JOIN elections e ON vr.election_id = e.id
+    LEFT JOIN candidates c ON vr.candidate_id = c.id
+    ORDER BY vr.created_at DESC
+  `;
+
+  db.all(query, (err, rows) => {
+    if (err) return res.status(500).json({ error: 'Database error' });
+    res.json(rows || []);
+  });
+});
+
+// Get Ratings Stats for Admin Dashboard
+app.get('/api/admin/ratings-stats', authenticateToken, (req, res) => {
+  const query = `
+    SELECT 
+      COUNT(*) as total_ratings,
+      AVG(rating) as average_rating,
+      COUNT(CASE WHEN rating >= 4 THEN 1 END) as positive_ratings,
+      COUNT(CASE WHEN rating <= 2 THEN 1 END) as negative_ratings
+    FROM voter_ratings
+  `;
+
+  db.get(query, (err, stats) => {
+    if (err) return res.status(500).json({ error: 'Database error' });
+    res.json(stats || { total_ratings: 0, average_rating: 0, positive_ratings: 0, negative_ratings: 0 });
+  });
+});
+
+// Get Recent Reviews for Admin Dashboard
+app.get('/api/admin/recent-reviews', authenticateToken, (req, res) => {
+  const query = `
+    SELECT vr.*, s.name as student_name, c.name as candidate_name
+    FROM voter_reviews vr
+    JOIN voter_registrations vreg ON vr.voter_reg_no = vreg.reg_no
+    JOIN students_master s ON vreg.reg_no = s.reg_no
+    LEFT JOIN candidates c ON vr.candidate_id = c.id
+    ORDER BY vr.created_at DESC
+    LIMIT 5
+  `;
+
+  db.all(query, (err, rows) => {
+    if (err) return res.status(500).json({ error: 'Database error' });
+    res.json(rows || []);
+  });
+});
+
+// VOTER LIST PDF ENDPOINT
+
+// Get Voters List for PDF
+app.get('/api/admin/voters-list', authenticateToken, (req, res) => {
+  const query = `
+    SELECT 
+      v.voter_reg_no,
+      s.name as student_name,
+      v.voted_at,
+      e.title as election_title
+    FROM votes v
+    JOIN voter_registrations vr ON v.voter_reg_no = vr.reg_no
+    JOIN students_master s ON v.voter_reg_no = s.reg_no
+    LEFT JOIN elections e ON v.election_id = e.id
+    ORDER BY v.voted_at DESC
+  `;
+
+  db.all(query, (err, voters) => {
+    if (err) return res.status(500).json({ error: 'Database error' });
+    res.json(voters || []);
+  });
+});
+
+// Generate PDF of Voters List
+app.get('/api/admin/voters-pdf', authenticateToken, async (req, res) => {
+  try {
+    const query = `
+      SELECT DISTINCT
+        v.voter_reg_no,
+        s.name as student_name,
+        MAX(v.voted_at) as last_voted_at
+      FROM votes v
+      JOIN voter_registrations vr ON v.voter_reg_no = vr.reg_no
+      JOIN students_master s ON v.voter_reg_no = s.reg_no
+      WHERE vr.status = 'Approved'
+      GROUP BY v.voter_reg_no, s.name
+      ORDER BY v.voted_at DESC
+    `;
+
+    db.all(query, async (err, voters) => {
+      if (err) return res.status(500).json({ error: 'Database error' });
+
+      // Create PDF
+      const pdfDoc = await PDFDocument.create();
+      const page = pdfDoc.addPage([595, 842]); // A4 size
+      const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
+      const boldFont = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+
+      // Title
+      page.drawText('BUSA VOTING PORTAL - VOTERS LIST', {
+        x: 50,
+        y: 800,
+        size: 18,
+        font: boldFont,
+        color: rgb(0, 0.2, 0.4)
+      });
+
+      // Date
+      page.drawText(`Generated on: ${new Date().toLocaleDateString()}`, {
+        x: 50,
+        y: 770,
+        size: 10,
+        font: font,
+        color: rgb(0.5, 0.5, 0.5)
+      });
+
+      // Table headers
+      let yPosition = 730;
+      page.drawText('REGISTRATION NUMBER', {
+        x: 50,
+        y: yPosition,
+        size: 12,
+        font: boldFont,
+        color: rgb(0, 0, 0)
+      });
+      page.drawText('STUDENT NAME', {
+        x: 200,
+        y: yPosition,
+        size: 12,
+        font: boldFont,
+        color: rgb(0, 0, 0)
+      });
+      page.drawText('VOTING TIME', {
+        x: 400,
+        y: yPosition,
+        size: 12,
+        font: boldFont,
+        color: rgb(0, 0, 0)
+      });
+
+      // Line under headers
+      page.drawLine({
+        start: { x: 50, y: yPosition - 5 },
+        end: { x: 550, y: yPosition - 5 },
+        thickness: 1,
+        color: rgb(0, 0, 0)
+      });
+
+      // Voter data
+      yPosition -= 25;
+      voters.forEach((voter, index) => {
+        if (yPosition < 50) {
+          // Add new page if needed
+          const newPage = pdfDoc.addPage([595, 842]);
+          yPosition = 800;
+        }
+
+        page.drawText(voter.voter_reg_no || '', {
+          x: 50,
+          y: yPosition,
+          size: 10,
+          font: font,
+          color: rgb(0, 0, 0)
+        });
+        
+        page.drawText(voter.student_name || '', {
+          x: 200,
+          y: yPosition,
+          size: 10,
+          font: font,
+          color: rgb(0, 0, 0)
+        });
+        
+        const voteTime = voter.last_voted_at ? 
+          new Date(voter.last_voted_at).toLocaleString() : 'N/A';
+        page.drawText(voteTime, {
+          x: 400,
+          y: yPosition,
+          size: 10,
+          font: font,
+          color: rgb(0, 0, 0)
+        });
+
+        yPosition -= 20;
+      });
+
+      // Footer
+      const totalPages = pdfDoc.getPageCount();
+      for (let i = 0; i < totalPages; i++) {
+        const currentPage = pdfDoc.getPages()[i];
+        currentPage.drawText(`Page ${i + 1} of ${totalPages}`, {
+          x: 550,
+          y: 20,
+          size: 8,
+          font: font,
+          color: rgb(0.5, 0.5, 0.5)
+        });
+      }
+
+      // Generate PDF bytes
+      const pdfBytes = await pdfDoc.save();
+
+      // Set headers for PDF download
+      res.setHeader('Content-Type', 'application/pdf');
+      res.setHeader('Content-Disposition', `attachment; filename="voters-list-${new Date().toISOString().split('T')[0]}.pdf"`);
+      res.send(Buffer.from(pdfBytes));
+    });
+  } catch (error) {
+    console.error('Error generating PDF:', error);
+    res.status(500).json({ error: 'Failed to generate PDF' });
+  }
 });
 
 // Error Handling Middleware

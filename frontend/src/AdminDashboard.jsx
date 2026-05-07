@@ -9,20 +9,30 @@ const AdminDashboard = () => {
   const [stats, setStats] = useState({ total: 0, pending: 0 });
   const [activeElections, setActiveElections] = useState([]);
   const [recentLogs, setRecentLogs] = useState([]);
+  const [ratingsStats, setRatingsStats] = useState({ total_ratings: 0, average_rating: 0, positive_ratings: 0, negative_ratings: 0 });
+  const [recentReviews, setRecentReviews] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const [statsData, electionsData, logsData] = await Promise.all([
+        const [statsData, electionsData, logsData, ratingsData, reviewsData] = await Promise.all([
           adminAPI.getVoterStats(),
           electionAPI.getActive(),
-          adminAPI.getSecurityLogs({ limit: 5 })
+          adminAPI.getSecurityLogs({ limit: 5 }),
+          fetch('/api/admin/ratings-stats', {
+            headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
+          }).then(res => res.json()),
+          fetch('/api/admin/recent-reviews', {
+            headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
+          }).then(res => res.json())
         ]);
         setStats(statsData);
         setActiveElections(electionsData);
         setRecentLogs(logsData);
+        setRatingsStats(ratingsData);
+        setRecentReviews(reviewsData);
       } catch (err) {
         utils.showToast('Failed to fetch dashboard stats', true);
       } finally {
@@ -36,6 +46,33 @@ const AdminDashboard = () => {
     e.preventDefault();
     localStorage.removeItem('authToken');
     navigate('/');
+  };
+
+  const handleDownloadVotersPDF = async () => {
+    try {
+      const response = await fetch('/api/admin/voters-pdf', {
+        headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
+      });
+
+      if (response.ok) {
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `voters-list-${new Date().toISOString().split('T')[0]}.pdf`;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+        utils.showToast('📄 Voters list PDF downloaded successfully', false);
+      } else {
+        const error = await response.json();
+        utils.showToast(error.error || 'Failed to download PDF', true);
+      }
+    } catch (error) {
+      console.error('Error downloading PDF:', error);
+      utils.showToast('Failed to download PDF. Please try again.', true);
+    }
   };
 
   return (
@@ -53,6 +90,7 @@ const AdminDashboard = () => {
           <div className="sidebar-nav" style={{ display: 'flex', flexDirection: 'column', marginTop: '12px' }}>
             <a href="#" onClick={(e) => { e.preventDefault(); navigate('/admin/dashboard'); }} className="sidebar-link active" style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 20px', textDecoration: 'none', fontSize: '14px', fontWeight: '500', color: '#002F6C', background: '#E8F0FE', borderLeft: '3px solid #002F6C' }}>Dashboard</a>
             <a href="#" onClick={(e) => { e.preventDefault(); navigate('/admin/database'); }} className="sidebar-link" style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 20px', textDecoration: 'none', fontSize: '14px', fontWeight: '500', color: 'black' }}>Voter Database</a>
+            <a href="#" onClick={handleDownloadVotersPDF} className="sidebar-link" style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 20px', textDecoration: 'none', fontSize: '14px', fontWeight: '500', color: '#FF6B35' }}>📄 Download Voters PDF</a>
             <a href="#" onClick={(e) => { e.preventDefault(); navigate('/admin/elections'); }} className="sidebar-link" style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 20px', textDecoration: 'none', fontSize: '14px', fontWeight: '500', color: 'black' }}>Manage Elections</a>
             <a href="#" onClick={(e) => { e.preventDefault(); navigate('/admin/candidates'); }} className="sidebar-link" style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 20px', textDecoration: 'none', fontSize: '14px', fontWeight: '500', color: 'black' }}>Manage Candidates</a>
                         <a href="#" onClick={(e) => { e.preventDefault(); navigate('/admin/verify'); }} className="sidebar-link" style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 20px', textDecoration: 'none', fontSize: '14px', fontWeight: '500', color: 'black' }}>✅ Verify Voters</a>
@@ -92,6 +130,18 @@ const AdminDashboard = () => {
               <div className="stat-info">
                 <h4 style={{ fontSize: '13px', fontWeight: '600', color: 'black', margin: '0 0 6px 0' }}>Active Elections</h4>
                 <div className="stat-number" style={{ fontSize: '32px', fontWeight: '800', color: '#002F6C' }}>{activeElections.length}</div>
+              </div>
+            </div>
+            <div className="stat-card" style={{ background: '#FFFFFF', borderRadius: '20px', padding: '18px 24px', border: '1px solid #E2EAF2', flex: '1', minWidth: '200px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div className="stat-info">
+                <h4 style={{ fontSize: '13px', fontWeight: '600', color: 'black', margin: '0 0 6px 0' }}>Total Ratings</h4>
+                <div className="stat-number" style={{ fontSize: '32px', fontWeight: '800', color: '#FF6B35' }}>{ratingsStats.total_ratings || 0}</div>
+              </div>
+            </div>
+            <div className="stat-card" style={{ background: '#FFFFFF', borderRadius: '20px', padding: '18px 24px', border: '1px solid #E2EAF2', flex: '1', minWidth: '200px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div className="stat-info">
+                <h4 style={{ fontSize: '13px', fontWeight: '600', color: 'black', margin: '0 0 6px 0' }}>Avg Rating</h4>
+                <div className="stat-number" style={{ fontSize: '32px', fontWeight: '800', color: '#4CAF50' }}>{(ratingsStats.average_rating || 0).toFixed(1)}</div>
               </div>
             </div>
           </div>
@@ -154,6 +204,48 @@ const AdminDashboard = () => {
                   <span style={{ fontWeight: '700', fontSize: '12px', color: '#2E7D32' }}>🟢 AUTHORIZED</span>
                 </div>
               </div>
+            </div>
+          </div>
+
+          {/* Recent Reviews Card */}
+          <div className="col-card" style={{ background: '#FFFFFF', borderRadius: '20px', border: '1px solid #E2EAF2', flex: '1', overflow: 'hidden' }}>
+            <div className="card-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '18px 24px', background: 'linear-gradient(90deg, #FF6B35 0%, #F7931E 100%)', color: 'white' }}>
+              <h3 style={{ fontSize: '16px', fontWeight: '800', color: 'white', margin: 0 }}>Recent Reviews & Ratings</h3>
+              <a href="#" onClick={(e) => { e.preventDefault(); navigate('/admin/ratings'); }} className="view-link" style={{ fontSize: '12px', color: 'white', opacity: 0.9, textDecoration: 'none', fontWeight: '500' }}>View All →</a>
+            </div>
+            <div className="reviews-list" style={{ padding: '8px 0' }}>
+              {recentReviews.length === 0 ? (
+                <div style={{ padding: '24px', textAlign: 'center', fontSize: '13px', color: 'black' }}>No recent reviews or ratings.</div>
+              ) : (
+                recentReviews.map((review, idx) => (
+                  <div key={idx} style={{ padding: '14px 24px', borderBottom: idx < recentReviews.length - 1 ? '1px solid #EEF3F8' : 'none' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px' }}>
+                      <div>
+                        <div style={{ fontWeight: '600', fontSize: '13px', color: '#1A2C3E', marginBottom: '2px' }}>
+                          {review.student_name || 'Anonymous'}
+                          {review.rating && (
+                            <span style={{ marginLeft: '8px', color: '#FFB800', fontSize: '12px' }}>
+                              {'★'.repeat(review.rating)}{'☆'.repeat(5 - review.rating)}
+                            </span>
+                          )}
+                        </div>
+                        {review.candidate_name && (
+                          <div style={{ fontSize: '11px', color: '#8AA0B8', marginBottom: '2px' }}>About: {review.candidate_name}</div>
+                        )}
+                        {review.review_text && (
+                          <div style={{ fontSize: '12px', color: 'black', fontStyle: 'italic' }}>"{review.review_text}"</div>
+                        )}
+                        {review.feedback && (
+                          <div style={{ fontSize: '12px', color: 'black', fontStyle: 'italic' }}>"{review.feedback}"</div>
+                        )}
+                      </div>
+                      <div style={{ fontSize: '11px', color: 'black', fontWeight: '600', whiteSpace: 'nowrap' }}>
+                        {new Date(review.created_at).toLocaleString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true })}
+                      </div>
+                    </div>
+                  </div>
+                ))
+              )}
             </div>
           </div>
 
