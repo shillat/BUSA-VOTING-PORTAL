@@ -433,11 +433,21 @@ app.post('/api/register', (req, res, next) => {
 
         // Regardless of expected_grad_year, providing the file puts them in Pending for admin approval.
         const insertSql = "INSERT INTO voter_registrations (reg_no, password_hash, evidence_url, status) VALUES (?, ?, ?, 'Pending')";
-        db.run(insertSql, [reg_no, "", evidence_url], function (err) {
+        db.run(insertSql, [reg_no, "", evidence_url], async function (err) {
           if (err) return res.status(500).json({ error: 'Database error saving registration.' });
 
           logSecurityEvent('voter', reg_no, 'REGISTRATION_PENDING', ipAddress, userAgent, `Remote In-Service student pending approval with evidence: ${evidence_url}`);
-          sendEmail(student.email, "Voter Registration Pending", "Your registration is pending admin approval based on your submitted Bank Slip.");
+          
+          // Send email notification immediately
+          try {
+            await sendEmail(student.email, "Voter Registration Pending", 
+              `Dear ${student.name},\n\nYour voter registration has been received and is currently pending admin approval.\n\nRegistration Details:\n- Registration Number: ${reg_no}\n- Student Type: In-Service (Remote)\n- Evidence File: Bank slip submitted\n\nYou will receive another email once your registration has been reviewed and approved.\n\nBest regards,\nBUSA Voting System Administration`);
+            
+            console.log(`Pending registration email sent to ${student.email}`);
+          } catch (emailError) {
+            console.error('Failed to send pending registration email:', emailError);
+          }
+          
           return res.json({ success: true, message: "Registration pending. Wait for admin approval." });
         });
       }

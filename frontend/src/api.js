@@ -318,6 +318,29 @@ export const votingAPI = {
   },
 };
 
+// Ratings and Reviews APIs
+export const ratingsAPI = {
+  // Submit rating
+  submitRating: async (rating, feedback) => {
+    return await apiRequest('/ratings', {
+      method: 'POST',
+      body: JSON.stringify({ rating, feedback }),
+    });
+  },
+
+  // Submit review
+  submitReview: async (electionId, candidateId, reviewText) => {
+    return await apiRequest('/reviews', {
+      method: 'POST',
+      body: JSON.stringify({ 
+        election_id: electionId, 
+        candidate_id: candidateId, 
+        review_text: reviewText 
+      }),
+    });
+  },
+};
+
 // Admin Dashboard APIs
 export const adminAPI = {
   // Get all voters
@@ -504,6 +527,7 @@ export default {
   electionAPI,
   candidateAPI,
   votingAPI,
+  ratingsAPI,
   adminAPI,
   publicAPI,
   announcementAPI,
