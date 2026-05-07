@@ -343,6 +343,31 @@ export const adminAPI = {
       body: JSON.stringify(announcementData),
     });
   },
+
+  // Get ratings statistics
+  getRatingsStats: async () => {
+    return await apiRequest('/admin/ratings-stats');
+  },
+
+  // Get recent reviews
+  getRecentReviews: async () => {
+    return await apiRequest('/admin/recent-reviews');
+  },
+
+  // Download voters PDF
+  downloadVotersPDF: async () => {
+    const token = localStorage.getItem('authToken');
+    const response = await fetch(`${API_BASE_URL}/admin/voters-pdf`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || 'Failed to download PDF');
+    }
+
+    return response.blob();
+  },
 };
 
 // Public APIs

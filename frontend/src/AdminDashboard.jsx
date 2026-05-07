@@ -21,12 +21,8 @@ const AdminDashboard = () => {
           adminAPI.getVoterStats(),
           electionAPI.getActive(),
           adminAPI.getSecurityLogs({ limit: 5 }),
-          fetch('/api/admin/ratings-stats', {
-            headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
-          }).then(res => res.json()),
-          fetch('/api/admin/recent-reviews', {
-            headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
-          }).then(res => res.json())
+          adminAPI.getRatingsStats(),
+          adminAPI.getRecentReviews()
         ]);
         setStats(statsData);
         setActiveElections(electionsData);
@@ -50,28 +46,19 @@ const AdminDashboard = () => {
 
   const handleDownloadVotersPDF = async () => {
     try {
-      const response = await fetch('/api/admin/voters-pdf', {
-        headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
-      });
-
-      if (response.ok) {
-        const blob = await response.blob();
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `voters-list-${new Date().toISOString().split('T')[0]}.pdf`;
-        document.body.appendChild(a);
-        a.click();
-        window.URL.revokeObjectURL(url);
-        document.body.removeChild(a);
-        utils.showToast('📄 Voters list PDF downloaded successfully', false);
-      } else {
-        const error = await response.json();
-        utils.showToast(error.error || 'Failed to download PDF', true);
-      }
+      const blob = await adminAPI.downloadVotersPDF();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `voters-list-${new Date().toISOString().split('T')[0]}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+      utils.showToast('📄 Voters list PDF downloaded successfully', false);
     } catch (error) {
       console.error('Error downloading PDF:', error);
-      utils.showToast('Failed to download PDF. Please try again.', true);
+      utils.showToast(error.message || 'Failed to download PDF. Please try again.', true);
     }
   };
 
