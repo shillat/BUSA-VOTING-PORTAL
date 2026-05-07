@@ -32,6 +32,63 @@ const Rating = () => {
 
   return (
     <div className="portal-container" style={{ width: '100%', maxWidth: '1280px', background: '#F3FAFF', minHeight: '100vh', margin: '0 auto', fontFamily: "'Inter', sans-serif", overflow: 'hidden' }}>
+      <style jsx>{`
+        @media (max-width: 768px) {
+          .dashboard-layout {
+            padding: 16px !important;
+            gap: 16px !important;
+          }
+          .sidebar {
+            width: 100% !important;
+            order: 2 !important;
+            margin-bottom: 16px;
+          }
+          .main-content {
+            order: 1 !important;
+          }
+          .rating-card {
+            padding: 16px !important;
+          }
+          .stars-container {
+            gap: 6px !important;
+          }
+          .stars-container span {
+            font-size: 24px !important;
+          }
+          textarea {
+            font-size: 14px !important;
+            padding: 10px 12px !important;
+          }
+          textarea::placeholder {
+            font-size: 12px !important;
+          }
+        }
+        @media (max-width: 480px) {
+          .dashboard-layout {
+            padding: 12px !important;
+            gap: 12px !important;
+          }
+          .rating-card {
+            padding: 12px !important;
+          }
+          .stars-container span {
+            font-size: 20px !important;
+          }
+          textarea {
+            font-size: 13px !important;
+            padding: 8px 10px !important;
+          }
+          textarea::placeholder {
+            font-size: 11px !important;
+          }
+          .thankyou-card {
+            padding: 16px 12px !important;
+          }
+          h1 {
+            font-size: 20px !important;
+          }
+        }
+      `}</style>
       {/* Header */}
       <div className="header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 20px 12px 20px', borderBottom: '1px solid #DCE5F0', background: '#FFFFFF' }}>
         <div className="logo-area" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
@@ -41,9 +98,9 @@ const Rating = () => {
         <div style={{ fontSize: '13px', fontWeight: '600', color: '#1F2A44', background: '#FFFFFF', padding: '4px 14px', borderRadius: '40px', border: '1px solid #DCE5F0' }}>{voter?.name || 'Student'}</div>
       </div>
 
-      <div className="dashboard-layout" style={{ display: 'flex', gap: '20px', padding: '20px', flex: '1', maxWidth: '100%', overflow: 'hidden' }}>
+      <div className="dashboard-layout" style={{ display: 'flex', gap: '20px', padding: '20px', flex: '1', maxWidth: '100%', overflow: 'hidden', flexDirection: 'row', flexWrap: 'wrap' }}>
         {/* Sidebar */}
-        <div className="sidebar" style={{ width: '200px', flexShrink: '0', background: '#FFFFFF', borderRadius: '20px', padding: '16px 0', border: '1px solid #E2EBF3', height: 'fit-content', boxShadow: '0 2px 8px rgba(0, 0, 0, 0.02)' }}>
+        <div className="sidebar" style={{ width: '200px', flexShrink: '0', background: '#FFFFFF', borderRadius: '20px', padding: '16px 0', border: '1px solid #E2EBF3', height: 'fit-content', boxShadow: '0 2px 8px rgba(0, 0, 0, 0.02)', order: 1 }}>
           <div className="sidebar-header" style={{ padding: '0 16px 12px 16px', borderBottom: '1px solid #EFF3F8', marginBottom: '8px' }}>
             <h2 style={{ fontSize: '16px', fontWeight: '800', color: 'black', margin: 0 }}>Dashboard</h2>
           </div>
@@ -57,7 +114,7 @@ const Rating = () => {
         </div>
 
         {/* Main Content */}
-        <div className="main-content" style={{ flex: '1', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+        <div className="main-content" style={{ flex: '1', display: 'flex', flexDirection: 'column', gap: '20px', minWidth: '0', order: 2 }}>
           <div className="status-card" style={{ background: 'linear-gradient(105deg, #002F6C 0%, #0A4175 100%)', borderRadius: '18px', padding: '16px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: 'white' }}>
             <div className="status-left">
               <h3 style={{ fontSize: '16px', fontWeight: '600', margin: '0 0 4px 0' }}>Verified Status: Active</h3>
@@ -73,7 +130,7 @@ const Rating = () => {
             <button onClick={handleDownloadReceipt} style={{ background: '#002F6C', color: 'white', border: 'none', padding: '12px 24px', borderRadius: '48px', fontWeight: '700', fontSize: '13px', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '8px' }}>📄 Download Voting Receipt</button>
           </div>
 
-          <div className="rating-card" style={{ background: '#FFFFFF', borderRadius: '20px', border: '1px solid #E2EBF3', padding: '20px 24px' }}>
+          <div className="rating-card" style={{ background: '#FFFFFF', borderRadius: '20px', border: '1px solid #E2EBF3', padding: '20px 24px', width: '100%', boxSizing: 'border-box' }}>
             <div className="rating-header">
               <h3 style={{ fontSize: '16px', fontWeight: '800', color: 'black', margin: '0 0 6px 0' }}>Rate Your Experience</h3>
               <p style={{ fontSize: '14px', color: 'black', marginBottom: '20px' }}>How would you rate the online voting process?</p>
@@ -96,7 +153,7 @@ const Rating = () => {
               disabled={submitted}
               rows="3"
               placeholder="Let us know how we can improve..."
-              style={{ width: '100%', padding: '12px 16px', border: '1.5px solid #E2EBF3', borderRadius: '16px', fontSize: '13px', resize: 'vertical', marginBottom: '16px', outline: 'none' }}
+              style={{ width: '100%', padding: '12px 16px', border: '1.5px solid #E2EBF3', borderRadius: '16px', fontSize: '13px', resize: 'vertical', marginBottom: '16px', outline: 'none', boxSizing: 'border-box', maxWidth: '100%', minWidth: '0' }}
             ></textarea>
             <button 
               onClick={handleSubmitFeedback} 
