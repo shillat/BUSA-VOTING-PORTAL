@@ -257,7 +257,7 @@ const db = new sqlite3.Database(dbPath, (err) => {
       const studentStmt = db.prepare("INSERT OR IGNORE INTO students_master VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
       studentStmt.run("24/BSE/BU/R/0008", "Atukwatse Blessing", "atukwatseblessing@gmail.com", "Regular", true, 2027, "main", "CI");
       studentStmt.run("24/BSE/BU/R/0003", "Naigaga Shillah", "shillahnaigaga5@gmail.com", "Regular", false, 2027, "main", "CI");
-      studentStmt.run("22/BTH/BU/H/0012", "Kakande Charlse", "charlsek@gmail.com", "In-Service", true, 2025, "main", "RS");
+      studentStmt.run("24/BTH/BU/H/0015", "Bwabye Kenneth", "kenethbwabye25@gmail.com", "In-Service", true, 2025, "main", "RS");
       studentStmt.run("19/BTH/BU/H/0012", "Nakamya Diana", "diana@gmail.com", "In-Service", false, 2022, "main", "RS");
       studentStmt.run("21/EDS/BU/R/0003", "Kamya Lawrence", "lawrencekamya@gmail.com", "Regular", true, 2026, "main", "EDS");
       studentStmt.run("21/EDS/BU/H/0003", "Katongore Lawrence", "lawrence@gmail.com", "In-Service", true, 2026, "main", "EDS");
