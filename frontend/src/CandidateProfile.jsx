@@ -65,9 +65,61 @@ const CandidateProfile = () => {
     return (
         <div className="container">
             <Navbar />
+            <style jsx>{`
+                @media (max-width: 768px) {
+                    .profile-container {
+                        padding: 16px !important;
+                    }
+                    .profile-grid {
+                        grid-template-columns: 1fr !important;
+                        gap: 24px !important;
+                        padding: 24px !important;
+                    }
+                    .candidate-photo {
+                        width: 100% !important;
+                        max-width: 300px !important;
+                        height: 350px !important;
+                        margin: 0 auto !important;
+                    }
+                    .candidate-name {
+                        font-size: 32px !important;
+                    }
+                    .candidate-position {
+                        font-size: 20px !important;
+                    }
+                    .details-grid {
+                        grid-template-columns: 1fr !important;
+                        gap: 16px !important;
+                    }
+                    .manifesto-section {
+                        padding: 20px !important;
+                    }
+                }
+                @media (max-width: 480px) {
+                    .profile-container {
+                        padding: 12px !important;
+                    }
+                    .profile-grid {
+                        padding: 16px !important;
+                        gap: 20px !important;
+                    }
+                    .candidate-photo {
+                        height: 280px !important;
+                    }
+                    .candidate-name {
+                        font-size: 24px !important;
+                    }
+                    .candidate-position {
+                        font-size: 18px !important;
+                    }
+                    .manifesto-section {
+                        padding: 16px !important;
+                    }
+                }
+            `}</style>
 
             {/* Back Button */}
-            <div style={{ padding: '20px 48px 0 48px' }}>
+            <div className="profile-container" style={{ padding: '20px 48px 0 48px' }}>
                 <button
                     onClick={() => navigate('/candidates')}
                     style={{
@@ -87,10 +139,10 @@ const CandidateProfile = () => {
             </div>
 
             {/* Profile Header */}
-            <div style={{ padding: '20px 48px' }}>
-                <div style={{
+            <div className="profile-container" style={{ padding: '20px 48px' }}>
+                <div className="profile-grid" style={{
                     display: 'grid',
-                    gridTemplateColumns: '400px 1fr',
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
                     gap: '48px',
                     alignItems: 'start',
                     background: '#FFFFFF',
@@ -104,10 +156,12 @@ const CandidateProfile = () => {
                     <div style={{ textAlign: 'center' }}>
                         {candidate.photo_url ? (
                             <img
+                                className="candidate-photo"
                                 src={`https://busa-voting-portal.onrender.com${candidate.photo_url}`}
                                 alt={candidate.name}
                                 style={{
-                                    width: '320px',
+                                    width: '100%',
+                                    maxWidth: '320px',
                                     height: '400px',
                                     objectFit: 'cover',
                                     objectPosition: 'center top',
@@ -117,8 +171,9 @@ const CandidateProfile = () => {
                                 onError={(e) => { e.target.style.display = 'none'; }}
                             />
                         ) : (
-                            <div style={{
-                                width: '320px',
+                            <div className="candidate-photo" style={{
+                                width: '100%',
+                                maxWidth: '320px',
                                 height: '400px',
                                 background: 'linear-gradient(135deg, #002F6C 0%, #1A4A7A 100%)',
                                 borderRadius: '24px',
@@ -128,7 +183,8 @@ const CandidateProfile = () => {
                                 fontSize: '96px',
                                 fontWeight: '800',
                                 color: 'white',
-                                boxShadow: '0 8px 24px rgba(0, 0, 0, 0.15)'
+                                boxShadow: '0 8px 24px rgba(0, 0, 0, 0.15)',
+                                margin: '0 auto'
                             }}>
                                 {initials}
                             </div>
@@ -138,7 +194,7 @@ const CandidateProfile = () => {
                     {/* Info Section */}
                     <div>
                         <div style={{ marginBottom: '32px' }}>
-                            <h1 style={{
+                            <h1 className="candidate-name" style={{
                                 fontSize: '48px',
                                 fontWeight: '800',
                                 color: 'black',
@@ -147,7 +203,7 @@ const CandidateProfile = () => {
                             }}>
                                 {candidate.name}
                             </h1>
-                            <p style={{
+                            <p className="candidate-position" style={{
                                 fontSize: '24px',
                                 fontWeight: '700',
                                 color: '#002F6C',
@@ -165,7 +221,7 @@ const CandidateProfile = () => {
                         </div>
 
                         {/* Details Grid */}
-                        <div style={{
+                        <div className="details-grid" style={{
                             display: 'grid',
                             gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
                             gap: '24px',
@@ -240,7 +296,7 @@ const CandidateProfile = () => {
                                 }}>
                                     Manifesto
                                 </h2>
-                                <div style={{
+                                <div className="manifesto-section" style={{
                                     background: '#F8FAFC',
                                     padding: '32px',
                                     borderRadius: '16px',
