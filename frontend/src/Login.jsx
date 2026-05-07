@@ -61,6 +61,47 @@ const Login = () => {
   return (
     <div className="container">
       <Navbar />
+      <style jsx>{`
+        @media (max-width: 768px) {
+          .card {
+            padding: 30px 20px !important;
+            margin: 40px 16px !important;
+          }
+          input {
+            font-size: 16px !important;
+            padding: 14px 16px !important;
+          }
+          input::placeholder {
+            font-size: 14px !important;
+            color: #8AA0B8 !important;
+          }
+          label {
+            font-size: 16px !important;
+          }
+          h2 {
+            font-size: 20px !important;
+          }
+        }
+        @media (max-width: 480px) {
+          .card {
+            padding: 25px 16px !important;
+            margin: 20px 12px !important;
+          }
+          input {
+            font-size: 16px !important;
+            padding: 12px 14px !important;
+          }
+          input::placeholder {
+            font-size: 13px !important;
+          }
+          label {
+            font-size: 15px !important;
+          }
+          h2 {
+            font-size: 18px !important;
+          }
+        }
+      `}</style>
 
       <div style={{ display: 'flex', justifyContent: 'center', margin: '80px 0' }}>
         <div className="card" style={{ width: '480px', maxWidth: '100%', textAlign: 'center', padding: '40px' }}>
@@ -97,6 +138,7 @@ const Login = () => {
                   onChange={handleChange}
                   placeholder="Enter your Admin ID"
                   required
+                  style={{ fontSize: '14px', width: '100%', padding: '12px 16px', border: '1.5px solid #E2E9F2', borderRadius: '16px', outline: 'none' }}
                 />
               </div>
             ) : (
@@ -112,6 +154,7 @@ const Login = () => {
                     onChange={handleChange}
                     placeholder="24/XXX/BU/X/XXXX"
                     required
+                    style={{ fontSize: '14px', width: '100%', padding: '12px 16px', border: '1.5px solid #E2E9F2', borderRadius: '16px', outline: 'none' }}
                   />
                 </div>
                 <div style={{ marginBottom: '20px' }}>
@@ -125,7 +168,7 @@ const Login = () => {
                     onChange={handleChange}
                     placeholder="Enter unique Voter ID (e.g. VID-XXXXXX)"
                     required
-                    style={{ fontSize: '14px' }}
+                    style={{ fontSize: '14px', width: '100%', padding: '12px 16px', border: '1.5px solid #E2E9F2', borderRadius: '16px', outline: 'none' }}
                   />
                 </div>
               </>
@@ -144,6 +187,7 @@ const Login = () => {
                     onChange={handleChange}
                     placeholder="••••••••"
                     required
+                    style={{ fontSize: '14px', width: '100%', padding: '12px 16px', border: '1.5px solid #E2E9F2', borderRadius: '16px', outline: 'none' }}
                   />
                 </div>
 

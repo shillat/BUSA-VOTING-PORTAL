@@ -145,9 +145,56 @@ const ManageCandidates = () => {
       <AdminTopNavbar />
 
       {/* Dashboard Layout */}
-      <div className="dashboard-layout" style={{ display: 'flex', gap: '32px', padding: '28px 40px 40px 40px', flex: '1' }}>
+      <div className="dashboard-layout" style={{ display: 'flex', gap: '32px', padding: '28px 40px 40px 40px', flex: '1', flexDirection: 'row', flexWrap: 'wrap' }}>
         {/* Sidebar */}
-        <div className="sidebar" style={{ width: '260px', flexShrink: '0', background: '#FFFFFF', borderRadius: '24px', padding: '20px 0', border: '1px solid #E9EDF2', height: 'fit-content' }}>
+        <div className="sidebar" style={{ width: '260px', flexShrink: '0', background: '#FFFFFF', borderRadius: '24px', padding: '20px 0', border: '1px solid #E9EDF2', height: 'fit-content', order: 1 }}>
+          <style jsx>{`
+            @media (max-width: 768px) {
+              .dashboard-layout {
+                padding: 20px 16px !important;
+                gap: 20px !important;
+              }
+              .sidebar {
+                width: 100% !important;
+                order: 2 !important;
+                margin-bottom: 20px;
+              }
+              .main-content {
+                order: 1 !important;
+              }
+              .candidates-grid {
+                grid-template-columns: 1fr !important;
+                gap: 16px !important;
+              }
+              .form-row {
+                flex-direction: column !important;
+                gap: 16px !important;
+              }
+              .form-group {
+                min-width: 100% !important;
+              }
+              .status-card {
+                flex-direction: column !important;
+                text-align: center !important;
+                gap: 12px !important;
+              }
+            }
+            @media (max-width: 480px) {
+              .dashboard-layout {
+                padding: 16px 12px !important;
+                gap: 16px !important;
+              }
+              .form-card {
+                padding: 20px 16px !important;
+              }
+              .candidate-header {
+                padding: 16px !important;
+              }
+              .candidate-body {
+                padding: 16px !important;
+              }
+            }
+          `}</style>
           <div className="sidebar-header" style={{ padding: '0 20px 16px 20px', borderBottom: '1px solid #F0F4F9' }}>
             <h2 style={{ fontSize: '20px', fontWeight: '800', color: 'black', margin: 0 }}>Dashboard</h2>
           </div>
@@ -164,7 +211,7 @@ const ManageCandidates = () => {
         </div>
 
         {/* Main Content */}
-        <div className="main-content" style={{ flex: '1', display: 'flex', flexDirection: 'column', gap: '28px' }}>
+        <div className="main-content" style={{ flex: '1', display: 'flex', flexDirection: 'column', gap: '28px', minWidth: '0', order: 2 }}>
           {/* Status Card */}
           <div className="status-card" style={{ background: 'linear-gradient(105deg, #002F6C 0%, #0A4175 100%)', borderRadius: '20px', padding: '18px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: 'white' }}>
             <div className="status-left">
@@ -286,7 +333,7 @@ const ManageCandidates = () => {
           </div>
 
           {/* Candidates Grid */}
-          <div className="candidates-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '24px', position: 'relative', minHeight: '200px' }}>
+          <div className="candidates-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '24px', position: 'relative', minHeight: '200px' }}>
             {loading && <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', fontWeight: '600', color: 'black' }}>Loading candidates...</div>}
             {!loading && candidates.map((candidate) => (
               <div key={candidate.id} className="candidate-card" style={{ background: '#FFFFFF', borderRadius: '20px', border: '1px solid #E9EDF2', overflow: 'hidden', opacity: loading ? 0.5 : 1 }}>
