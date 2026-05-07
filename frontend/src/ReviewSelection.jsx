@@ -115,13 +115,13 @@ const ReviewSelection = () => {
       <div className="header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 20px 12px 20px', borderBottom: '1px solid #E9EDF2', background: '#FFFFFF' }}>
         <div className="logo-area" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
           <LogoMark size={40} />
-          <div className="portal-title" style={{ fontWeight: '700', fontSize: '14px', letterSpacing: '-0.2px', color: '#0B2B44', background: '#F8FAFE', padding: '4px 14px', borderRadius: '40px' }}>BUSA VOTING</div>
+          <div className="portal-title" style={{ fontWeight: '700', fontSize: '14px', letterSpacing: '-0.2px', color: '#0B2B44', background: '#F8FAFE', padding: '4px 14px', borderRadius: '40px' }}>BUSA ONLINE VOTING PORTAL</div>
         </div>
         <div className="user-greeting" style={{ fontSize: '13px', fontWeight: '600', color: '#1F2A44', background: '#FFFFFF', padding: '4px 14px', borderRadius: '40px', border: '1px solid #E9EDF2' }}>{voter?.name || 'Student'}</div>
       </div>
 
       {/* Dashboard Layout */}
-      <div className="dashboard-layout" style={{ display: 'flex', gap: '20px', padding: '20px 20px 24px 20px', flex: '1' }}>
+      <div className="dashboard-layout" style={{ display: 'flex', gap: '20px', padding: '20px', flex: '1' }}>
         {/* Sidebar */}
         <div className="sidebar" style={{ width: '200px', flexShrink: '0', background: '#FFFFFF', borderRadius: '20px', padding: '16px 0', border: '1px solid #E9EDF2', height: 'fit-content' }}>
           <div className="sidebar-header" style={{ padding: '0 16px 12px 16px', borderBottom: '1px solid #F0F4F9', marginBottom: '8px' }}>

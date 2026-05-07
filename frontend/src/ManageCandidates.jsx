@@ -224,13 +224,13 @@ const ManageCandidates = () => {
                 >
                   <option value="">Select Position</option>
                   <option value="Presidential Candidate">Presidential Candidate</option>
-                  <option value="Vice Presidential Candidate">Vice Presidential Candidate</option>
-                  <option value="Guild Secretary">Guild Secretary</option>
-                  <option value="Treasurer">Treasurer</option>
-                  <option value="Sports Captain">Sports Captain</option>
-                  <option value="Cultural Minister">Cultural Minister</option>
-                  <option value="Academic Secretary">Academic Secretary</option>
-                  <option value="Welfare Officer">Welfare Officer</option>
+                  <option value="Vice Presidential Candidate">MP FACULTY OF SCIENCE AND TECHNOLOGY</option>
+                  <option value="Guild Secretary">MP FACULTY OF EDUCATION</option>
+                  <option value="Treasurer">MP FACULTY OF RELIGIOUS STUDIES</option>
+                  <option value="Sports Captain">MP FACULTY OF BUSINESS</option>
+                  <option value="Cultural Minister">MP OF EASTERN REGION</option>
+                  <option value="Academic Secretary">MP OF NORTHERN REGION</option>
+                  <option value="Welfare Officer">MP OF NORTHERN REGION</option>
                 </select>
               </div>
               <div className="form-group" style={{ flex: '1', minWidth: '200px' }}>
@@ -242,13 +242,10 @@ const ManageCandidates = () => {
                   style={{ width: '100%', padding: '12px 16px', border: '1.5px solid #E2E9F2', borderRadius: '16px', fontSize: '14px', outline: 'none' }}
                 >
                   <option value="Faculty of Business">Faculty of Business</option>
-                  <option value="Faculty of Engineering">Faculty of Engineering</option>
-                  <option value="Faculty of Law">Faculty of Law</option>
-                  <option value="Faculty of Health Sciences">Faculty of Health Sciences</option>
-                  <option value="Faculty of Humanities">Faculty of Humanities</option>
-                  <option value="School of Computing">School of Computing</option>
-                  <option value="School of Liberal Arts">School of Liberal Arts</option>
-                </select>
+                  <option value="Faculty of Engineering">Faculty of Science and Technology</option>
+                  <option value="Faculty of Law">Faculty of Religious studies</option>
+                  <option value="Faculty of Health Sciences">Faculty of Education</option>
+                  </select>
               </div>
               <div className="form-group" style={{ flex: '1', minWidth: '200px' }}>
                 <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', color: 'black', marginBottom: '8px' }}>Campaign Slogan (Optional)</label>
