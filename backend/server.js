@@ -1753,6 +1753,114 @@ app.get('/api/admin/voters-pdf', authenticateToken, async (req, res) => {
   }
 });
 
+// STUDENT MANAGEMENT ENDPOINTS (Admin Only)
+
+// Get all students
+app.get('/api/students', authenticateToken, (req, res) => {
+  const query = `
+    SELECT reg_no, name, email, type, is_registered_sem, expected_grad_year, campus, department 
+    FROM students_master 
+    ORDER BY name ASC
+  `;
+  
+  db.all(query, (err, students) => {
+    if (err) return res.status(500).json({ error: 'Database error' });
+    res.json(students);
+  });
+});
+
+// Add new student
+app.post('/api/students', authenticateToken, (req, res) => {
+  const { reg_no, name, email, type, is_registered_sem, year_of_study, campus, department } = req.body;
+  const adminId = req.user.admin_id;
+
+  if (!reg_no || !name || !email || !type || !year_of_study || !campus) {
+    return res.status(400).json({ error: 'Required fields: reg_no, name, email, type, year_of_study, campus' });
+  }
+
+  const query = `
+    INSERT INTO students_master (reg_no, name, email, type, is_registered_sem, expected_grad_year, campus, department) 
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+  `;
+
+  db.run(query, [reg_no, name, email, type, is_registered_sem ? 1 : 0, year_of_study, campus, department], function (err) {
+    if (err) {
+      if (err.message.includes('UNIQUE constraint failed')) {
+        return res.status(400).json({ error: 'Student with this registration number already exists' });
+      }
+      return res.status(500).json({ error: 'Database error' });
+    }
+
+    logSecurityEvent('admin', adminId, 'STUDENT_ADDED', req.ip, req.get('User-Agent'), `Reg No: ${reg_no}, Name: ${name}`);
+    res.json({
+      success: true,
+      message: 'Student added successfully',
+      student_id: this.lastID
+    });
+  });
+});
+
+// Update student
+app.put('/api/students/:reg_no', authenticateToken, (req, res) => {
+  const { reg_no } = req.params;
+  const { name, email, type, is_registered_sem, year_of_study, campus, department } = req.body;
+  const adminId = req.user.admin_id;
+
+  if (!name || !email || !type || !year_of_study || !campus) {
+    return res.status(400).json({ error: 'Required fields: name, email, type, year_of_study, campus' });
+  }
+
+  const query = `
+    UPDATE students_master 
+    SET name = ?, email = ?, type = ?, is_registered_sem = ?, expected_grad_year = ?, campus = ?, department = ?
+    WHERE reg_no = ?
+  `;
+
+  db.run(query, [name, email, type, is_registered_sem ? 1 : 0, year_of_study, campus, department, reg_no], function (err) {
+    if (err) return res.status(500).json({ error: 'Database error' });
+
+    if (this.changes === 0) {
+      return res.status(404).json({ error: 'Student not found' });
+    }
+
+    logSecurityEvent('admin', adminId, 'STUDENT_UPDATED', req.ip, req.get('User-Agent'), `Reg No: ${reg_no}, Name: ${name}`);
+    res.json({
+      success: true,
+      message: 'Student updated successfully'
+    });
+  });
+});
+
+// Delete student
+app.delete('/api/students/:reg_no', authenticateToken, (req, res) => {
+  const { reg_no } = req.params;
+  const adminId = req.user.admin_id;
+
+  // Check if student has any voter registrations first
+  db.get("SELECT COUNT(*) as count FROM voter_registrations WHERE reg_no = ?", [reg_no], (err, result) => {
+    if (err) return res.status(500).json({ error: 'Database error' });
+
+    if (result.count > 0) {
+      return res.status(400).json({ error: 'Cannot delete student: has existing voter registrations' });
+    }
+
+    // Delete the student
+    db.run("DELETE FROM students_master WHERE reg_no = ?", [reg_no], function (err) {
+      if (err) return res.status(500).json({ error: 'Database error' });
+
+      if (this.changes === 0) {
+        return res.status(404).json({ error: 'Student not found' });
+      }
+
+      logSecurityEvent('admin', adminId, 'STUDENT_DELETED', req.ip, req.get('User-Agent'), `Reg No: ${reg_no}`);
+      res.json({
+        success: true,
+        message: 'Student deleted successfully'
+      });
+    });
+  });
+});
+
 // Error Handling Middleware
 app.use((err, req, res, next) => {
   console.error('Unhandled Server Error:', err);

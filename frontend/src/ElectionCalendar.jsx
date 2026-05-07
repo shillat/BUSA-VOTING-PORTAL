@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { utils } from './api';
 import LogoMark from './LogoMark';
+import Footer from './Footer';
 
 const ElectionCalendar = () => {
   const navigate = useNavigate();
@@ -53,92 +54,472 @@ const ElectionCalendar = () => {
   };
 
   return (
-    <div className="portal-container" style={{ width: '100%', maxWidth: '1280px', background: '#FFFFFF', minHeight: '100vh', margin: '0 auto', fontFamily: "'Inter', sans-serif" }}>
-      {/* Header */}
-      <div className="header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '24px 48px 20px 48px', borderBottom: '1px solid #EFF3F8' }}>
-        <div className="logo-area" style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-          <LogoMark />
-          <div className="portal-title" style={{ fontWeight: '700', fontSize: '18px', letterSpacing: '-0.2px', color: '#0B2B44', background: '#F8FAFE', padding: '5px 18px', borderRadius: '40px' }}>BUSA ONLINE VOTING PORTAL</div>
+    <>
+      <style>{`
+        .calendar-container {
+          width: 100%;
+          max-width: 1280px;
+          background: #FFFFFF;
+          min-height: 100vh;
+          margin: 0 auto;
+          font-family: 'Inter', sans-serif;
+        }
+
+        /* Header Styles */
+        .calendar-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 24px 48px 20px 48px;
+          border-bottom: 1px solid #EFF3F8;
+        }
+
+        .logo-area {
+          display: flex;
+          align-items: center;
+          gap: 16px;
+        }
+
+        .portal-title {
+          font-weight: 700;
+          font-size: 18px;
+          letter-spacing: -0.2px;
+          color: #0B2B44;
+          background: #F8FAFE;
+          padding: 5px 18px;
+          border-radius: 40px;
+        }
+
+        .back-link {
+          font-size: 14px;
+          font-weight: 500;
+          color: #2A6F8F;
+          text-decoration: none;
+          border-bottom: 1px dashed #B9D4E3;
+          padding-bottom: 2px;
+        }
+
+        /* Title Section */
+        .calendar-title-section {
+          padding: 32px 48px 16px 48px;
+        }
+
+        .calendar-title {
+          font-size: clamp(24px, 5vw, 36px);
+          font-weight: 800;
+          color: black;
+          margin: 0;
+        }
+
+        /* Navigation Section */
+        .calendar-nav {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 16px 48px 0 48px;
+          gap: 16px;
+        }
+
+        .month-year {
+          font-size: clamp(18px, 4vw, 24px);
+          font-weight: 700;
+          color: #1A2C3E;
+        }
+
+        .nav-controls {
+          display: flex;
+          gap: 16px;
+          align-items: center;
+        }
+
+        .view-buttons {
+          display: flex;
+          gap: 12px;
+          background: #F5F8FC;
+          padding: 4px;
+          border-radius: 48px;
+        }
+
+        .view-btn {
+          padding: 8px 16px;
+          border: none;
+          background: transparent;
+          color: #6F8FAC;
+          font-weight: 600;
+          font-size: 14px;
+          border-radius: 40px;
+          cursor: pointer;
+          transition: all 0.2s;
+        }
+
+        .view-btn.active {
+          background: #002F6C;
+          color: white;
+        }
+
+        .nav-arrows {
+          display: flex;
+          gap: 8px;
+        }
+
+        .nav-arrow {
+          width: 40px;
+          height: 40px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border: 1px solid #E2E9F2;
+          border-radius: 40px;
+          background: white;
+          cursor: pointer;
+          transition: all 0.2s;
+        }
+
+        .nav-arrow:hover {
+          background: #F8FAFE;
+        }
+
+        /* Calendar Grid */
+        .calendar-grid-section {
+          padding: 24px 48px 32px 48px;
+        }
+
+        .calendar-grid {
+          background: #FFFFFF;
+          border: 1px solid #EDF2F7;
+          border-radius: 28px;
+          overflow: hidden;
+        }
+
+        .weekdays {
+          display: grid;
+          grid-template-columns: repeat(7, 1fr);
+          background: #F8FAFE;
+          border-bottom: 1px solid #EDF2F7;
+        }
+
+        .weekday {
+          padding: 16px 8px;
+          text-align: center;
+          font-weight: 700;
+          font-size: clamp(11px, 2.5vw, 14px);
+          color: black;
+          text-transform: uppercase;
+        }
+
+        .calendar-days {
+          display: grid;
+          grid-template-columns: repeat(7, 1fr);
+          background: #FFFFFF;
+        }
+
+        .calendar-day {
+          min-height: 80px;
+          padding: 8px;
+          border-right: 1px solid #F0F4F9;
+          border-bottom: 1px solid #F0F4F9;
+          position: relative;
+        }
+
+        .calendar-day.today {
+          background: #F0F7FF;
+        }
+
+        .day-number {
+          font-weight: 600;
+          font-size: 12px;
+          color: #8A9BB0;
+          margin-bottom: 4px;
+        }
+
+        .calendar-day.today .day-number {
+          font-weight: 800;
+          color: #002F6C;
+        }
+
+        .event-badge {
+          background: #E67E22;
+          color: white;
+          font-size: 9px;
+          padding: 2px 6px;
+          border-radius: 8px;
+          margin-top: 4px;
+          display: inline-block;
+          font-weight: 600;
+          cursor: pointer;
+          transition: transform 0.2s;
+        }
+
+        .event-badge:hover {
+          transform: scale(1.05);
+        }
+
+        /* Events Section */
+        .events-section {
+          padding: 16px 48px 48px 48px;
+        }
+
+        .events-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+          gap: 20px;
+        }
+
+        .event-card {
+          background: #FFFFFF;
+          border: 1px solid #EDF2F7;
+          border-radius: 24px;
+          overflow: hidden;
+          cursor: pointer;
+          transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .event-card:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .event-header {
+          padding: 16px 20px;
+          color: white;
+        }
+
+        .event-date {
+          font-size: clamp(20px, 4vw, 28px);
+          font-weight: 800;
+        }
+
+        .event-year {
+          font-size: 14px;
+          opacity: 0.8;
+          margin-top: 4px;
+        }
+
+        .event-content {
+          padding: 20px 24px 24px 24px;
+        }
+
+        .event-title {
+          font-size: clamp(16px, 3.5vw, 20px);
+          font-weight: 800;
+          color: #1A2C3E;
+          margin-bottom: 12px;
+        }
+
+        .event-description {
+          font-size: 14px;
+          line-height: 1.55;
+          color: black;
+          margin-bottom: 16px;
+        }
+
+        .event-meta {
+          font-size: 13px;
+          color: black;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin-top: 12px;
+          padding-top: 12px;
+          border-top: 1px solid #F0F4F9;
+        }
+
+        /* Mobile Responsive Styles */
+        @media (max-width: 768px) {
+          .calendar-header {
+            flex-direction: column;
+            gap: 16px;
+            padding: 20px 24px;
+            text-align: center;
+          }
+
+          .calendar-title-section {
+            padding: 24px 24px 12px 24px;
+          }
+
+          .calendar-nav {
+            flex-direction: column;
+            gap: 20px;
+            padding: 12px 24px 0 24px;
+          }
+
+          .nav-controls {
+            flex-direction: column;
+            width: 100%;
+          }
+
+          .view-buttons {
+            justify-content: center;
+            width: 100%;
+          }
+
+          .nav-arrows {
+            justify-content: center;
+          }
+
+          .calendar-grid-section {
+            padding: 20px 24px 24px 24px;
+          }
+
+          .weekday {
+            padding: 12px 4px;
+            font-size: 10px;
+          }
+
+          .calendar-day {
+            min-height: 60px;
+            padding: 4px;
+          }
+
+          .day-number {
+            font-size: 11px;
+          }
+
+          .event-badge {
+            font-size: 8px;
+            padding: 1px 4px;
+          }
+
+          .events-section {
+            padding: 12px 24px 32px 24px;
+          }
+
+          .events-grid {
+            grid-template-columns: 1fr;
+            gap: 16px;
+          }
+
+          .event-header {
+            padding: 12px 16px;
+          }
+
+          .event-content {
+            padding: 16px 20px 20px 20px;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .calendar-header {
+            padding: 16px 20px;
+          }
+
+          .portal-title {
+            font-size: 14px;
+            padding: 4px 12px;
+          }
+
+          .calendar-title-section {
+            padding: 20px 20px 8px 20px;
+          }
+
+          .calendar-nav {
+            padding: 8px 20px 0 20px;
+          }
+
+          .view-btn {
+            padding: 6px 12px;
+            font-size: 12px;
+          }
+
+          .nav-arrow {
+            width: 36px;
+            height: 36px;
+          }
+
+          .calendar-grid-section {
+            padding: 16px 20px 20px 20px;
+          }
+
+          .weekday {
+            padding: 8px 2px;
+            font-size: 9px;
+          }
+
+          .calendar-day {
+            min-height: 50px;
+            padding: 2px;
+          }
+
+          .events-section {
+            padding: 8px 20px 24px 20px;
+          }
+        }
+      `}</style>
+
+      <div className="calendar-container">
+        {/* Header */}
+        <header className="calendar-header">
+          <div className="logo-area">
+            <LogoMark />
+            <div className="portal-title">BUSA ONLINE VOTING PORTAL</div>
+          </div>
+          <a href="#" onClick={handleBackToHome} className="back-link">← Back to Home</a>
+        </header>
+
+        {/* Title */}
+        <div className="calendar-title-section">
+          <h1 className="calendar-title">ELECTION CALENDAR 2027</h1>
         </div>
-        <a href="#" onClick={handleBackToHome} style={{ fontSize: '14px', fontWeight: '500', color: '#2A6F8F', textDecoration: 'none', borderBottom: '1px dashed #B9D4E3', paddingBottom: '2px' }}>← Back to Home</a>
-      </div>
 
-      <div style={{ padding: '32px 48px 16px 48px' }}>
-        <h1 style={{ fontSize: '36px', fontWeight: '800', color: 'black', margin: 0 }}>ELECTION CALENDAR 2027</h1>
-      </div>
-
-      <div className="calendar-nav" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 48px 0 48px' }}>
-        <div className="month-year" style={{ fontSize: '24px', fontWeight: '700', color: '#1A2C3E' }}>April 2027</div>
-        <div style={{ display: 'flex', gap: '16px' }}>
-          <div className="view-buttons" style={{ display: 'flex', gap: '12px', background: '#F5F8FC', padding: '4px', borderRadius: '48px' }}>
-            {['month', 'week', 'day'].map((v) => (
-              <button 
-                key={v} 
-                className={`view-btn ${view === v ? 'active' : ''}`} 
-                onClick={() => setView(v)}
-                style={{ padding: '8px 20px', border: 'none', background: view === v ? '#002F6C' : 'transparent', color: view === v ? 'white' : '#6F8FAC', fontWeight: '600', fontSize: '14px', borderRadius: '40px', cursor: 'pointer' }}
-              >
-                {v.charAt(0).toUpperCase() + v.slice(1)}
-              </button>
-            ))}
-          </div>
-          <div style={{ display: 'flex', gap: '8px' }}>
-            <button onClick={() => handleNavClick('prev')} style={{ width: '40px', height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid #E2E9F2', borderRadius: '40px', background: 'white', cursor: 'pointer' }}>←</button>
-            <button onClick={() => handleNavClick('next')} style={{ width: '40px', height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid #E2E9F2', borderRadius: '40px', background: 'white', cursor: 'pointer' }}>→</button>
-          </div>
-        </div>
-      </div>
-
-      <div className="calendar-container" style={{ padding: '24px 48px 32px 48px' }}>
-        <div className="calendar-grid" style={{ background: '#FFFFFF', border: '1px solid #EDF2F7', borderRadius: '28px', overflow: 'hidden' }}>
-          <div className="weekdays" style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', background: '#F8FAFE', borderBottom: '1px solid #EDF2F7' }}>
-            {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map(d => (
-              <div key={d} style={{ padding: '16px 12px', textAlign: 'center', fontWeight: '700', fontSize: '14px', color: 'black', textTransform: 'uppercase' }}>{d}</div>
-            ))}
-          </div>
-          <div className="calendar-days" style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', background: '#FFFFFF' }}>
-            {renderDays()}
-          </div>
-        </div>
-      </div>
-
-      <div className="events-section" style={{ padding: '16px 48px 48px 48px' }}>
-        <div className="events-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '28px' }}>
-          {Object.entries(events).map(([day, ev]) => (
-            <div key={day} className="event-card" onClick={() => utils.showToast(`📅 ${ev.fullTitle}`, true)} style={{ background: '#FFFFFF', border: '1px solid #EDF2F7', borderRadius: '24px', overflow: 'hidden', cursor: 'pointer' }}>
-              <div style={{ background: ev.color, padding: '16px 20px', color: 'white' }}>
-                <div style={{ fontSize: '28px', fontWeight: '800' }}>April {day.padStart(2, '0')}</div>
-                <div style={{ fontSize: '14px', opacity: '0.8', marginTop: '4px' }}>2027</div>
-              </div>
-              <div className="event-content" style={{ padding: '20px 24px 24px 24px' }}>
-                <div style={{ fontSize: '20px', fontWeight: '800', color: '#1A2C3E', marginBottom: '12px' }}>{ev.fullTitle}</div>
-                <div style={{ fontSize: '14px', lineHeight: '1.55', color: 'black', marginBottom: '16px' }}>{ev.desc}</div>
-                <div style={{ fontSize: '13px', color: 'black', display: 'flex', alignItems: 'center', gap: '8px', marginTop: '12px', paddingTop: '12px', borderTop: '1px solid #F0F4F9' }}>{ev.time} | Venue/Online</div>
-              </div>
+        {/* Navigation */}
+        <nav className="calendar-nav">
+          <div className="month-year">April 2027</div>
+          <div className="nav-controls">
+            <div className="view-buttons">
+              {['month', 'week', 'day'].map((v) => (
+                <button 
+                  key={v} 
+                  className={`view-btn ${view === v ? 'active' : ''}`} 
+                  onClick={() => setView(v)}
+                >
+                  {v.charAt(0).toUpperCase() + v.slice(1)}
+                </button>
+              ))}
             </div>
-          ))}
+            <div className="nav-arrows">
+              <button onClick={() => handleNavClick('prev')} className="nav-arrow">←</button>
+              <button onClick={() => handleNavClick('next')} className="nav-arrow">→</button>
+            </div>
+          </div>
+        </nav>
+
+        {/* Calendar Grid */}
+        <div className="calendar-grid-section">
+          <div className="calendar-grid">
+            <div className="weekdays">
+              {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map(d => (
+                <div key={d} className="weekday">{d}</div>
+              ))}
+            </div>
+            <div className="calendar-days">
+              {renderDays()}
+            </div>
+          </div>
+        </div>
+
+        {/* Events Section */}
+        <div className="events-section">
+          <div className="events-grid">
+            {Object.entries(events).map(([day, ev]) => (
+              <div key={day} className="event-card" onClick={() => utils.showToast(`📅 ${ev.fullTitle}`, true)}>
+                <div className="event-header" style={{ background: ev.color }}>
+                  <div className="event-date">April {day.padStart(2, '0')}</div>
+                  <div className="event-year">2027</div>
+                </div>
+                <div className="event-content">
+                  <div className="event-title">{ev.fullTitle}</div>
+                  <div className="event-description">{ev.desc}</div>
+                  <div className="event-meta">{ev.time} | Venue/Online</div>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
       {/* Footer */}
-      <div className="footer" style={{ background: '#FCFDFF', borderTop: '1px solid #ECF3F9', padding: '32px 48px 28px', width: '100%', marginTop: 'auto' }}>
-        <div className="footer-grid" style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '40px', maxWidth: '1100px', margin: '0 auto' }}>
-          <div className="footer-col">
-            <h4 style={{ fontWeight: '700', fontSize: '14px', color: 'black', marginBottom: '14px' }}>BUSA</h4>
-            <a href="#" style={{ display: 'block', fontSize: '12px', color: '#48708E', textDecoration: 'none', marginBottom: '10px' }}>About Union</a>
-            <a href="#" style={{ display: 'block', fontSize: '12px', color: '#48708E', textDecoration: 'none', marginBottom: '10px' }}>Election Guidelines</a>
-          </div>
-          <div className="footer-col">
-            <h4 style={{ fontWeight: '700', fontSize: '14px', color: 'black', marginBottom: '14px' }}>Legal</h4>
-            <a href="#" style={{ display: 'block', fontSize: '12px', color: '#48708E', textDecoration: 'none', marginBottom: '10px' }}>PRIVACY POLICY</a>
-            <a href="#" style={{ display: 'block', fontSize: '12px', color: '#48708E', textDecoration: 'none', marginBottom: '10px' }}>TERMS OF SERVICE</a>
-          </div>
-        </div>
-        <div className="copyright" style={{ textAlign: 'center', fontSize: '11px', color: '#7C95AF', marginTop: '28px', paddingTop: '16px', borderTop: '1px solid #E9F0F6' }}>
-          © 2026 BUSA ONLINE VOTING PORTAL. ALL RIGHTS RESERVED
-        </div>
-      </div>
-    </div>
+      <Footer />
+    </>
   );
 };
 

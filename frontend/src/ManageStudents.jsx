@@ -14,7 +14,7 @@ const ManageStudents = () => {
     email: '',
     type: 'Regular',
     is_registered_sem: false,
-    year_of_study: '',
+    expected_grad_year: '',
     campus: 'main',
     department: ''
   });
@@ -85,7 +85,7 @@ const ManageStudents = () => {
       email: student.email,
       type: student.type,
       is_registered_sem: student.is_registered_sem,
-      year_of_study: student.year_of_study,
+      expected_grad_year: student.expected_grad_year,
       campus: student.campus,
       department: student.department || ''
     });
@@ -125,7 +125,7 @@ const ManageStudents = () => {
       email: '',
       type: 'Regular',
       is_registered_sem: false,
-      year_of_study: '',
+      expected_grad_year: '',
       campus: 'main',
       department: ''
     });
@@ -537,7 +537,7 @@ const ManageStudents = () => {
                       <p><strong>Reg No:</strong> {student.reg_no}</p>
                       <p><strong>Email:</strong> {student.email}</p>
                       <p><strong>Campus:</strong> {student.campus}</p>
-                      <p><strong>Year:</strong> {student.year_of_study}</p>
+                      <p><strong>Graduation Year:</strong> {student.expected_grad_year}</p>
                       {student.department && <p><strong>Department:</strong> {student.department}</p>}
                     </div>
                     <div className="student-actions">
@@ -618,11 +618,11 @@ const ManageStudents = () => {
                 </div>
 
                 <div className="form-group">
-                  <label>Year of Study *</label>
+                  <label>Expected Graduation Year *</label>
                   <input
                     type="number"
-                    name="year_of_study"
-                    value={formData.year_of_study}
+                    name="expected_grad_year"
+                    value={formData.expected_grad_year}
                     onChange={handleInputChange}
                     placeholder="e.g., 2028"
                     min="2020"
