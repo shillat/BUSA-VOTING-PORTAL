@@ -31,7 +31,7 @@ const Rating = () => {
   };
 
   return (
-    <div className="portal-container" style={{ width: '100%', maxWidth: '1280px', background: '#F3FAFF', minHeight: '100vh', margin: '0 auto', fontFamily: "'Inter', sans-serif" }}>
+    <div className="portal-container" style={{ width: '100%', maxWidth: '1280px', background: '#F3FAFF', minHeight: '100vh', margin: '0 auto', fontFamily: "'Inter', sans-serif", overflow: 'hidden' }}>
       {/* Header */}
       <div className="header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 20px 12px 20px', borderBottom: '1px solid #DCE5F0', background: '#FFFFFF' }}>
         <div className="logo-area" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
@@ -41,7 +41,7 @@ const Rating = () => {
         <div style={{ fontSize: '13px', fontWeight: '600', color: '#1F2A44', background: '#FFFFFF', padding: '4px 14px', borderRadius: '40px', border: '1px solid #DCE5F0' }}>{voter?.name || 'Student'}</div>
       </div>
 
-      <div className="dashboard-layout" style={{ display: 'flex', gap: '20px', padding: '20px', flex: '1' }}>
+      <div className="dashboard-layout" style={{ display: 'flex', gap: '20px', padding: '20px', flex: '1', maxWidth: '100%', overflow: 'hidden' }}>
         {/* Sidebar */}
         <div className="sidebar" style={{ width: '200px', flexShrink: '0', background: '#FFFFFF', borderRadius: '20px', padding: '16px 0', border: '1px solid #E2EBF3', height: 'fit-content', boxShadow: '0 2px 8px rgba(0, 0, 0, 0.02)' }}>
           <div className="sidebar-header" style={{ padding: '0 16px 12px 16px', borderBottom: '1px solid #EFF3F8', marginBottom: '8px' }}>

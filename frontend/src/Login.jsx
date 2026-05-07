@@ -123,8 +123,9 @@ const Login = () => {
                     name="voterId"
                     value={formData.voterId}
                     onChange={handleChange}
-                    placeholder="Enter your unique Voter ID (e.g. VID-XXXXXX)"
+                    placeholder="Enter unique Voter ID (e.g. VID-XXXXXX)"
                     required
+                    style={{ fontSize: '14px' }}
                   />
                 </div>
               </>
