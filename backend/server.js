@@ -279,7 +279,7 @@ const db = new sqlite3.Database(dbPath, (err) => {
       // Seed student data if not exists
       const studentStmt = db.prepare("INSERT OR IGNORE INTO students_master VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
       studentStmt.run("24/BSE/BU/R/0008", "Atukwatse Blessing", "atukwatseblessing@gmail.com", "Regular", true, 2027, "main", "CI");
-      studentStmt.run("24/BSE/BU/R/0003", "Naigaga Shillah", "shillahnaigaga5@gmail.com", "Regular", false, 2027, "main", "CI");
+      studentStmt.run("24/BTH/BU/H/0003", "Naigaga Shillah", "shillahnaigaga5@gmail.com", "In-Service", false, 2027, "main", "CI");
       studentStmt.run("24/BTH/BU/H/0015", "Bwabye Kenneth", "kenethbwabye25@gmail.com", "In-Service", true, 2025, "main", "RS");
       studentStmt.run("19/BTH/BU/H/0012", "Nakamya Diana", "diana@gmail.com", "In-Service", false, 2022, "main", "RS");
       studentStmt.run("21/EDS/BU/R/0003", "Kamya Lawrence", "lawrencekamya@gmail.com", "Regular", true, 2026, "main", "EDS");
@@ -340,8 +340,11 @@ app.post('/api/register', (req, res, next) => {
 }, async (req, res) => {
   const { reg_no, on_campus } = req.body;
   const isOnCampus = on_campus === 'true'; // string from formData
+  const ipAddress = req.ip;
+  const userAgent = req.get('User-Agent');
 
   if (!reg_no) {
+    logSecurityEvent('voter', 'unknown', 'REGISTRATION_FAILED', ipAddress, userAgent, 'Missing registration number');
     return res.status(400).json({ error: 'Registration Number is required.' });
   }
 
@@ -355,6 +358,7 @@ app.post('/api/register', (req, res, next) => {
     });
 
     if (existingReg) {
+      logSecurityEvent('voter', reg_no, 'REGISTRATION_FAILED', ipAddress, userAgent, 'Registration already exists');
       return res.status(400).json({ error: 'Registration already exists for this number.' });
     }
 
@@ -367,6 +371,7 @@ app.post('/api/register', (req, res, next) => {
     });
 
     if (!student) {
+      logSecurityEvent('voter', reg_no, 'REGISTRATION_FAILED', ipAddress, userAgent, 'Student not found in master records');
       return res.status(404).json({ error: 'Student not found in master records.' });
     }
 
@@ -377,6 +382,7 @@ app.post('/api/register', (req, res, next) => {
       // Path A: Regulars
       if (!student.is_registered_sem) {
         const rejectionMsg = "Registration failed: You must be registered for the current semester.";
+        logSecurityEvent('voter', reg_no, 'REGISTRATION_FAILED', ipAddress, userAgent, 'Regular student not registered for current semester');
         sendEmail(student.email, "Registration Rejected", rejectionMsg);
         return res.status(400).json({ error: rejectionMsg });
       }
@@ -389,6 +395,7 @@ app.post('/api/register', (req, res, next) => {
       db.run(insertSql, [reg_no, voterId, voterIdHash], function (err) {
         if (err) return res.status(500).json({ error: 'Database error saving registration.' });
 
+        logSecurityEvent('voter', reg_no, 'REGISTRATION_APPROVED', ipAddress, userAgent, `Regular student approved with Voter ID: ${voterId}`);
         sendEmail(student.email, "Voter Registration Approved", `Congratulations! You have been successfully registered as a voter. Your unique Voter ID is: ${voterId}`);
         return res.json({ success: true, message: "Registration successful. You are approved and your Voter ID has been sent to your email.", voter_id: voterId });
       });
@@ -404,11 +411,13 @@ app.post('/api/register', (req, res, next) => {
           const insertSql = "INSERT INTO voter_registrations (reg_no, voter_id, password_hash, status) VALUES (?, ?, ?, 'Approved')";
           db.run(insertSql, [reg_no, voterId, voterIdHash], function (err) {
             if (err) return res.status(500).json({ error: 'Database error saving registration.' });
+            logSecurityEvent('voter', reg_no, 'REGISTRATION_APPROVED', ipAddress, userAgent, `In-Service campus student approved with Voter ID: ${voterId}`);
             sendEmail(student.email, "Voter Registration Approved", `Congratulations! You have been successfully registered as a voter. Your unique Voter ID is: ${voterId}`);
             return res.json({ success: true, message: "Registration successful. You are approved and your Voter ID has been sent to your email.", voter_id: voterId });
           });
         } else {
           const rejectionMsg = "Registration failed: You must be on the current session list.";
+          logSecurityEvent('voter', reg_no, 'REGISTRATION_FAILED', ipAddress, userAgent, 'In-Service campus student not on current session list');
           sendEmail(student.email, "Registration Rejected", rejectionMsg);
           return res.status(400).json({ error: rejectionMsg });
         }
@@ -416,6 +425,7 @@ app.post('/api/register', (req, res, next) => {
       } else {
         // Path C: In-Service Remote
         if (!req.file) {
+          logSecurityEvent('voter', reg_no, 'REGISTRATION_FAILED', ipAddress, userAgent, 'Remote In-Service student missing bank slip file');
           return res.status(400).json({ error: "Current Session Bank Slip is mandatory for Remote In-Service students." });
         }
 
@@ -426,12 +436,14 @@ app.post('/api/register', (req, res, next) => {
         db.run(insertSql, [reg_no, "", evidence_url], function (err) {
           if (err) return res.status(500).json({ error: 'Database error saving registration.' });
 
+          logSecurityEvent('voter', reg_no, 'REGISTRATION_PENDING', ipAddress, userAgent, `Remote In-Service student pending approval with evidence: ${evidence_url}`);
           sendEmail(student.email, "Voter Registration Pending", "Your registration is pending admin approval based on your submitted Bank Slip.");
           return res.json({ success: true, message: "Registration pending. Wait for admin approval." });
         });
       }
 
     } else {
+      logSecurityEvent('voter', reg_no, 'REGISTRATION_FAILED', ipAddress, userAgent, 'Unknown student type in records');
       return res.status(400).json({ error: "Unknown student type in records." });
     }
 
@@ -456,9 +468,11 @@ app.get('/api/voter/status/:reg_no', (req, res) => {
     if (err) return res.status(500).json({ error: 'Database error' });
 
     if (!voter) {
+      logSecurityEvent('voter', reg_no, 'STATUS_CHECK_FAILED', req.ip, req.get('User-Agent'), 'No registration record found');
       return res.status(404).json({ error: 'No registration record found for this Registration Number.' });
     }
 
+    logSecurityEvent('voter', reg_no, 'STATUS_CHECKED', req.ip, req.get('User-Agent'), `Status: ${voter.status}`);
     res.json(voter);
   });
 });
@@ -1387,6 +1401,7 @@ app.post('/api/ratings', authenticateToken, (req, res) => {
   const voterRegNo = req.user.reg_no;
 
   if (!rating || rating < 1 || rating > 5) {
+    logSecurityEvent('voter', voterRegNo, 'RATING_SUBMISSION_FAILED', req.ip, req.get('User-Agent'), `Invalid rating: ${rating}`);
     return res.status(400).json({ error: 'Rating must be between 1 and 5' });
   }
 
@@ -1395,6 +1410,7 @@ app.post('/api/ratings', authenticateToken, (req, res) => {
     if (err) return res.status(500).json({ error: 'Database error' });
 
     if (existing) {
+      logSecurityEvent('voter', voterRegNo, 'RATING_SUBMISSION_FAILED', req.ip, req.get('User-Agent'), 'Duplicate rating submission attempted');
       return res.status(400).json({ error: 'You have already submitted a rating' });
     }
 
@@ -1403,6 +1419,7 @@ app.post('/api/ratings', authenticateToken, (req, res) => {
       [voterRegNo, rating, feedback || ''],
       function (err) {
         if (err) return res.status(500).json({ error: 'Database error' });
+        logSecurityEvent('voter', voterRegNo, 'RATING_SUBMITTED', req.ip, req.get('User-Agent'), `Rating: ${rating}, Feedback: ${feedback || 'None'}`);
         res.json({ success: true, message: 'Rating submitted successfully' });
       }
     );
@@ -1415,6 +1432,7 @@ app.post('/api/reviews', authenticateToken, (req, res) => {
   const voterRegNo = req.user.reg_no;
 
   if (!election_id || !candidate_id || !review_text) {
+    logSecurityEvent('voter', voterRegNo, 'REVIEW_SUBMISSION_FAILED', req.ip, req.get('User-Agent'), 'Missing required fields for review');
     return res.status(400).json({ error: 'Election ID, candidate ID, and review text are required' });
   }
 
@@ -1423,6 +1441,7 @@ app.post('/api/reviews', authenticateToken, (req, res) => {
     [voterRegNo, election_id, candidate_id, review_text],
     function (err) {
       if (err) return res.status(500).json({ error: 'Database error' });
+      logSecurityEvent('voter', voterRegNo, 'REVIEW_SUBMITTED', req.ip, req.get('User-Agent'), `Election: ${election_id}, Candidate: ${candidate_id}, Review: ${review_text.substring(0, 100)}...`);
       res.json({ success: true, message: 'Review submitted successfully' });
     }
   );
