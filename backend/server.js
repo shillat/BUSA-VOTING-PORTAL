@@ -1549,39 +1549,43 @@ app.get('/api/admin/ratings-stats', authenticateToken, (req, res) => {
 // Get Recent Reviews for Admin Dashboard
 app.get('/api/admin/recent-reviews', authenticateToken, (req, res) => {
   const query = `
-    SELECT 
-      vr.id,
-      vr.voter_reg_no,
-      vr.review_text as feedback,
-      vr.created_at,
-      s.name as student_name,
-      c.name as candidate_name,
-      'review' as type
-    FROM voter_reviews vr
-    JOIN voter_registrations vreg ON vr.voter_reg_no = vreg.reg_no
-    JOIN students_master s ON vreg.reg_no = s.reg_no
-    LEFT JOIN candidates c ON vr.candidate_id = c.id
-    
-    UNION ALL
-    
-    SELECT 
-      vrt.id,
-      vrt.voter_reg_no,
-      vrt.feedback,
-      vrt.created_at,
-      s.name as student_name,
-      NULL as candidate_name,
-      'rating' as type
-    FROM voter_ratings vrt
-    JOIN voter_registrations vreg ON vrt.voter_reg_no = vreg.reg_no
-    JOIN students_master s ON vreg.reg_no = s.reg_no
-    
+    SELECT * FROM (
+      SELECT 
+        vr.id,
+        vr.voter_reg_no,
+        vr.review_text as feedback,
+        vr.created_at,
+        s.name as student_name,
+        c.name as candidate_name,
+        'review' as type
+      FROM voter_reviews vr
+      JOIN voter_registrations vreg ON vr.voter_reg_no = vreg.reg_no
+      JOIN students_master s ON vreg.reg_no = s.reg_no
+      LEFT JOIN candidates c ON vr.candidate_id = c.id
+      
+      UNION ALL
+      
+      SELECT 
+        vrt.id,
+        vrt.voter_reg_no,
+        vrt.feedback,
+        vrt.created_at,
+        s.name as student_name,
+        NULL as candidate_name,
+        'rating' as type
+      FROM voter_ratings vrt
+      JOIN voter_registrations vreg ON vrt.voter_reg_no = vreg.reg_no
+      JOIN students_master s ON vreg.reg_no = s.reg_no
+    ) 
     ORDER BY created_at DESC
     LIMIT 5
   `;
 
   db.all(query, (err, rows) => {
-    if (err) return res.status(500).json({ error: 'Database error' });
+    if (err) {
+      console.error('Database error in recent-reviews:', err);
+      return res.status(500).json({ error: 'Database error', details: err.message });
+    }
     res.json(rows || []);
   });
 });
