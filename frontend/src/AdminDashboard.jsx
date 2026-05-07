@@ -210,17 +210,20 @@ const AdminDashboard = () => {
                       <div>
                         <div style={{ fontWeight: '600', fontSize: '13px', color: '#1A2C3E', marginBottom: '2px' }}>
                           {review.student_name || 'Anonymous'}
-                          {review.rating && (
-                            <span style={{ marginLeft: '8px', color: '#FFB800', fontSize: '12px' }}>
-                              {'★'.repeat(review.rating)}{'☆'.repeat(5 - review.rating)}
-                            </span>
-                          )}
+                          <span style={{ 
+                            marginLeft: '8px', 
+                            fontSize: '10px', 
+                            padding: '2px 6px', 
+                            borderRadius: '4px',
+                            background: review.type === 'rating' ? '#FFB800' : '#002F6C',
+                            color: 'white',
+                            fontWeight: '500'
+                          }}>
+                            {review.type === 'rating' ? 'RATING' : 'REVIEW'}
+                          </span>
                         </div>
                         {review.candidate_name && (
                           <div style={{ fontSize: '11px', color: '#8AA0B8', marginBottom: '2px' }}>About: {review.candidate_name}</div>
-                        )}
-                        {review.review_text && (
-                          <div style={{ fontSize: '12px', color: 'black', fontStyle: 'italic' }}>"{review.review_text}"</div>
                         )}
                         {review.feedback && (
                           <div style={{ fontSize: '12px', color: 'black', fontStyle: 'italic' }}>"{review.feedback}"</div>

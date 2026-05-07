@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { authAPI, utils } from './api';
+import { authAPI, utils, ratingsAPI } from './api';
 import LogoMark from './LogoMark';
 import Footer from './Footer';
 
@@ -28,29 +28,12 @@ const Rating = () => {
     }
 
     try {
-      const response = await fetch('/api/ratings', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('authToken')}`
-        },
-        body: JSON.stringify({
-          rating: selectedRating,
-          feedback: feedback.trim()
-        })
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        setSubmitted(true);
-        utils.showToast('✅ Thank you for your feedback! Your comments have been recorded.', false);
-      } else {
-        utils.showToast(data.error || 'Failed to submit rating', true);
-      }
+      await ratingsAPI.submitRating(selectedRating, feedback.trim());
+      setSubmitted(true);
+      utils.showToast('✅ Thank you for your feedback! Your comments have been recorded.', false);
     } catch (error) {
       console.error('Error submitting rating:', error);
-      utils.showToast('Failed to submit rating. Please try again.', true);
+      utils.showToast(error.message || 'Failed to submit rating. Please try again.', true);
     }
   };
 

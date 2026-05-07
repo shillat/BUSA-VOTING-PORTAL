@@ -306,24 +306,48 @@ const transporter = nodemailer.createTransport({
 
 // Helper to send real email
 const sendEmail = async (email, subject, message) => {
+  // Check if email configuration is properly set up
+  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS || process.env.EMAIL_PASS === 'your-gmail-app-password') {
+    console.error('\n🚨 EMAIL CONFIGURATION ERROR:');
+    console.error('EMAIL_USER or EMAIL_PASS not properly configured in .env file');
+    console.error('Please see EMAIL_SETUP_GUIDE.md for instructions');
+    console.log(`\n--- EMAIL FALLBACK (Mock) ---`);
+    console.log(`To: ${email}`);
+    console.log(`Subject: ${subject}`);
+    console.log(`Message: ${message}`);
+    console.log(`-------------------------\n`);
+    return false;
+  }
+
   try {
     const mailOptions = {
-      from: process.env.EMAIL_USER || 'busa.voting.system@gmail.com',
+      from: process.env.EMAIL_USER,
       to: email,
       subject: subject,
       text: message
     };
     
     const info = await transporter.sendMail(mailOptions);
-    console.log(`Email sent successfully to ${email}:`, info.messageId);
+    console.log(`✅ Email sent successfully to ${email}:`, info.messageId);
+    return true;
   } catch (error) {
-    console.error('Failed to send email:', error);
-    // Fallback to console logging for development
+    console.error('\n🚨 EMAIL SENDING ERROR:');
+    console.error('Failed to send email to:', email);
+    console.error('Error details:', error.message);
+    
+    if (error.code === 'EAUTH') {
+      console.error('Authentication failed - check EMAIL_USER and EMAIL_PASS in .env');
+      console.error('Make sure you are using a Gmail App Password, not your regular password');
+    } else if (error.code === 'ECONNECTION') {
+      console.error('Connection failed - check internet connection and firewall settings');
+    }
+    
     console.log(`\n--- EMAIL FALLBACK (Mock) ---`);
     console.log(`To: ${email}`);
     console.log(`Subject: ${subject}`);
     console.log(`Message: ${message}`);
     console.log(`-------------------------\n`);
+    return false;
   }
 };
 
@@ -504,16 +528,23 @@ app.get('/api/admin/verify', (req, res) => {
 
 app.post('/api/admin/approve/:id', authenticateToken, (req, res) => {
   const { id } = req.params;
-  db.get("SELECT s.email FROM voter_registrations v JOIN students_master s ON v.reg_no = s.reg_no WHERE v.id = ?", [id], async (err, row) => {
+  db.get("SELECT s.email, s.name FROM voter_registrations v JOIN students_master s ON v.reg_no = s.reg_no WHERE v.id = ?", [id], async (err, row) => {
     if (!row) return res.status(404).json({ error: 'Record not found' });
 
     const voterId = 'VID-' + Math.floor(100000 + Math.random() * 900000);
     const voterIdHash = await bcrypt.hash(voterId, 10);
 
-    db.run("UPDATE voter_registrations SET status = 'Approved', voter_id = ?, password_hash = ? WHERE id = ?", [voterId, voterIdHash, id], function (err) {
+    db.run("UPDATE voter_registrations SET status = 'Approved', voter_id = ?, password_hash = ? WHERE id = ?", [voterId, voterIdHash, id], async function (err) {
       if (err) return res.status(500).json({ error: 'Database error' });
-      sendEmail(row.email, "Voter Registration Approved", `Congratulations! Your registration has been approved by the Admin. Your unique Voter ID is: ${voterId}`);
-      res.json({ success: true, message: "Registration approved, Voter ID generated and email sent" });
+      
+      const emailSent = await sendEmail(row.email, "Voter Registration Approved", 
+        `Dear ${row.name},\n\nCongratulations! Your voter registration has been approved by the Admin.\n\nYour unique Voter ID is: ${voterId}\n\nYou can now login to the voting portal using:\n- Registration Number: Your student registration number\n- Voter ID: ${voterId}\n\nBest regards,\nBUSA Voting System Administration`);
+      
+      const message = emailSent 
+        ? "Registration approved, Voter ID generated and email sent successfully"
+        : "Registration approved and Voter ID generated (email delivery failed - check server logs)";
+      
+      res.json({ success: true, message, voter_id: voterId, email_sent: emailSent });
     });
   });
 });
@@ -522,13 +553,20 @@ app.post('/api/admin/reject/:id', authenticateToken, (req, res) => {
   const { id } = req.params;
   const { reason = "Your bank slip was rejected." } = req.body;
 
-  db.get("SELECT s.email FROM voter_registrations v JOIN students_master s ON v.reg_no = s.reg_no WHERE v.id = ?", [id], (err, row) => {
+  db.get("SELECT s.email, s.name FROM voter_registrations v JOIN students_master s ON v.reg_no = s.reg_no WHERE v.id = ?", [id], async (err, row) => {
     if (!row) return res.status(404).json({ error: 'Record not found' });
 
-    db.run("UPDATE voter_registrations SET status = 'Rejected', rejection_reason = ? WHERE id = ?", [reason, id], function (err) {
+    db.run("UPDATE voter_registrations SET status = 'Rejected', rejection_reason = ? WHERE id = ?", [reason, id], async function (err) {
       if (err) return res.status(500).json({ error: 'Database error' });
-      sendEmail(row.email, "Voter Registration Rejected", `Your registration was rejected. Reason: ${reason}`);
-      res.json({ success: true, message: "Registration rejected and email sent" });
+      
+      const emailSent = await sendEmail(row.email, "Voter Registration Rejected", 
+        `Dear ${row.name},\n\nYour voter registration has been rejected by the Admin.\n\nRejection Reason: ${reason}\n\nIf you believe this is an error, please contact the BUSA administration.\n\nBest regards,\nBUSA Voting System Administration`);
+      
+      const message = emailSent 
+        ? "Registration rejected and email sent successfully"
+        : "Registration rejected (email delivery failed - check server logs)";
+      
+      res.json({ success: true, message, email_sent: emailSent });
     });
   });
 });
@@ -1511,12 +1549,34 @@ app.get('/api/admin/ratings-stats', authenticateToken, (req, res) => {
 // Get Recent Reviews for Admin Dashboard
 app.get('/api/admin/recent-reviews', authenticateToken, (req, res) => {
   const query = `
-    SELECT vr.*, s.name as student_name, c.name as candidate_name
+    SELECT 
+      vr.id,
+      vr.voter_reg_no,
+      vr.review_text as feedback,
+      vr.created_at,
+      s.name as student_name,
+      c.name as candidate_name,
+      'review' as type
     FROM voter_reviews vr
     JOIN voter_registrations vreg ON vr.voter_reg_no = vreg.reg_no
     JOIN students_master s ON vreg.reg_no = s.reg_no
     LEFT JOIN candidates c ON vr.candidate_id = c.id
-    ORDER BY vr.created_at DESC
+    
+    UNION ALL
+    
+    SELECT 
+      vrt.id,
+      vrt.voter_reg_no,
+      vrt.feedback,
+      vrt.created_at,
+      s.name as student_name,
+      NULL as candidate_name,
+      'rating' as type
+    FROM voter_ratings vrt
+    JOIN voter_registrations vreg ON vrt.voter_reg_no = vreg.reg_no
+    JOIN students_master s ON vreg.reg_no = s.reg_no
+    
+    ORDER BY created_at DESC
     LIMIT 5
   `;
 
