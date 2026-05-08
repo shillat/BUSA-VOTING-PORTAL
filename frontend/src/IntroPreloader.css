@@ -80,10 +80,10 @@
 }
 
 .phone-screen {
-  width: calc(100% - 4px);
-  height: calc(100% - 4px);
+  width: 100%;
+  height: 100%;
   background: #FFFFFF;
-  border-radius: 20px;
+  border-radius: 18px;
   padding: 15px;
   display: flex;
   flex-direction: column;
@@ -91,8 +91,6 @@
   position: relative;
   overflow: hidden;
   box-shadow: inset 0 2px 8px rgba(0,0,0,0.1);
-  top: 2px;
-  left: 2px;
 }
 
 .phone-header {
