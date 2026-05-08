@@ -8,12 +8,12 @@ const IntroPreloader = ({ onComplete }) => {
     // Trigger exit animation
     const timer = setTimeout(() => {
       setIsExiting(true);
-    }, 4200);
+    }, 5500);
 
     // Call onComplete after exit animation finishes
     const completeTimer = setTimeout(() => {
       onComplete();
-    }, 5000);
+    }, 6300);
 
     return () => {
       clearTimeout(timer);
