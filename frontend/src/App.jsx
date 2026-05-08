@@ -65,7 +65,7 @@ const Home = () => {
 
   useEffect(() => {
     // Use placeholder data directly instead of API calls
-    const placeholderStats = { total_votes: 1247, total_voters: 2843 };
+    const placeholderStats = { total_votes: 1000, total_voters: 2000 };
     const placeholderElections = [
       {
         id: 4,
@@ -464,6 +464,11 @@ function App() {
             <Route path="/admin/candidates" element={
               <ProtectedRoute requiredRole="admin">
                 <ManageCandidates />
+              </ProtectedRoute>
+            } />
+            <Route path="/admin/students" element={
+              <ProtectedRoute requiredRole="admin">
+                <ManageStudents />
               </ProtectedRoute>
             } />
             <Route path="/admin/guidelines" element={

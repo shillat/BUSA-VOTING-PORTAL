@@ -453,7 +453,30 @@ const ElectionCalendar = () => {
             <LogoMark />
             <div className="portal-title">BUSA ONLINE VOTING PORTAL</div>
           </div>
-          <a href="#" onClick={handleBackToHome} className="back-link">← Back to Home</a>
+          <button
+          onClick={handleBackToHome}
+          style={{
+            padding: '8px 16px',
+            background: '#002F6C',
+            color: 'white',
+            border: 'none',
+            borderRadius: '8px',
+            fontSize: '12px',
+            fontWeight: '600',
+            cursor: 'pointer',
+            transition: 'all 0.3s ease'
+          }}
+          onMouseOver={(e) => {
+            e.target.style.background = '#0A4175';
+            e.target.style.transform = 'translateY(-1px)';
+          }}
+          onMouseOut={(e) => {
+            e.target.style.background = '#002F6C';
+            e.target.style.transform = 'translateY(0)';
+          }}
+        >
+          ← Back to Home
+        </button>
         </header>
 
         {/* Title */}

@@ -115,26 +115,6 @@ const ElectionOverview = () => {
         <h1 style={{ fontSize: '28px', fontWeight: '800', color: 'black', margin: 0, lineHeight: '1.2' }}>ELECTION OVERVIEW</h1>
       </div>
 
-      {/* Candidates Preview */}
-      <div style={{ padding: '16px 24px 32px 24px' }}>
-        <h2 style={{ fontSize: '24px', fontWeight: '700', color: '#1A2C3E', marginBottom: '24px', textAlign: 'center' }}>Featured Candidates</h2>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '20px', marginBottom: '40px' }}>
-          {candidates.slice(0, 6).map((candidate) => (
-            <div key={candidate.id} style={{ background: '#FFFFFF', border: '1px solid #EDF2F7', borderRadius: '20px', padding: '20px', textAlign: 'center', cursor: 'pointer', transition: 'all 0.3s ease' }} 
-                 onClick={() => navigate(`/candidates/${candidate.id}`)}
-                 onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-5px)'; e.currentTarget.style.boxShadow = '0 15px 30px rgba(0, 0, 0, 0.1)'; }} 
-                 onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 5px 15px rgba(0, 0, 0, 0.05)'; }}>
-              {candidate.photo_url && (
-                <img src={candidate.photo_url} alt={candidate.name} style={{ width: '80px', height: '80px', borderRadius: '50%', objectFit: 'cover', marginBottom: '16px', border: '3px solid #F0F4F9' }} />
-              )}
-              <h3 style={{ fontSize: '18px', fontWeight: '700', color: '#1A2C3E', margin: '0 0 8px 0' }}>{candidate.name}</h3>
-              <div style={{ fontSize: '14px', color: '#64748B', marginBottom: '8px' }}>{candidate.position}</div>
-              <div style={{ fontSize: '12px', fontStyle: 'italic', color: '#002F6C', marginTop: '8px' }}>"{candidate.slogan}"</div>
-            </div>
-          ))}
-        </div>
-      </div>
-
       <div className="roles-grid" style={{ padding: '16px 24px 32px 24px', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px' }}>
         {roles.map((role, idx) => (
           <div key={idx} className="role-card" style={{ background: '#FFFFFF', border: '1px solid #EDF2F7', borderRadius: '28px', overflow: 'hidden', boxShadow: '0 10px 30px -10px rgba(0, 0, 0, 0.05)', transition: 'transform 0.3s ease, box-shadow 0.3s ease', cursor: 'pointer' }} onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-5px)'; e.currentTarget.style.boxShadow = '0 20px 40px -10px rgba(0, 0, 0, 0.1)'; }} onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 10px 30px -10px rgba(0, 0, 0, 0.05)'; }}>

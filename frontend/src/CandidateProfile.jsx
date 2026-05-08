@@ -12,22 +12,91 @@ const CandidateProfile = () => {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        const fetchCandidate = async () => {
-            try {
-                setLoading(true);
-                const data = await candidateAPI.getById(id);
-                setCandidate(data);
-            } catch (err) {
-                console.error('Failed to fetch candidate:', err);
-                setError(err.message || 'Failed to load candidate profile');
-            } finally {
-                setLoading(false);
+        // Use placeholder data directly instead of API calls
+        const placeholderCandidates = [
+            {
+                id: 1,
+                name: "ABRAHAM OKOCH",
+                position: "President",
+                faculty: "General",
+                slogan: "Leadership That Delivers",
+                photo_url: "/uploads/ABRAHAM OKOCH.png",
+                manifesto: "As your President, I will focus on three key areas: Academic Excellence, Student Welfare, and Infrastructure Development. My vision is to create a supportive environment where every student can thrive academically and personally. I will work closely with university administration to ensure student concerns are addressed promptly and effectively.",
+                achievements: "Led multiple student initiatives, organized community service programs, maintained excellent academic standing throughout university career.",
+                email: "abraham.okoch@busa.edu",
+                phone: "+256 785 123 456"
+            },
+            {
+                id: 2,
+                name: "FUBI JOVIA",
+                position: "President",
+                faculty: "General",
+                slogan: "Together We Rise",
+                photo_url: "/uploads/FUBI JOVIA.png",
+                manifesto: "My presidency will be built on the foundation of unity, progress, and innovation. I believe in empowering every student voice and creating opportunities for growth. Together, we can transform BUSA into a model student union that serves the diverse needs of our student body.",
+                achievements: "Student Representative for 2 years, organized leadership workshops, recipient of Student Service Award.",
+                email: "fubi.jovia@busa.edu",
+                phone: "+256 785 123 457"
+            },
+            {
+                id: 3,
+                name: "LUZZE LINUS",
+                position: "MP - Faculty of Science and Technology",
+                faculty: "Science and Technology",
+                slogan: "Innovation Through Science",
+                photo_url: "/uploads/LUZZE LINUS.jpg",
+                manifesto: "As your Faculty MP, I will champion science education, research opportunities, and technological advancement. I will work to secure better lab facilities, research funding, and industry partnerships that benefit all Science and Technology students.",
+                achievements: "Research Assistant in Computer Science Department, winner of Innovation Challenge 2025, peer tutor for 3 years.",
+                email: "luzze.linus@busa.edu",
+                phone: "+256 785 123 458"
+            },
+            {
+                id: 4,
+                name: "NAKAMYA BELINDA",
+                position: "MP - Faculty of Science and Technology",
+                faculty: "Science and Technology",
+                slogan: "Science For Progress",
+                photo_url: "/uploads/NAKAMYA BELINDA.png",
+                manifesto: "I am committed to advancing scientific excellence and ensuring that Science and Technology students have access to cutting-edge resources and opportunities. My focus will be on curriculum improvement, research support, and career development programs.",
+                achievements: "Dean's List for 4 semesters, President of Science Club, organized annual Science Fair.",
+                email: "nakamya.belinda@busa.edu",
+                phone: "+256 785 123 459"
+            },
+            {
+                id: 5,
+                name: "OKELLO PETER",
+                position: "MP - Eastern Region",
+                faculty: "Regional Representation",
+                slogan: "Eastern Unity, Eastern Pride",
+                photo_url: "/uploads/OKELLO PETER.png",
+                manifesto: "As your Eastern Region MP, I will ensure that our regional students receive fair representation and access to resources. I will advocate for regional development initiatives, cultural events, and support systems that celebrate our diversity.",
+                achievements: "Regional Student Coordinator, organized cultural exchange programs, community development volunteer.",
+                email: "okello.peter@busa.edu",
+                phone: "+256 785 123 460"
+            },
+            {
+                id: 6,
+                name: "SHILLAH NAIGAGA",
+                position: "MP - Eastern Region",
+                faculty: "Regional Representation",
+                slogan: "Service With Excellence",
+                photo_url: "/uploads/SHILLAH NAIGAGA.jpg",
+                manifesto: "I am dedicated to serving the Eastern Region with excellence and integrity. My focus will be on improving communication between regional students and the union, addressing regional-specific concerns, and creating programs that support our regional student community.",
+                achievements: "Student Ambassador, peer mentor, recipient of Community Service Award 2025.",
+                email: "shillah.naigaga@busa.edu",
+                phone: "+256 785 123 461"
             }
-        };
+        ];
 
-        if (id) {
-            fetchCandidate();
+        const candidateData = placeholderCandidates.find(c => c.id === parseInt(id));
+        
+        if (candidateData) {
+            setCandidate(candidateData);
+        } else {
+            setError('Candidate not found');
         }
+        
+        setLoading(false);
     }, [id]);
 
     if (loading) {

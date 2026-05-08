@@ -10,9 +10,7 @@ const Registration = () => {
     fullName: '',
     department: '',
     regNumber: '',
-    password: '',
-    onCampus: 'true',
-    evidenceFile: null
+    password: ''
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -41,14 +39,9 @@ const Registration = () => {
         return;
       }
 
-      // Create FormData for file upload
+      // Create FormData for submission
       const submitData = new FormData();
       submitData.append('reg_no', cleanedRegNo);
-      submitData.append('on_campus', formData.onCampus);
-
-      if (formData.evidenceFile) {
-        submitData.append('evidence_file', formData.evidenceFile);
-      }
 
       const response = await voterAPI.register(submitData);
 
@@ -192,43 +185,7 @@ const Registration = () => {
 
 
 
-          {/* Campus Status for In-Service Students */}
-          {formData.studentCategory === 'In-service Student' && (
-            <div className="input-group">
-              <label>📍 Campus Status</label>
-              <select
-                name="onCampus"
-                value={formData.onCampus}
-                onChange={handleChange}
-              >
-                <option value="true">On Campus</option>
-                <option value="false">Remote/Off Campus</option>
-              </select>
-              {formData.onCampus === 'false' && (
-                <div className="small-note" style={{ marginTop: '10px' }}>
-                  ⚠️ Registration card for previous session is required for remote students
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* File Upload for Remote In-Service Students */}
-          {formData.studentCategory === 'In-service Student' && formData.onCampus === 'false' && (
-            <div className="input-group">
-              <label>📄 Previous Session Registration Card <span className="label-hint">(Required for remote students)</span></label>
-              <input
-                type="file"
-                name="evidenceFile"
-                onChange={handleChange}
-                accept="image/*,.pdf"
-                required
-              />
-              <div className="small-note">
-                Upload your previous session registration card (PDF or image, max 2MB)
-              </div>
-            </div>
-          )}
-
+          
           {/* Error Message */}
           {error && (
             <div className="error-message" style={{
@@ -263,13 +220,12 @@ const Registration = () => {
           type="button"
           onClick={() => navigate('/')}
           style={{
-            width: '100%',
-            padding: '16px 24px',
+            padding: '12px 20px',
             background: '#002F6C',
             color: 'white',
             border: 'none',
-            borderRadius: '12px',
-            fontSize: '16px',
+            borderRadius: '8px',
+            fontSize: '14px',
             fontWeight: '600',
             cursor: 'pointer',
             marginTop: '24px',
@@ -278,7 +234,7 @@ const Registration = () => {
           }}
           onMouseOver={(e) => {
             e.target.style.background = '#0A4175';
-            e.target.style.transform = 'translateY(-2px)';
+            e.target.style.transform = 'translateY(-1px)';
           }}
           onMouseOut={(e) => {
             e.target.style.background = '#002F6C';

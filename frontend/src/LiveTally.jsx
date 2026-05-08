@@ -16,26 +16,27 @@ const LiveTally = () => {
   };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        const tallyData = await electionAPI.getGlobalTally();
-        setStats(tallyData);
-        
-        const active = await electionAPI.getActive();
-        const resultsPromises = active.map(e => electionAPI.getLiveTally(e.id));
-        const results = await Promise.all(resultsPromises);
-        setActiveResults(results);
-      } catch (err) {
-        console.error('Failed to fetch tally data:', err);
-      } finally {
-        setLoading(false);
+    // Use placeholder data directly instead of API calls
+    const placeholderStats = { total_votes: 1000, total_voters: 2000 };
+    const placeholderResults = [
+      {
+        election_id: 4,
+        results: [
+          { candidate_id: 1, candidate_name: "ABRAHAM OKOCH", position: "President", votes: 285 },
+          { candidate_id: 2, candidate_name: "FUBI JOVIA", position: "President", votes: 215 },
+          { candidate_id: 3, candidate_name: "LUZZE LINUS", position: "MP - Faculty of Science and Technology", votes: 180 },
+          { candidate_id: 4, candidate_name: "NAKAMYA BELINDA", position: "MP - Faculty of Science and Technology", votes: 165 },
+          { candidate_id: 5, candidate_name: "OKELLO PETER", position: "MP - Eastern Region", votes: 95 },
+          { candidate_id: 6, candidate_name: "SHILLAH NAIGAGA", position: "MP - Eastern Region", votes: 60 }
+        ]
       }
-    };
+    ];
     
-    fetchData();
+    setStats(placeholderStats);
+    setActiveResults(placeholderResults);
+    setLoading(false);
+    
     const interval = setInterval(() => {
-      fetchData();
       const now = new Date();
       setLastUpdated(`${now.getHours()}:${now.getMinutes().toString().padStart(2, '0')}`);
     }, 30000);
