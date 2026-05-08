@@ -66,33 +66,33 @@ const Footer = () => {
           }
           
           .footer-rows {
-            gap: 24px;
+            gap: 20px;
           }
           
           .footer-row {
             flex-direction: column;
-            gap: 20px;
+            gap: 16px;
           }
           
           .footer-col {
-            margin-bottom: 16px;
+            margin-bottom: 12px;
             text-align: left;
           }
           
           .footer-col h4 {
-            font-size: 13px;
-            margin-bottom: 12px;
+            font-size: 12px;
+            margin-bottom: 10px;
           }
           
           .footer-col a {
-            font-size: 11px;
-            margin-bottom: 8px;
+            font-size: 10px;
+            margin-bottom: 6px;
           }
           
           .copyright {
-            margin-top: 20px;
-            padding-top: 12px;
-            font-size: 10px;
+            margin-top: 16px;
+            padding-top: 10px;
+            font-size: 9px;
           }
         }
       `}</style>
