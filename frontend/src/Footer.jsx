@@ -69,12 +69,13 @@ const Footer = () => {
             gap: 20px;
           }
           
-          .footer-row {
+          .desktop-layout {
+            display: flex;
             flex-direction: column;
             gap: 16px;
           }
           
-          .footer-col {
+          .desktop-layout .footer-col {
             margin-bottom: 12px;
             text-align: left;
           }
@@ -98,8 +99,8 @@ const Footer = () => {
       `}</style>
       
       <div className="footer-rows">
-        {/* First Row: BUSA and Support */}
-        <div className="footer-row">
+        {/* Desktop Layout: 2x2 Grid */}
+        <div className="footer-row desktop-layout">
           <div className="footer-col">
             <h4>BUSA</h4>
             <Link to="/overview">About Union</Link>
@@ -112,10 +113,6 @@ const Footer = () => {
             <a href="tel:+256780752003">Help Desk</a>
             <a href="tel:+256780752003">Technical Support</a>
           </div>
-        </div>
-        
-        {/* Second Row: Legal and Terms */}
-        <div className="footer-row">
           <div className="footer-col">
             <h4>Legal</h4>
             <Link to="/overview">Privacy Policy</Link>
