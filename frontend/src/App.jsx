@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, NavLink, Link, useNavigate } from 'react-router-dom';
+import ScrollToTop from './ScrollToTop';
 import Registration from './Registration';
 import AdminVerify from './AdminVerify';
 import Login from './Login';
@@ -405,14 +406,15 @@ function App() {
     <>
       {showPreloader && <IntroPreloader onComplete={handlePreloaderComplete} />}
       <Router>
-        <div className="app-container" style={{
-          opacity: showPreloader ? 0 : 1,
-          transition: 'opacity 0.8s ease-in-out',
-          minHeight: '100vh',
-          display: 'flex',
-          flexDirection: 'column'
-        }}>
-          <Routes>
+          <ScrollToTop />
+          <div className="app-container" style={{
+            opacity: showPreloader ? 0 : 1,
+            transition: 'opacity 0.8s ease-in-out',
+            minHeight: '100vh',
+            display: 'flex',
+            flexDirection: 'column'
+          }}>
+            <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/register" element={<Registration />} />
             <Route path="/validation-successful" element={<ValidationSuccessful />} />

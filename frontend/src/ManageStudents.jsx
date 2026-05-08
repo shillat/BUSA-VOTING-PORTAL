@@ -281,7 +281,7 @@ const ManageStudents = () => {
           border-radius: 16px;
           overflow-x: auto;
           box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-          margin: 0 48px 48px 48px;
+          margin: 0 24px 48px 24px;
           min-width: 100%;
         }
         
