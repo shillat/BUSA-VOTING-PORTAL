@@ -21,13 +21,17 @@ const LiveTally = () => {
     const placeholderResults = [
       {
         election_id: 4,
+        election: {
+          title: "BUSA Student Leadership Elections 2026"
+        },
+        total_votes: 1000,
         results: [
-          { candidate_id: 1, candidate_name: "ABRAHAM OKOCH", position: "President", votes: 285 },
-          { candidate_id: 2, candidate_name: "FUBI JOVIA", position: "President", votes: 215 },
-          { candidate_id: 3, candidate_name: "LUZZE LINUS", position: "MP - Faculty of Science and Technology", votes: 180 },
-          { candidate_id: 4, candidate_name: "NAKAMYA BELINDA", position: "MP - Faculty of Science and Technology", votes: 165 },
-          { candidate_id: 5, candidate_name: "OKELLO PETER", position: "MP - Eastern Region", votes: 95 },
-          { candidate_id: 6, candidate_name: "SHILLAH NAIGAGA", position: "MP - Eastern Region", votes: 60 }
+          { candidate_id: 1, name: "ABRAHAM OKOCH", position: "President", votes: 285, percentage: 28.5, vote_count: 285 },
+          { candidate_id: 2, name: "FUBI JOVIA", position: "President", votes: 215, percentage: 21.5, vote_count: 215 },
+          { candidate_id: 3, name: "LUZZE LINUS", position: "MP - Faculty of Science and Technology", votes: 180, percentage: 18.0, vote_count: 180 },
+          { candidate_id: 4, name: "NAKAMYA BELINDA", position: "MP - Faculty of Science and Technology", votes: 165, percentage: 16.5, vote_count: 165 },
+          { candidate_id: 5, name: "OKELLO PETER", position: "MP - Eastern Region", votes: 95, percentage: 9.5, vote_count: 95 },
+          { candidate_id: 6, name: "SHILLAH NAIGAGA", position: "MP - Eastern Region", votes: 60, percentage: 6.0, vote_count: 60 }
         ]
       }
     ];
