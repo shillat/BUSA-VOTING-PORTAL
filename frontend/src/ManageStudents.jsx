@@ -5,6 +5,8 @@ import LogoMark from './LogoMark';
 const ManageStudents = () => {
   const navigate = useNavigate();
   const [students, setStudents] = useState([]);
+  const [filteredStudents, setFilteredStudents] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(false);
   const [showAddForm, setShowAddForm] = useState(false);
   const [editingStudent, setEditingStudent] = useState(null);
@@ -55,35 +57,42 @@ const ManageStudents = () => {
     ];
     
     setStudents(placeholderStudents);
+    setFilteredStudents(placeholderStudents);
     setLoading(false);
   }, []);
+
+  // Search functionality
+  useEffect(() => {
+    const filtered = students.filter(student => 
+      student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      student.reg_no.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      student.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      student.type.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setFilteredStudents(filtered);
+  }, [searchTerm, students]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     
+    // Placeholder functionality - simulate adding/editing without API calls
     try {
-      const token = localStorage.getItem('authToken');
-      const url = editingStudent ? `/api/students/${editingStudent.reg_no}` : '/api/students';
-      const method = editingStudent ? 'PUT' : 'POST';
-      
-      const response = await fetch(url, {
-        method,
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify(formData)
-      });
-
-      const result = await response.json();
-      
-      if (response.ok) {
-        alert(editingStudent ? 'Student updated successfully!' : 'Student added successfully!');
-        resetForm();
-        fetchStudents();
+      if (editingStudent) {
+        // Update existing student
+        setStudents(prev => prev.map(student => 
+          student.reg_no === editingStudent.reg_no 
+            ? { ...formData, reg_no: editingStudent.reg_no }
+            : student
+        ));
+        alert('Voter updated successfully!');
       } else {
-        alert(result.error || 'Operation failed');
+        // Add new student
+        const newStudent = { ...formData, reg_no: formData.reg_no };
+        setStudents(prev => [...prev, newStudent]);
+        alert('Voter added successfully!');
       }
+      
+      resetForm();
     } catch (error) {
       console.error('Error:', error);
       alert('Operation failed');
@@ -106,25 +115,12 @@ const ManageStudents = () => {
   };
 
   const handleDelete = async (regNo) => {
-    if (!confirm('Are you sure you want to delete this student?')) return;
+    if (!confirm('Are you sure you want to delete this voter?')) return;
     
+    // Placeholder functionality - simulate deletion without API calls
     try {
-      const token = localStorage.getItem('authToken');
-      const response = await fetch(`/api/students/${regNo}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-
-      const result = await response.json();
-      
-      if (response.ok) {
-        alert('Student deleted successfully!');
-        fetchStudents();
-      } else {
-        alert(result.error || 'Delete failed');
-      }
+      setStudents(prev => prev.filter(student => student.reg_no !== regNo));
+      alert('Voter deleted successfully!');
     } catch (error) {
       console.error('Error:', error);
       alert('Delete failed');
@@ -217,15 +213,49 @@ const ManageStudents = () => {
         .page-header {
           display: flex;
           justify-content: space-between;
-          align-items: center;
-          margin-bottom: 32px;
+          align-items: flex-start;
+          padding: 32px 48px 24px 48px;
+          gap: 24px;
+        }
+        
+        .page-header > div {
+          flex: 1;
         }
         
         .page-title {
           font-size: 32px;
-          font-weight: 700;
+          font-weight: 800;
           color: #1A2C3E;
-          margin: 0;
+          margin: 0 0 16px 0;
+        }
+        
+        .search-container {
+          position: relative;
+          max-width: 400px;
+        }
+        
+        .search-input {
+          width: 100%;
+          padding: 12px 16px 12px 45px;
+          border: 2px solid #E2E9F2;
+          border-radius: 12px;
+          font-size: 14px;
+          outline: none;
+          transition: all 0.3s ease;
+        }
+        
+        .search-input:focus {
+          border-color: #002F6C;
+          box-shadow: 0 0 0 3px rgba(0, 47, 108, 0.1);
+        }
+        
+        .search-icon {
+          position: absolute;
+          left: 16px;
+          top: 50%;
+          transform: translateY(-50%);
+          font-size: 16px;
+          color: #64748B;
         }
         
         .add-student-btn {
@@ -234,14 +264,105 @@ const ManageStudents = () => {
           border: none;
           padding: 12px 24px;
           border-radius: 8px;
+          font-size: 14px;
           font-weight: 600;
-          font-size: 15px;
           cursor: pointer;
-          transition: background 0.2s;
+          transition: all 0.3s ease;
+          white-space: nowrap;
         }
         
         .add-student-btn:hover {
-          background: #003D8F;
+          background: #0A4175;
+          transform: translateY(-2px);
+        }
+        
+        .table-container {
+          background: white;
+          border-radius: 16px;
+          overflow: hidden;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+          margin: 0 48px 48px 48px;
+        }
+        
+        .voters-table {
+          width: 100%;
+          border-collapse: collapse;
+        }
+        
+        .voters-table th {
+          background: #F8FAFE;
+          padding: 16px;
+          text-align: left;
+          font-weight: 700;
+          font-size: 14px;
+          color: #1A2C3E;
+          border-bottom: 2px solid #EDF2F7;
+        }
+        
+        .voters-table td {
+          padding: 16px;
+          border-bottom: 1px solid #F0F4F9;
+          font-size: 14px;
+          color: #374151;
+        }
+        
+        .voters-table tbody tr:hover {
+          background: #F8FAFE;
+        }
+        
+        .voters-table tbody tr:last-child td {
+          border-bottom: none;
+        }
+        
+        .type-badge {
+          padding: 4px 12px;
+          border-radius: 20px;
+          font-size: 12px;
+          font-weight: 600;
+          display: inline-block;
+        }
+        
+        .type-regular {
+          background: #E8F0FE;
+          color: #002F6C;
+        }
+        
+        .type-in-service {
+          background: #FEF3C7;
+          color: #92400E;
+        }
+        
+        .action-buttons {
+          display: flex;
+          gap: 8px;
+        }
+        
+        .action-btn {
+          padding: 6px 12px;
+          border: none;
+          border-radius: 6px;
+          font-size: 12px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.3s ease;
+        }
+        
+        .edit-btn {
+          background: #002F6C;
+          color: white;
+        }
+        
+        .edit-btn:hover {
+          background: #0A4175;
+        }
+        
+        .delete-btn {
+          background: #DC2626;
+          color: white;
+        }
+        
+        .delete-btn:hover {
+          background: #B91C1C;
         }
         
         .students-grid {
@@ -526,47 +647,75 @@ const ManageStudents = () => {
 
         {/* Main Content */}
         <div className="main-content">
-          {/* Page Header */}
+          {/* Page Header with Search and Add Button */}
           <div className="page-header">
-            <h1 className="page-title">Manage Voters</h1>
+            <div>
+              <h1 className="page-title">Manage Voters</h1>
+              <div className="search-container">
+                <input
+                  type="text"
+                  placeholder="Search by name, registration number, email, or type..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="search-input"
+                />
+                <div className="search-icon">🔍</div>
+              </div>
+            </div>
             <button className="add-student-btn" onClick={() => setShowAddForm(true)}>
-              + Add New Student
+              + Add New Voter
             </button>
           </div>
 
-          {/* Students Grid */}
-          {students.length === 0 ? (
+          {/* Students Table */}
+          {filteredStudents.length === 0 ? (
             <div className="empty-state">
-              <h3>No students found</h3>
-              <p>Add your first university student to get started</p>
+              <h3>{searchTerm ? 'No voters found matching your search' : 'No voters found'}</h3>
+              <p>{searchTerm ? 'Try adjusting your search terms' : 'Add your first voter to get started'}</p>
             </div>
           ) : (
-            <div className="students-grid">
-              {students.map((student) => (
-                <div key={student.reg_no} className="student-card">
-                  <div className="student-header">
-                    <div className="student-info">
-                      <h3>{student.name}</h3>
-                      <p><strong>Reg No:</strong> {student.reg_no}</p>
-                      <p><strong>Email:</strong> {student.email}</p>
-                      <p><strong>Campus:</strong> {student.campus}</p>
-                      <p><strong>Graduation Year:</strong> {student.expected_grad_year}</p>
-                      {student.department && <p><strong>Department:</strong> {student.department}</p>}
-                    </div>
-                    <div className="student-actions">
-                      <button className="action-btn edit-btn" onClick={() => handleEdit(student)}>
-                        Edit
-                      </button>
-                      <button className="action-btn delete-btn" onClick={() => handleDelete(student.reg_no)}>
-                        Delete
-                      </button>
-                    </div>
-                  </div>
-                  <div className={`student-type ${student.type === 'Regular' ? 'type-regular' : 'type-in-service'}`}>
-                    {student.type}
-                  </div>
-                </div>
-              ))}
+            <div className="table-container">
+              <table className="voters-table">
+                <thead>
+                  <tr>
+                    <th>Registration Number</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Type</th>
+                    <th>Campus</th>
+                    <th>Department</th>
+                    <th>Graduation Year</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredStudents.map((student) => (
+                    <tr key={student.reg_no}>
+                      <td>{student.reg_no}</td>
+                      <td>{student.name}</td>
+                      <td>{student.email}</td>
+                      <td>
+                        <span className={`type-badge ${student.type === 'Regular' ? 'type-regular' : 'type-in-service'}`}>
+                          {student.type}
+                        </span>
+                      </td>
+                      <td>{student.campus}</td>
+                      <td>{student.department || '-'}</td>
+                      <td>{student.expected_grad_year}</td>
+                      <td>
+                        <div className="action-buttons">
+                          <button className="action-btn edit-btn" onClick={() => handleEdit(student)}>
+                            Edit
+                          </button>
+                          <button className="action-btn delete-btn" onClick={() => handleDelete(student.reg_no)}>
+                            Delete
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           )}
         </div>
@@ -653,14 +802,17 @@ const ManageStudents = () => {
                 </div>
 
                 <div className="form-group">
-                  <label>Department</label>
-                  <input
-                    type="text"
-                    name="department"
-                    value={formData.department}
-                    onChange={handleInputChange}
-                    placeholder="e.g., Computer Science"
-                  />
+                  <label>Department *</label>
+                  <select name="department" value={formData.department} onChange={handleInputChange} required>
+                    <option value="">Select Department</option>
+                    <option value="CI">Computing And Informatics</option>
+                    <option value="Business">Business Administration</option>
+                    <option value="RS">Religious Studies</option>
+                    <option value="EDS">Education In Sciences</option>
+                    <option value="EDA">Education In Arts</option>
+                    <option value="Health">Health Sciences</option>
+                    <option value="NaturalSciences">Natural Sciences</option>
+                  </select>
                 </div>
 
                 <div className="form-group">
