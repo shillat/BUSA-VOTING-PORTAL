@@ -62,114 +62,115 @@
   height: 280px;
 }
 
-/* Ballot Box */
-.box-container {
-  position: absolute;
-  bottom: 0; left: 50%;
-  transform: translateX(-50%);
-  width: 160px; height: 140px;
+/* Phone Animation */
+.phone {
+  position: relative;
+  width: 200px;
+  height: 350px;
+  background: #1a1a1a;
+  border-radius: 30px;
+  padding: 10px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+  animation: phoneAppear 7s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  opacity: 0;
+  margin: 0 auto;
 }
-.box-top-opening {
-  position: absolute;
-  top: 0; left: 0;
-  width: 160px; height: 40px;
-  background: #06284a;
-  border-radius: 50%;
-  z-index: 1;
-  box-shadow: inset 0 10px 20px rgba(0,0,0,0.5);
-}
-.box-front {
-  position: absolute;
-  top: 20px; left: 0;
-  width: 160px; height: 120px;
+
+.phone-screen {
+  width: 100%;
+  height: 100%;
   background: #FFFFFF;
-  border-radius: 0 0 12px 12px;
-  z-index: 3;
-  box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+  border-radius: 20px;
+  padding: 20px;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
+  position: relative;
+  overflow: hidden;
 }
-.box-logo {
-  width: 40px; height: 40px;
-  background: #E9EDF2;
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+
+.phone-header {
+  font-size: 14px;
   font-weight: bold;
   color: #002F6C;
-  font-size: 12px;
-}
-.box-top-lip {
-  position: absolute;
-  top: 0; left: 0;
-  width: 160px; height: 40px;
-  background: #FFFFFF;
-  border-radius: 50%;
-  z-index: 3;
-  clip-path: polygon(0 50%, 100% 50%, 100% 100%, 0 100%);
+  margin-bottom: 20px;
+  text-align: center;
 }
 
-/* Ballot */
-.ballot {
-  position: absolute;
-  bottom: 160px;
-  left: 50%;
-  margin-left: -35px;
-  width: 70px; height: 100px;
-  background: #FFFFFF;
-  border-radius: 4px;
-  border: 2px solid #E9EDF2;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-  z-index: 2;
+.voting-card {
+  width: 140px;
+  height: 80px;
+  background: linear-gradient(135deg, #002F6C 0%, #0A4175 100%);
+  border-radius: 12px;
+  padding: 15px;
+  color: white;
   display: flex;
+  flex-direction: column;
   justify-content: center;
-  align-items: center;
-  animation: ballotDrop 7s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  box-shadow: 0 8px 20px rgba(0,47,108,0.3);
+  animation: cardPop 7s cubic-bezier(0.4, 0, 0.2, 1) forwards;
   opacity: 0;
-}
-.ballot-check {
-  width: 35px; height: 35px;
-  fill: #0A4175;
-}
-.ballot-lines {
-  position: absolute;
-  top: 15px; left: 10px;
-  width: 30px; height: 4px;
-  background: #E9EDF2;
-  border-radius: 2px;
-}
-.ballot-lines::after {
-  content: '';
-  position: absolute;
-  top: 8px; left: 0;
-  width: 20px; height: 4px;
-  background: #E9EDF2;
-  border-radius: 2px;
+  transform: scale(0);
 }
 
-/* Ballot Animation - No Hand */
+.card-header {
+  font-size: 10px;
+  font-weight: bold;
+  margin-bottom: 8px;
+  opacity: 0.8;
+}
 
-/* Success Glow */
-.success-glow {
-  position: absolute;
-  bottom: 80px; left: 50%;
-  transform: translateX(-50%) scale(0);
-  z-index: 6;
-  background: #4CAF50;
-  width: 50px; height: 50px;
-  border-radius: 50%;
+.card-info {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  box-shadow: 0 0 30px rgba(76, 175, 80, 0.6);
-  animation: glowPop 7s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  flex-direction: column;
+  gap: 4px;
 }
-.success-glow svg {
-  width: 30px; height: 30px;
+
+.card-name {
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.card-id {
+  font-size: 9px;
+  opacity: 0.7;
+}
+
+.voted-status {
+  position: absolute;
+  bottom: 30px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #4CAF50;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: bold;
+  animation: votedAppear 7s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  opacity: 0;
+  transform: scale(0);
+  box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4);
+}
+
+.voted-check {
+  width: 16px;
+  height: 16px;
   fill: white;
 }
+
+.phone-button {
+  position: absolute;
+  bottom: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40px;
+  height: 4px;
+  background: #333;
+  border-radius: 2px;
+}
+
 
 /* Success Elements */
 .success-elements {
@@ -210,26 +211,25 @@
 .dot-2 { animation-delay: 0.2s; }
 .dot-3 { animation-delay: 0.4s; }
 
-/* Keyframes - 7 Seconds Total */
-@keyframes ballotDrop {
-  0%, 15% { transform: translateY(-100px); opacity: 0; }
-  20% { transform: translateY(-100px); opacity: 1; }
-  40% { transform: translateY(0); opacity: 1; }
-  50% { transform: translateY(0); opacity: 1; }
-  55% { transform: translateY(150px); opacity: 1; }
-  58% { transform: translateY(135px); opacity: 1; }
-  61% { transform: translateY(150px); opacity: 1; }
-  63% { transform: translateY(150px); opacity: 0; }
-  100% { transform: translateY(150px); opacity: 0; }
+/* Keyframes - Phone Animation */
+@keyframes phoneAppear {
+  0%, 20% { transform: scale(0.8) rotate(-10deg); opacity: 0; }
+  25% { transform: scale(1) rotate(0deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
 }
 
-@keyframes glowPop {
-  0%, 55% { transform: translateX(-50%) scale(0); opacity: 0; }
-  60% { transform: translateX(-50%) scale(1.2); opacity: 1; }
-  65% { transform: translateX(-50%) scale(1); opacity: 1; }
-  85% { transform: translateX(-50%) scale(1); opacity: 1; }
-  95% { transform: translateX(-50%) scale(0.5); opacity: 0; }
-  100% { transform: translateX(-50%) scale(0.5); opacity: 0; }
+@keyframes cardPop {
+  0%, 40% { transform: scale(0); opacity: 0; }
+  45% { transform: scale(1.1); opacity: 1; }
+  50% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes votedAppear {
+  0%, 65% { transform: scale(0); opacity: 0; }
+  70% { transform: scale(1.2); opacity: 1; }
+  75% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
 }
 
 /* Keyframes - Organic Animations */
@@ -277,7 +277,7 @@
 
 /* Accessibility */
 @media (prefers-reduced-motion: reduce) {
-  .intro-container, .ballot, .success-glow, .word-anim {
+  .intro-container, .phone, .voting-card, .voted-status, .word-anim {
     animation: none !important;
   }
 }
@@ -286,4 +286,13 @@
   .text-stage .title { font-size: 32px; }
   .text-stage .subtitle { font-size: 16px; padding: 0 20px; }
   .animation-stage { transform: scale(0.8); }
+  .phone { 
+    width: 160px;
+    height: 280px;
+  }
+  .voting-card {
+    width: 120px;
+    height: 70px;
+    padding: 12px;
+  }
 }

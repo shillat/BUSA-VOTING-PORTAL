@@ -46,26 +46,25 @@ const IntroPreloader = ({ onComplete }) => {
       </div>
 
       <div className="animation-stage">
-        {/* Ballot */}
-        <div className="ballot">
-          <div className="ballot-lines"></div>
-          <svg className="ballot-check" viewBox="0 0 24 24">
-            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" />
-          </svg>
-        </div>
-
-        {/* Box */}
-        <div className="box-container">
-          <div className="box-top-opening"></div>
-          <div className="box-front">
-            <div className="box-logo">BUSA</div>
+        {/* Phone */}
+        <div className="phone">
+          <div className="phone-screen">
+            <div className="phone-header">BUSA Voting</div>
+            <div className="voting-card">
+              <div className="card-header">Voter Card</div>
+              <div className="card-info">
+                <div className="card-name">STUDENT VOTER</div>
+                <div className="card-id">ID: 2026-BUSA-001</div>
+              </div>
+            </div>
+            <div className="voted-status">
+              <svg className="voted-check" viewBox="0 0 24 24">
+                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" />
+              </svg>
+              <span>VOTED</span>
+            </div>
           </div>
-          <div className="box-top-lip"></div>
-        </div>
-
-        {/* Success Glow */}
-        <div className="success-glow">
-          <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" /></svg>
+          <div className="phone-button"></div>
         </div>
       </div>
     </div>
