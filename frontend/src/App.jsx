@@ -15,6 +15,7 @@ import SecurityLog from './SecurityLog';
 import ManageAnnouncements from './ManageAnnouncements';
 import ManageElections from './ManageElections';
 import ManageCandidates from './ManageCandidates';
+import ManageStudents from './ManageStudents';
 import ManageGuidelines from './ManageGuidelines';
 import ManageElectionCalendar from './ManageElectionCalendar';
 import AllCandidates from './AllCandidates';
