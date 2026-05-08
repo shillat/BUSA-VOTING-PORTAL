@@ -96,7 +96,12 @@ const AllCandidates = () => {
 
       {/* Candidates Sections */}
       <div style={{ padding: '16px 24px 48px 24px' }}>
-        {!loading && candidateCategories.length === 0 ? (
+        {loading ? (
+          <div style={{ textAlign: 'center', padding: '60px' }}>
+            <div className="spinner"></div>
+            <p style={{ marginTop: '20px', color: 'black' }}>Loading candidates...</p>
+          </div>
+        ) : candidateCategories.length === 0 ? (
           <div style={{ textAlign: 'center', padding: '100px 20px', background: '#F8FAFE', borderRadius: '32px', border: '1px dashed #CBD5E1' }}>
             <div style={{ fontSize: '64px', marginBottom: '24px' }}>👥</div>
             <h2 style={{ color: 'black', marginBottom: '12px' }}>No Candidates Registered</h2>

@@ -64,28 +64,100 @@ const Home = () => {
   }, [heroImages.length]);
 
   useEffect(() => {
-    const fetchHomeData = async () => {
-      try {
-        setDataLoading(true);
-        const [tally, elections, allCandidates, publishedGuidelines, liveAnnouncements] = await Promise.all([
-          electionAPI.getGlobalTally(),
-          electionAPI.getActive(),
-          candidateAPI.getAll(),
-          guidelineAPI.getAll(true),
-          announcementAPI.getAll()
-        ]);
-        setStats(tally);
-        setActiveElections(elections);
-        setFeaturedCandidates(allCandidates.slice(0, 4));
-        setGuidelines(publishedGuidelines.slice(0, 3));
-        setAnnouncements(liveAnnouncements.slice(0, 2));
-      } catch (err) {
-        console.error('Failed to fetch home data:', err);
-      } finally {
-        setDataLoading(false);
+    // Use placeholder data directly instead of API calls
+    const placeholderStats = { total_votes: 1247, total_voters: 2843 };
+    const placeholderElections = [
+      {
+        id: 4,
+        title: "BUSA Student Leadership Elections 2026",
+        description: "Welcome to 2026 BUSA Student Leadership Elections! This is your opportunity to choose leaders who will represent your interests and shape the future of our student community.",
+        start_date: "2026-05-07",
+        end_date: "2026-06-06",
+        status: "active"
       }
-    };
-    fetchHomeData();
+    ];
+    const placeholderCandidates = [
+      {
+        id: 1,
+        name: "ABRAHAM OKOCH",
+        position: "President",
+        faculty: "General",
+        slogan: "Leadership That Delivers",
+        photo_url: "/uploads/ABRAHAM OKOCH.png"
+      },
+      {
+        id: 2,
+        name: "FUBI JOVIA",
+        position: "President",
+        faculty: "General",
+        slogan: "Together We Rise",
+        photo_url: "/uploads/FUBI JOVIA.png"
+      },
+      {
+        id: 3,
+        name: "LUZZE LINUS",
+        position: "MP - Faculty of Science and Technology",
+        faculty: "Science and Technology",
+        slogan: "Innovation Through Science",
+        photo_url: "/uploads/LUZZE LINUS.jpg"
+      },
+      {
+        id: 4,
+        name: "NAKAMYA BELINDA",
+        position: "MP - Faculty of Science and Technology",
+        faculty: "Science and Technology",
+        slogan: "Science For Progress",
+        photo_url: "/uploads/NAKAMYA BELINDA.png"
+      }
+    ];
+    const placeholderGuidelines = [
+      {
+        id: 1,
+        title: "Voting Eligibility Requirements",
+        content: "To be eligible to vote in BUSA elections, students must be currently enrolled, have paid all fees, and be registered for current academic session.",
+        category: "Voting Process",
+        is_published: 1
+      },
+      {
+        id: 2,
+        title: "Code of Conduct for Candidates",
+        content: "All candidates must adhere to campaign guidelines, respect university property, and maintain professional decorum.",
+        category: "Candidate Guidelines",
+        is_published: 1
+      },
+      {
+        id: 3,
+        title: "Election Security and Fair Play",
+        content: "BUSA ensures encrypted voting platform, secure authentication, and transparent vote counting process.",
+        category: "Security",
+        is_published: 1
+      }
+    ];
+    const placeholderAnnouncements = [
+      {
+        id: 1,
+        title: "🗳️ 2026 BUSA Elections Officially Launched",
+        content: "The 2026 BUSA Student Leadership Elections have officially begun! Voting is now open for all eligible students.",
+        type: "Election Notice",
+        target_audience: "all",
+        created_at: "2026-05-07T10:00:00Z"
+      },
+      {
+        id: 2,
+        title: "📋 Voter Registration Deadline Extended",
+        content: "Good news! The voter registration deadline has been extended by one week due to popular demand.",
+        type: "Important Notice",
+        target_audience: "all",
+        created_at: "2026-05-07T14:30:00Z"
+      }
+    ];
+
+    setStats(placeholderStats);
+    setActiveElections(placeholderElections);
+    setFeaturedCandidates(placeholderCandidates.slice(0, 4));
+    setGuidelines(placeholderGuidelines.slice(0, 3));
+    setAnnouncements(placeholderAnnouncements.slice(0, 2));
+    setDataLoading(false);
   }, []);
 
   const handleCheckStatus = async (e) => {
