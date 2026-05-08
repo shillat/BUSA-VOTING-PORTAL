@@ -21,9 +21,9 @@ const ElectionCalendar = () => {
   const startOffset = 3; // April 1, 2027 is a Thursday
 
   const events = {
-    5: { title: 'Debates', type: 'debate', fullTitle: 'CANDIDATE DEBATES', color: '#E67E22', desc: 'Live televised and streamed sessions where all registered candidates present their manifestos.', time: '🕒 6:00 PM' },
-    12: { title: 'Voting Opens', type: 'voting', fullTitle: 'GENERAL VOTING OPENS', color: '#27AE60', desc: 'The portal opens for all verified voters. Cast your secure ballot using your unique registration credentials.', time: '🕒 08:00 AM' },
-    15: { title: 'Results', type: 'results', fullTitle: 'FINAL RESULTS RELEASE', color: '#8E44AD', desc: 'Official certification and announcement of election winners following independent verification.', time: '🕒 4:00 PM' }
+    5: { title: 'Debates', type: 'debate', fullTitle: 'CANDIDATE DEBATES', color: '#E67E22', desc: 'Live televised and streamed sessions where all registered candidates present their manifestos. Join us at Main Auditorium to hear from Abraham Okoch and Fubi Jovia as they present their visions for BUSA leadership.', time: '🕒 6:00 PM' },
+    12: { title: 'Voting Opens', type: 'voting', fullTitle: 'GENERAL VOTING OPENS', color: '#27AE60', desc: 'The portal opens for all verified voters. Cast your secure ballot using your unique registration credentials. All positions are available: President, Faculty Representatives, and Regional MPs.', time: '🕒 08:00 AM' },
+    15: { title: 'Results', type: 'results', fullTitle: 'FINAL RESULTS RELEASE', color: '#8E44AD', desc: 'Official certification and announcement of election winners following independent verification. Results will be published on all platforms and candidates will be notified.', time: '🕒 4:00 PM' }
   };
 
   const renderDays = () => {

@@ -1,28 +1,48 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, NavLink } from 'react-router-dom';
-import { announcementAPI, utils } from './api';
+import { utils } from './api';
 import Navbar from './Navbar';
 import Footer from './Footer';
 
 const PublicAnnouncements = () => {
   const navigate = useNavigate();
-  const [announcements, setAnnouncements] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    const fetchAnnouncements = async () => {
-      try {
-        setLoading(true);
-        const data = await announcementAPI.getAll();
-        setAnnouncements(data);
-      } catch (err) {
-        utils.showToast('Failed to load announcements', true);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchAnnouncements();
-  }, []);
+  // Placeholder announcements data
+  const announcements = [
+    {
+      id: 1,
+      title: "🗳️ 2026 BUSA Elections Officially Launched",
+      content: "The 2026 BUSA Student Leadership Elections have officially begun! Voting is now open for all eligible students. Cast your vote for President, Faculty Representatives, and Regional MPs. Make your voice heard and shape the future of our student community. Voting closes on December 31, 2026 at 11:59 PM.",
+      type: "Election Notice",
+      target_audience: "all",
+      created_at: "2026-05-07T10:00:00Z"
+    },
+    {
+      id: 2,
+      title: "📋 Voter Registration Deadline Extended",
+      content: "Good news! The voter registration deadline has been extended by one week due to popular demand. Students who haven't registered yet have until November 30, 2026 to complete their registration. Don't miss this opportunity to participate in the democratic process. Visit the registration portal now!",
+      type: "Important Notice",
+      target_audience: "all",
+      created_at: "2026-05-07T14:30:00Z"
+    },
+    {
+      id: 3,
+      title: "🎯 Meet the Candidates: Presidential Debate Tonight",
+      content: "Join us tonight at 7:00 PM in the Main Auditorium for the Presidential Candidates Debate. Abraham Okoch and Fubi Jovia will present their visions and answer questions from the student body. This is your chance to make an informed decision. Refreshments will be served. All students are welcome!",
+      type: "Event",
+      target_audience: "all",
+      created_at: "2026-05-07T16:00:00Z"
+    },
+    {
+      id: 4,
+      title: "🏆 New Student Support Programs Announced",
+      content: "The current BUSA administration is pleased to announce new support programs including: 1) Emergency Student Fund for those facing financial difficulties, 2) Academic Excellence Scholarships for top-performing students, 3) Mental Health and Counseling Services expansion, and 4) Career Development Workshops. Applications open next week. Stay tuned for more details!",
+      type: "General Information",
+      target_audience: "all",
+      created_at: "2026-05-07T09:00:00Z"
+    }
+  ];
 
   return (
     <div className="container" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>

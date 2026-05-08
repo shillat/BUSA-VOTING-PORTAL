@@ -1,27 +1,42 @@
 import React, { useEffect, useState } from 'react';
 import Navbar from './Navbar';
 import Footer from './Footer';
-import { guidelineAPI, utils } from './api';
+import { utils } from './api';
 
 const PublicGuidelines = () => {
-  const [guidelines, setGuidelines] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    const fetchGuidelines = async () => {
-      try {
-        setLoading(true);
-        const data = await guidelineAPI.getAll(true);
-        setGuidelines(data);
-      } catch (err) {
-        utils.showToast('Unable to load guidelines at the moment', true);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchGuidelines();
-  }, []);
+  // Placeholder guidelines data
+  const guidelines = [
+    {
+      id: 1,
+      title: "Voting Eligibility Requirements",
+      content: "To be eligible to vote in BUSA elections, students must:\n\n1. Be currently enrolled at BUSA\n2. Have paid all university fees for the current semester\n3. Be registered for the current academic session\n4. Have a valid student registration number\n5. Not have any disciplinary cases pending\n\nRegular students are automatically eligible upon semester registration. In-Service students must provide evidence of current session payment or attend on-campus verification.\n\nVoting is conducted online through the official BUSA Voting Portal using your Registration Number and Voter ID.",
+      category: "Voting Process",
+      is_published: 1
+    },
+    {
+      id: 2,
+      title: "Code of Conduct for Candidates",
+      content: "All candidates participating in BUSA elections must adhere to the following code of conduct:\n\nCampaign Guidelines:\n• Campaign materials must be approved by the Electoral Commission\n• No defamatory statements against opponents\n• Respect university property and regulations\n• No bribery or offering inducements to voters\n• Maintain professional decorum at all times\n\nDuring Debates:\n• Arrive on time and dress appropriately\n• Address issues, not personalities\n• Respect speaking time limits\n• Allow others to speak without interruption\n\nViolations may result in disqualification. Report violations to the Electoral Commission within 24 hours.",
+      category: "Candidate Guidelines",
+      is_published: 1
+    },
+    {
+      id: 3,
+      title: "Election Security and Fair Play",
+      content: "BUSA is committed to ensuring free, fair, and secure elections. Security measures include:\n\nTechnical Security:\n• Encrypted voting platform\n• Secure voter authentication\n• Real-time monitoring of voting patterns\n• Protection against multiple voting\n• Audit trail for all votes\n\nFair Play Principles:\n• Equal opportunity for all candidates\n• Transparent vote counting process\n• Independent monitoring by Electoral Commission\n• Immediate investigation of any irregularities\n• Right to appeal within 48 hours\n\nStudents should report any suspicious activities to security@busa.edu or call the Election Hotline: 0800-BUSA-VOTE",
+      category: "Security",
+      is_published: 1
+    },
+    {
+      id: 4,
+      title: "Student Rights and Responsibilities",
+      content: "As participants in BUSA elections, students have both rights and responsibilities:\n\nYour Rights:\n• Right to vote freely without coercion\n• Right to access all candidate information\n• Right to ask candidates questions\n• Right to observe counting process\n• Right to report irregularities\n• Right to appeal election outcomes\n\nYour Responsibilities:\n• Vote only once per position\n• Verify your voter registration status\n• Protect your voting credentials\n• Respect others' voting choices\n• Report any election malpractice\n• Participate peacefully in the electoral process\n\nRemember: Your vote is your voice. Use it wisely and responsibly for the future of BUSA.",
+      category: "Student Information",
+      is_published: 1
+    }
+  ];
 
   const groupedByCategory = guidelines.reduce((grouped, guideline) => {
     const category = guideline.category || 'General';

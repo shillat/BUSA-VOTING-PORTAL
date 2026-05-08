@@ -13,10 +13,69 @@ const ElectionOverview = () => {
   };
 
   const handleViewCandidates = (role) => {
-    utils.showToast(`📋 Viewing candidates for ${role} (demo - candidate list would appear)`, false);
-    // In a real app, we might navigate to /candidates?role=...
     navigate('/candidates');
   };
+
+  // Placeholder data for active election
+  const activeElection = {
+    title: "BUSA Student Leadership Elections 2026",
+    description: "Welcome to 2026 BUSA Student Leadership Elections! This is your opportunity to choose leaders who will represent your interests and shape the future of our student community.",
+    start_date: "2026-05-07",
+    end_date: "2026-06-06",
+    status: "active"
+  };
+
+  // Placeholder candidates data
+  const candidates = [
+    {
+      id: 1,
+      name: "ABRAHAM OKOCH",
+      position: "President",
+      faculty: "General",
+      slogan: "Leadership That Delivers",
+      photo_url: "/uploads/ABRAHAM OKOCH.png"
+    },
+    {
+      id: 2,
+      name: "FUBI JOVIA",
+      position: "President",
+      faculty: "General",
+      slogan: "Together We Rise",
+      photo_url: "/uploads/FUBI JOVIA.png"
+    },
+    {
+      id: 3,
+      name: "LUZZE LINUS",
+      position: "MP - Faculty of Science and Technology",
+      faculty: "Science and Technology",
+      slogan: "Innovation Through Science",
+      photo_url: "/uploads/LUZZE LINUS.jpg"
+    },
+    {
+      id: 4,
+      name: "NAKAMYA BELINDA",
+      position: "MP - Faculty of Science and Technology",
+      faculty: "Science and Technology",
+      slogan: "Science For Progress",
+      photo_url: "/uploads/NAKAMYA BELINDA.png"
+    },
+    {
+      id: 5,
+      name: "OKELLO PETER",
+      position: "MP - Eastern Region",
+      faculty: "Regional Representation",
+      slogan: "Eastern Unity, Eastern Pride",
+      photo_url: "/uploads/OKELLO PETER.png"
+    },
+    {
+      id: 6,
+      name: "SHILLAH NAIGAGA",
+      position: "MP - Eastern Region",
+      faculty: "Regional Representation",
+      slogan: "Service With Excellence",
+      photo_url: "/uploads/SHILLAH NAIGAGA.jpg"
+    }
+  ];
 
   const roles = [
     { title: "Guild President", subtitle: "The highest executive authority", description: "The highest executive authority of the Student Union. Responsible for representing all students to the university administration, leading the Guild Cabinet, and overseeing the strategic direction of student welfare." },
@@ -34,8 +93,46 @@ const ElectionOverview = () => {
     <div className="container">
       <Navbar />
 
+      {/* Active Election Banner */}
+      <div style={{ background: 'linear-gradient(135deg, #002F6C, #1E5A3C)', padding: '32px 24px', margin: '20px 24px', borderRadius: '20px', color: 'white' }}>
+        <div style={{ textAlign: 'center' }}>
+          <h2 style={{ fontSize: '32px', fontWeight: '800', margin: '0 0 16px 0', textTransform: 'uppercase' }}>{activeElection.title}</h2>
+          <p style={{ fontSize: '18px', margin: '0 0 24px 0', opacity: '0.9', lineHeight: '1.4' }}>{activeElection.description}</p>
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '32px', flexWrap: 'wrap' }}>
+            <div style={{ textAlign: 'center' }}>
+              <div style={{ fontSize: '14px', opacity: '0.7', marginBottom: '8px' }}>Voting Period</div>
+              <div style={{ fontSize: '20px', fontWeight: '700' }}>{activeElection.start_date} - {activeElection.end_date}</div>
+            </div>
+            <div style={{ textAlign: 'center' }}>
+              <div style={{ fontSize: '14px', opacity: '0.7', marginBottom: '8px' }}>Status</div>
+              <div style={{ fontSize: '20px', fontWeight: '700', textTransform: 'uppercase', background: 'rgba(255,255,255,0.2)', padding: '8px 16px', borderRadius: '20px', display: 'inline-block' }}>{activeElection.status}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div style={{ padding: '20px 24px 16px 24px' }}>
         <h1 style={{ fontSize: '28px', fontWeight: '800', color: 'black', margin: 0, lineHeight: '1.2' }}>ELECTION OVERVIEW</h1>
+      </div>
+
+      {/* Candidates Preview */}
+      <div style={{ padding: '16px 24px 32px 24px' }}>
+        <h2 style={{ fontSize: '24px', fontWeight: '700', color: '#1A2C3E', marginBottom: '24px', textAlign: 'center' }}>Featured Candidates</h2>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '20px', marginBottom: '40px' }}>
+          {candidates.slice(0, 6).map((candidate) => (
+            <div key={candidate.id} style={{ background: '#FFFFFF', border: '1px solid #EDF2F7', borderRadius: '20px', padding: '20px', textAlign: 'center', cursor: 'pointer', transition: 'all 0.3s ease' }} 
+                 onClick={() => navigate(`/candidates/${candidate.id}`)}
+                 onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-5px)'; e.currentTarget.style.boxShadow = '0 15px 30px rgba(0, 0, 0, 0.1)'; }} 
+                 onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 5px 15px rgba(0, 0, 0, 0.05)'; }}>
+              {candidate.photo_url && (
+                <img src={candidate.photo_url} alt={candidate.name} style={{ width: '80px', height: '80px', borderRadius: '50%', objectFit: 'cover', marginBottom: '16px', border: '3px solid #F0F4F9' }} />
+              )}
+              <h3 style={{ fontSize: '18px', fontWeight: '700', color: '#1A2C3E', margin: '0 0 8px 0' }}>{candidate.name}</h3>
+              <div style={{ fontSize: '14px', color: '#64748B', marginBottom: '8px' }}>{candidate.position}</div>
+              <div style={{ fontSize: '12px', fontStyle: 'italic', color: '#002F6C', marginTop: '8px' }}>"{candidate.slogan}"</div>
+            </div>
+          ))}
+        </div>
       </div>
 
       <div className="roles-grid" style={{ padding: '16px 24px 32px 24px', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px' }}>

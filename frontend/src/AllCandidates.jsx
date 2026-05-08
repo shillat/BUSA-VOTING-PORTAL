@@ -1,47 +1,85 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { utils, electionAPI, candidateAPI } from './api';
+import { utils } from './api';
 import Navbar from './Navbar';
 import Footer from './Footer';
 
 const AllCandidates = () => {
   const navigate = useNavigate();
-  const [candidateCategories, setCandidateCategories] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    const fetchCandidates = async () => {
-      try {
-        setLoading(true);
-        const elections = await electionAPI.getAll();
-        const cats = [];
-
-        for (const election of elections) {
-          const candidates = await candidateAPI.getByElection(election.id);
-          if (candidates.length > 0) {
-            cats.push({
-              title: election.title,
-              candidates: candidates.map(c => ({
-                id: c.id,
-                initials: c.name.split(' ').map(n => n[0]).join('').toUpperCase(),
-                name: c.name,
-                faculty: c.faculty || '',
-                post: c.position || 'Candidate',
-                slogan: c.slogan || '',
-                photo_url: c.photo_url || null
-              }))
-            });
-          }
+  // Placeholder candidates data
+  const candidateCategories = [
+    {
+      title: "BUSA Student Leadership Elections 2026",
+      candidates: [
+        {
+          id: 1,
+          initials: "AO",
+          name: "ABRAHAM OKOCH",
+          faculty: "General",
+          post: "President",
+          slogan: "Leadership That Delivers",
+          photo_url: "/uploads/ABRAHAM OKOCH.png"
+        },
+        {
+          id: 2,
+          initials: "FJ",
+          name: "FUBI JOVIA",
+          faculty: "General",
+          post: "President",
+          slogan: "Together We Rise",
+          photo_url: "/uploads/FUBI JOVIA.png"
         }
-        setCandidateCategories(cats);
-      } catch (err) {
-        console.error('Failed to fetch candidates:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchCandidates();
-  }, []);
+      ]
+    },
+    {
+      title: "Faculty of Science and Technology",
+      candidates: [
+        {
+          id: 3,
+          initials: "LL",
+          name: "LUZZE LINUS",
+          faculty: "Science and Technology",
+          post: "MP - Faculty of Science and Technology",
+          slogan: "Innovation Through Science",
+          photo_url: "/uploads/LUZZE LINUS.jpg"
+        },
+        {
+          id: 4,
+          initials: "NB",
+          name: "NAKAMYA BELINDA",
+          faculty: "Science and Technology",
+          post: "MP - Faculty of Science and Technology",
+          slogan: "Science For Progress",
+          photo_url: "/uploads/NAKAMYA BELINDA.png"
+        }
+      ]
+    },
+    {
+      title: "Eastern Region",
+      candidates: [
+        {
+          id: 5,
+          initials: "OP",
+          name: "OKELLO PETER",
+          faculty: "Regional Representation",
+          post: "MP - Eastern Region",
+          slogan: "Eastern Unity, Eastern Pride",
+          photo_url: "/uploads/OKELLO PETER.png"
+        },
+        {
+          id: 6,
+          initials: "SN",
+          name: "SHILLAH NAIGAGA",
+          faculty: "Regional Representation",
+          post: "MP - Eastern Region",
+          slogan: "Service With Excellence",
+          photo_url: "/uploads/SHILLAH NAIGAGA.jpg"
+        }
+      ]
+    }
+  ];
 
   const handleViewProfile = (candidate) => {
     navigate(`/candidates/${candidate.id}`);
