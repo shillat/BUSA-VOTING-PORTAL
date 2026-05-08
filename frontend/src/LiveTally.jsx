@@ -22,16 +22,34 @@ const LiveTally = () => {
       {
         election_id: 4,
         election: {
-          title: "BUSA Student Leadership Elections 2026"
+          title: "Presidential Election"
         },
-        total_votes: 1000,
+        total_votes: 500,
         results: [
-          { candidate_id: 1, name: "ABRAHAM OKOCH", position: "President", votes: 285, percentage: 28.5, vote_count: 285 },
-          { candidate_id: 2, name: "FUBI JOVIA", position: "President", votes: 215, percentage: 21.5, vote_count: 215 },
-          { candidate_id: 3, name: "LUZZE LINUS", position: "MP - Faculty of Science and Technology", votes: 180, percentage: 18.0, vote_count: 180 },
-          { candidate_id: 4, name: "NAKAMYA BELINDA", position: "MP - Faculty of Science and Technology", votes: 165, percentage: 16.5, vote_count: 165 },
-          { candidate_id: 5, name: "OKELLO PETER", position: "MP - Eastern Region", votes: 95, percentage: 9.5, vote_count: 95 },
-          { candidate_id: 6, name: "SHILLAH NAIGAGA", position: "MP - Eastern Region", votes: 60, percentage: 6.0, vote_count: 60 }
+          { candidate_id: 1, name: "ABRAHAM OKOCH", position: "President", votes: 285, percentage: 57.0, vote_count: 285 },
+          { candidate_id: 2, name: "FUBI JOVIA", position: "President", votes: 215, percentage: 43.0, vote_count: 215 }
+        ]
+      },
+      {
+        election_id: 5,
+        election: {
+          title: "Faculty of Science and Technology MP Election"
+        },
+        total_votes: 345,
+        results: [
+          { candidate_id: 3, name: "LUZZE LINUS", position: "MP - Faculty of Science and Technology", votes: 180, percentage: 52.2, vote_count: 180 },
+          { candidate_id: 4, name: "NAKAMYA BELINDA", position: "MP - Faculty of Science and Technology", votes: 165, percentage: 47.8, vote_count: 165 }
+        ]
+      },
+      {
+        election_id: 6,
+        election: {
+          title: "Eastern Region MP Election"
+        },
+        total_votes: 155,
+        results: [
+          { candidate_id: 5, name: "OKELLO PETER", position: "MP - Eastern Region", votes: 95, percentage: 61.3, vote_count: 95 },
+          { candidate_id: 6, name: "SHILLAH NAIGAGA", position: "MP - Eastern Region", votes: 60, percentage: 38.7, vote_count: 60 }
         ]
       }
     ];
