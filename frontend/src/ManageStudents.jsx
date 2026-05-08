@@ -279,9 +279,10 @@ const ManageStudents = () => {
         .table-container {
           background: white;
           border-radius: 16px;
-          overflow: hidden;
+          overflow-x: auto;
           box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
           margin: 0 48px 48px 48px;
+          min-width: 100%;
         }
         
         .voters-table {
@@ -363,6 +364,24 @@ const ManageStudents = () => {
         
         .delete-btn:hover {
           background: #B91C1C;
+        }
+        
+        .status-badge {
+          padding: 4px 12px;
+          border-radius: 20px;
+          font-size: 12px;
+          font-weight: 600;
+          display: inline-block;
+        }
+        
+        .status-registered {
+          background: #D1FAE5;
+          color: #065F46;
+        }
+        
+        .status-pending {
+          background: #FEF3C7;
+          color: #92400E;
         }
         
         .students-grid {
@@ -684,6 +703,7 @@ const ManageStudents = () => {
                     <th>Type</th>
                     <th>Campus</th>
                     <th>Department</th>
+                    <th>Registration Status</th>
                     <th>Graduation Year</th>
                     <th>Actions</th>
                   </tr>
@@ -701,6 +721,11 @@ const ManageStudents = () => {
                       </td>
                       <td>{student.campus}</td>
                       <td>{student.department || '-'}</td>
+                      <td>
+                        <span className={`status-badge ${student.is_registered_sem ? 'status-registered' : 'status-pending'}`}>
+                          {student.is_registered_sem ? 'Registered' : 'Pending'}
+                        </span>
+                      </td>
                       <td>{student.expected_grad_year}</td>
                       <td>
                         <div className="action-buttons">

@@ -151,7 +151,7 @@ const CandidateProfile = () => {
                         margin: 0 auto !important;
                     }
                     .candidate-name {
-                        font-size: 32px !important;
+                        font-size: 24px !important;
                     }
                     .candidate-position {
                         font-size: 20px !important;
@@ -176,7 +176,7 @@ const CandidateProfile = () => {
                         height: 280px !important;
                     }
                     .candidate-name {
-                        font-size: 24px !important;
+                        font-size: 20px !important;
                     }
                     .candidate-position {
                         font-size: 18px !important;
@@ -264,15 +264,16 @@ const CandidateProfile = () => {
                     <div>
                         <div style={{ marginBottom: '32px' }}>
                             <h1 className="candidate-name" style={{
-                                fontSize: '48px',
-                                fontWeight: '800',
+                                fontSize: '32px',
+                                fontWeight: '600',
                                 color: 'black',
                                 margin: '0 0 8px 0',
-                                letterSpacing: '-1px',
+                                letterSpacing: '-0.5px',
                                 wordBreak: 'break-word',
                                 overflowWrap: 'break-word',
                                 hyphens: 'auto',
-                                maxWidth: '100%'
+                                maxWidth: '100%',
+                                lineHeight: '1.2'
                             }}>
                                 {candidate.name}
                             </h1>
