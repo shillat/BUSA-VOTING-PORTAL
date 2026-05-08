@@ -64,8 +64,8 @@ const Login = () => {
       <style jsx>{`
         @media (max-width: 768px) {
           .card {
-            padding: 30px 20px !important;
-            margin: 40px 16px !important;
+            padding: 30px !important;
+            margin: 0 20px !important;
           }
           input {
             font-size: 16px !important;
@@ -100,10 +100,13 @@ const Login = () => {
           h2 {
             font-size: 18px !important;
           }
+          .login-container {
+            margin: 40px 0 !important;
+          }
         }
       `}</style>
 
-      <div style={{ display: 'flex', justifyContent: 'center', margin: '80px 0' }}>
+      <div style={{ display: 'flex', justifyContent: 'center', margin: '80px 0' }} className="login-container">
         <div className="card" style={{ width: '480px', maxWidth: '100%', textAlign: 'center', padding: '40px' }}>
           <div style={{
             margin: '0 auto 20px',

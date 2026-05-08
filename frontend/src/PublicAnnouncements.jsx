@@ -45,10 +45,16 @@ const PublicAnnouncements = () => {
   ];
 
   return (
-    <div className="container" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+    <div className="container">
       <Navbar />
-
-      <div style={{ padding: '40px 0' }}>
+      <style>{`
+        @media (max-width: 768px) {
+          .content-container {
+            padding: 20px 0 !important;
+          }
+        }
+      `}</style>
+      <div style={{ padding: '40px 0' }} className="content-container">
         <div style={{ marginBottom: '40px' }}>
           <h1 style={{ fontSize: '36px', fontWeight: '800', color: 'black', marginBottom: '12px' }}>Public Announcements</h1>
           <p style={{ color: 'black', fontSize: '18px' }}>Stay updated with the latest news, guidelines, and notices from the BUSA Electoral Board.</p>

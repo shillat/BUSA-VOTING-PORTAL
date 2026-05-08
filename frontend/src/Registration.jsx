@@ -79,6 +79,35 @@ const Registration = () => {
         </div>
       </div>
 
+      {/* Back to Home Button - Top */}
+      <div style={{ textAlign: 'center', marginBottom: '20px' }}>
+        <button
+          type="button"
+          onClick={() => navigate('/')}
+          style={{
+            padding: '8px 16px',
+            background: '#002F6C',
+            color: 'white',
+            border: 'none',
+            borderRadius: '8px',
+            fontSize: '12px',
+            fontWeight: '600',
+            cursor: 'pointer',
+            transition: 'all 0.3s ease'
+          }}
+          onMouseOver={(e) => {
+            e.target.style.background = '#0A4175';
+            e.target.style.transform = 'translateY(-1px)';
+          }}
+          onMouseOut={(e) => {
+            e.target.style.background = '#002F6C';
+            e.target.style.transform = 'translateY(0)';
+          }}
+        >
+          ← Back to Home
+        </button>
+      </div>
+
       {/* Registration Form */}
       <div className="validation-card">
         <div className="brand-head" style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -214,35 +243,6 @@ const Registration = () => {
         <div className="legal-disclaimer">
           ⚖️ By proceeding, you verify that information provided is accurate and belongs to you.
         </div>
-        
-        {/* Back to Home Button */}
-        <button
-          type="button"
-          onClick={() => navigate('/')}
-          style={{
-            padding: '12px 20px',
-            background: '#002F6C',
-            color: 'white',
-            border: 'none',
-            borderRadius: '8px',
-            fontSize: '14px',
-            fontWeight: '600',
-            cursor: 'pointer',
-            marginTop: '24px',
-            marginBottom: '16px',
-            transition: 'all 0.3s ease'
-          }}
-          onMouseOver={(e) => {
-            e.target.style.background = '#0A4175';
-            e.target.style.transform = 'translateY(-1px)';
-          }}
-          onMouseOut={(e) => {
-            e.target.style.background = '#002F6C';
-            e.target.style.transform = 'translateY(0)';
-          }}
-        >
-          ← Back to Home
-        </button>
       </div>
 
       {/* Footer */}

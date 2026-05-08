@@ -360,7 +360,7 @@ const Home = () => {
                   <p style={{ fontSize: '14px', fontWeight: '700', color: 'black', margin: '0 0 12px 0' }}>
                     <span style={{ fontWeight: '600' }}>POST:</span> {cand.position || 'Candidate'}
                   </p>
-                  <Link to={`/candidates/${cand.id}`} className="btn" style={{ padding: '5px', fontSize: '12px', width: '95%', textAlign: 'center' }}>View Full Profile</Link>
+                  <Link to={`/candidates/${cand.id}`} className="btn" style={{ padding: '8px 12px', fontSize: '11px', width: 'auto', textAlign: 'center', maxWidth: '100%' }}>View Full Profile</Link>
                 </div>
               </div>
             ))
