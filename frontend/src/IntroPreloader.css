@@ -126,7 +126,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  animation: ballotMove 7s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation: ballotDrop 7s cubic-bezier(0.4, 0, 0.2, 1) forwards;
   opacity: 0;
 }
 .ballot-check {
@@ -149,61 +149,7 @@
   border-radius: 2px;
 }
 
-/* Organic Hand CSS */
-.hand {
-  position: absolute;
-  bottom: 160px;
-  left: 50%;
-  margin-left: 20px;
-  width: 200px;
-  height: 80px;
-  z-index: 2; /* hand-back */
-  animation: handMove 7s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-  opacity: 0;
-}
-.hand.hand-front {
-  z-index: 4;
-}
-
-.sleeve {
-  position: absolute;
-  top: 15px; left: 60px;
-  width: 150px; height: 50px;
-  background: linear-gradient(90deg, #0A4175, #002F6C);
-  border-radius: 8px 0 0 8px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-}
-
-.palm {
-  position: absolute;
-  top: 22px; left: 20px;
-  width: 50px; height: 36px;
-  background: #FAD6C0;
-  border-radius: 18px 0 0 18px;
-}
-
-.finger {
-  position: absolute;
-  background: #E8BFA8;
-  height: 12px;
-  border-radius: 6px;
-}
-.f1 {
-  top: 25px; left: -5px; width: 40px;
-}
-.f2 {
-  top: 42px; left: 0px; width: 35px;
-}
-
-.thumb {
-  position: absolute;
-  top: 10px; left: 5px;
-  width: 35px; height: 16px;
-  background: #F2C4A7;
-  border-radius: 8px;
-  transform: rotate(-25deg);
-  box-shadow: -2px 2px 5px rgba(0,0,0,0.1);
-}
+/* Ballot Animation - No Hand */
 
 /* Success Glow */
 .success-glow {
@@ -265,27 +211,16 @@
 .dot-3 { animation-delay: 0.4s; }
 
 /* Keyframes - 7 Seconds Total */
-@keyframes handMove {
-  0%, 10% { transform: translateX(300px); opacity: 0; }
-  15% { transform: translateX(300px); opacity: 1; }
-  30% { transform: translateX(0); opacity: 1; }
-  45% { transform: translateX(0) translateY(15px); opacity: 1; }
-  50% { transform: translateX(0) translateY(15px); opacity: 1; }
-  65% { transform: translateX(300px) translateY(15px); opacity: 1; }
-  70% { transform: translateX(300px) translateY(15px); opacity: 0; }
-  100% { transform: translateX(300px); opacity: 0; }
-}
-
-@keyframes ballotMove {
-  0%, 10% { transform: translateX(300px); opacity: 0; }
-  15% { transform: translateX(300px); opacity: 1; }
-  30% { transform: translateX(0); opacity: 1; }
-  45% { transform: translateX(0) translateY(15px); opacity: 1; }
-  50% { transform: translateX(0) translateY(150px); opacity: 1; }
-  53% { transform: translateX(0) translateY(135px); opacity: 1; }
-  56% { transform: translateX(0) translateY(150px); opacity: 1; }
-  58% { transform: translateX(0) translateY(150px); opacity: 0; }
-  100% { transform: translateX(0) translateY(150px); opacity: 0; }
+@keyframes ballotDrop {
+  0%, 15% { transform: translateY(-100px); opacity: 0; }
+  20% { transform: translateY(-100px); opacity: 1; }
+  40% { transform: translateY(0); opacity: 1; }
+  50% { transform: translateY(0); opacity: 1; }
+  55% { transform: translateY(150px); opacity: 1; }
+  58% { transform: translateY(135px); opacity: 1; }
+  61% { transform: translateY(150px); opacity: 1; }
+  63% { transform: translateY(150px); opacity: 0; }
+  100% { transform: translateY(150px); opacity: 0; }
 }
 
 @keyframes glowPop {
@@ -342,7 +277,7 @@
 
 /* Accessibility */
 @media (prefers-reduced-motion: reduce) {
-  .intro-container, .hand, .ballot, .success-glow, .word-anim {
+  .intro-container, .ballot, .success-glow, .word-anim {
     animation: none !important;
   }
 }
