@@ -70,13 +70,13 @@ const Footer = () => {
           }
           
           .desktop-layout {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 20px;
           }
           
           .desktop-layout .footer-col {
-            margin-bottom: 12px;
             text-align: left;
           }
           
