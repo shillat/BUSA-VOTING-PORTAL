@@ -282,6 +282,12 @@ const Home = () => {
         )}
 
         <div className="card">
+          <h3>Election Details</h3>
+          <p className="small">View comprehensive election information including roles, voting integrity measures, and candidate details.</p>
+          <Link to="/overview" className="btn">View Full Overview</Link>
+        </div>
+
+        <div className="card">
           <h3>Key Dates</h3>
           <p className="small"><strong>Verify</strong> - 24h before voting</p>
           <p className="small"><strong>Registration</strong> - Open Now</p>

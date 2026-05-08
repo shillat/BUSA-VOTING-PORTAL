@@ -5,7 +5,7 @@ import LogoMark from './LogoMark';
 const ManageStudents = () => {
   const navigate = useNavigate();
   const [students, setStudents] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [showAddForm, setShowAddForm] = useState(false);
   const [editingStudent, setEditingStudent] = useState(null);
   const [formData, setFormData] = useState({
@@ -20,30 +20,43 @@ const ManageStudents = () => {
   });
 
   useEffect(() => {
-    fetchStudents();
-  }, []);
-
-  const fetchStudents = async () => {
-    try {
-      const token = localStorage.getItem('authToken');
-      const response = await fetch('/api/students', {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-      
-      if (response.ok) {
-        const data = await response.json();
-        setStudents(data);
-      } else {
-        console.error('Failed to fetch students');
+    // Use placeholder data instead of API call
+    const placeholderStudents = [
+      {
+        reg_no: '24/BCC/BU/R/0001',
+        name: 'John Smith',
+        email: 'john.smith@busa.edu',
+        type: 'Regular',
+        is_registered_sem: true,
+        expected_grad_year: 2028,
+        campus: 'main',
+        department: 'CI'
+      },
+      {
+        reg_no: '24/BED/BU/R/0002',
+        name: 'Sarah Johnson',
+        email: 'sarah.johnson@busa.edu',
+        type: 'Regular',
+        is_registered_sem: true,
+        expected_grad_year: 2027,
+        campus: 'main',
+        department: 'EDA'
+      },
+      {
+        reg_no: '23/BBA/BU/I/0003',
+        name: 'Michael Brown',
+        email: 'michael.brown@busa.edu',
+        type: 'In-service',
+        is_registered_sem: false,
+        expected_grad_year: 2026,
+        campus: 'kampala',
+        department: 'Business'
       }
-    } catch (error) {
-      console.error('Error fetching students:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+    ];
+    
+    setStudents(placeholderStudents);
+    setLoading(false);
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -515,7 +528,7 @@ const ManageStudents = () => {
         <div className="main-content">
           {/* Page Header */}
           <div className="page-header">
-            <h1 className="page-title">Manage University Students</h1>
+            <h1 className="page-title">Manage Voters</h1>
             <button className="add-student-btn" onClick={() => setShowAddForm(true)}>
               + Add New Student
             </button>

@@ -268,7 +268,11 @@ const CandidateProfile = () => {
                                 fontWeight: '800',
                                 color: 'black',
                                 margin: '0 0 8px 0',
-                                letterSpacing: '-1px'
+                                letterSpacing: '-1px',
+                                wordBreak: 'break-word',
+                                overflowWrap: 'break-word',
+                                hyphens: 'auto',
+                                maxWidth: '100%'
                             }}>
                                 {candidate.name}
                             </h1>

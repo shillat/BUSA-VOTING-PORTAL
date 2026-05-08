@@ -128,7 +128,7 @@ const AllCandidates = () => {
                     <div style={{ padding: '24px', background: '#FFFFFF', textAlign: 'center' }}>
                       {/* Candidate Info - Simple Format */}
                       <div style={{ textAlign: 'left', marginBottom: '16px' }}>
-                        <p style={{ fontSize: '16px', fontWeight: '700', color: 'black', margin: '0 0 8px 0' }}>
+                        <p style={{ fontSize: '16px', fontWeight: '700', color: 'black', margin: '0 0 8px 0', wordBreak: 'break-word', overflowWrap: 'break-word', hyphens: 'auto' }}>
                           <span style={{ fontWeight: '600' }}>NAME:</span> {cand.name}
                         </p>
                         {cand.faculty && (
