@@ -3,24 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { adminAPI, electionAPI, utils } from './api';
 import Footer from './Footer';
 import AdminTopNavbar from './AdminTopNavbar';
-
-const navLinkStyle = {
-  display: 'flex',
-  alignItems: 'center',
-  gap: '12px',
-  padding: '12px 20px',
-  textDecoration: 'none',
-  fontSize: '14px',
-  fontWeight: '500',
-  color: 'black'
-};
-
-const activeNavLinkStyle = {
-  ...navLinkStyle,
-  color: '#002F6C',
-  background: '#E8F0FE',
-  borderLeft: '3px solid #002F6C'
-};
+import AdminSidebar from './AdminSidebar';
 
 const cardStyle = {
   background: '#FFFFFF',
@@ -61,36 +44,12 @@ const AdminDashboard = () => {
     fetchData();
   }, []);
 
-  const handleLogout = (event) => {
-    event.preventDefault();
-    localStorage.removeItem('authToken');
-    localStorage.removeItem('adminInfo');
-    navigate('/');
-  };
-
   return (
     <div className="portal-container" style={{ width: '100%', maxWidth: '1280px', background: '#F3FAFF', minHeight: '100vh', margin: '0 auto', fontFamily: "'Inter', sans-serif" }}>
       <AdminTopNavbar />
 
       <div className="dashboard-layout" style={{ display: 'flex', gap: '32px', padding: '28px 40px 32px 40px', flex: '1' }}>
-        <aside className="sidebar" style={{ width: '260px', flexShrink: '0', background: '#FFFFFF', borderRadius: '24px', padding: '20px 0', border: '1px solid #E2EAF2', height: 'fit-content' }}>
-          <div className="sidebar-header" style={{ padding: '0 20px 16px 20px', borderBottom: '1px solid #EEF3F8' }}>
-            <h2 style={{ fontSize: '20px', fontWeight: '800', color: 'black', margin: 0 }}>Dashboard</h2>
-            <div className="sidebar-welcome" style={{ fontSize: '13px', color: 'black', marginTop: '6px' }}>Welcome Admin</div>
-          </div>
-
-          <nav className="sidebar-nav" style={{ display: 'flex', flexDirection: 'column', marginTop: '12px' }}>
-            <a href="#" onClick={(e) => { e.preventDefault(); navigate('/admin/dashboard'); }} className="sidebar-link active" style={activeNavLinkStyle}>Dashboard</a>
-            <a href="#" onClick={(e) => { e.preventDefault(); navigate('/admin/students'); }} className="sidebar-link" style={navLinkStyle}>Manage Voters</a>
-            <a href="#" onClick={(e) => { e.preventDefault(); navigate('/admin/elections'); }} className="sidebar-link" style={navLinkStyle}>Manage Elections</a>
-            <a href="#" onClick={(e) => { e.preventDefault(); navigate('/admin/candidates'); }} className="sidebar-link" style={navLinkStyle}>Manage Candidates</a>
-            <a href="#" onClick={(e) => { e.preventDefault(); navigate('/admin/guidelines'); }} className="sidebar-link" style={navLinkStyle}>Manage Guidelines</a>
-            <a href="#" onClick={(e) => { e.preventDefault(); navigate('/admin/announcements'); }} className="sidebar-link" style={navLinkStyle}>Manage Announcements</a>
-            <a href="#" onClick={(e) => { e.preventDefault(); navigate('/admin/reviews'); }} className="sidebar-link" style={navLinkStyle}>Reviews</a>
-            <a href="#" onClick={(e) => { e.preventDefault(); navigate('/admin/security'); }} className="sidebar-link" style={navLinkStyle}>Security Log</a>
-            <a href="#" onClick={handleLogout} className="sidebar-link logout-link" style={{ ...navLinkStyle, color: '#C62828', marginTop: '28px', borderTop: '1px solid #EEF3F8', paddingTop: '16px' }}>Logout</a>
-          </nav>
-        </aside>
+        <AdminSidebar />
 
         <main className="main-content" style={{ flex: '1', display: 'flex', flexDirection: 'column', gap: '24px', overflow: 'hidden' }}>
           <section className="welcome-status" style={{ background: 'linear-gradient(105deg, #002F6C 0%, #0A4175 100%)', borderRadius: '20px', padding: '18px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: 'white' }}>

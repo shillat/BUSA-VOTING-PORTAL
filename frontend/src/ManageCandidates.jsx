@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { candidateAPI, electionAPI, utils } from './api';
 import Footer from './Footer';
 import AdminTopNavbar from './AdminTopNavbar';
+import AdminSidebar from './AdminSidebar';
 
 const ManageCandidates = () => {
-  const navigate = useNavigate();
   const [candidates, setCandidates] = useState([]);
   const [elections, setElections] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -41,12 +40,6 @@ const ManageCandidates = () => {
   });
 
   const [uploadedFile, setUploadedFile] = useState(null);
-
-  const handleLogout = (e) => {
-    e.preventDefault();
-    localStorage.removeItem('authToken');
-    navigate('/');
-  };
 
   const handleInputChange = (e) => {
     const { id, value } = e.target;
@@ -117,7 +110,7 @@ const ManageCandidates = () => {
         await candidateAPI.delete(id);
         utils.showToast('🗑️ Candidate has been removed.', false);
         fetchData();
-      } catch (err) {
+      } catch {
         utils.showToast('Failed to delete candidate', true);
       }
     }
@@ -146,69 +139,7 @@ const ManageCandidates = () => {
 
       {/* Dashboard Layout */}
       <div className="dashboard-layout" style={{ display: 'flex', gap: '32px', padding: '28px 40px 40px 40px', flex: '1', flexDirection: 'row', flexWrap: 'wrap' }}>
-        {/* Sidebar */}
-        <div className="sidebar" style={{ width: '260px', flexShrink: '0', background: '#FFFFFF', borderRadius: '24px', padding: '20px 0', border: '1px solid #E9EDF2', height: 'fit-content', order: 1 }}>
-          <style jsx>{`
-            @media (max-width: 768px) {
-              .dashboard-layout {
-                padding: 20px 16px !important;
-                gap: 20px !important;
-              }
-              .sidebar {
-                width: 100% !important;
-                order: 2 !important;
-                margin-bottom: 20px;
-              }
-              .main-content {
-                order: 1 !important;
-              }
-              .candidates-grid {
-                grid-template-columns: 1fr !important;
-                gap: 16px !important;
-              }
-              .form-row {
-                flex-direction: column !important;
-                gap: 16px !important;
-              }
-              .form-group {
-                min-width: 100% !important;
-              }
-              .status-card {
-                flex-direction: column !important;
-                text-align: center !important;
-                gap: 12px !important;
-              }
-            }
-            @media (max-width: 480px) {
-              .dashboard-layout {
-                padding: 16px 12px !important;
-                gap: 16px !important;
-              }
-              .form-card {
-                padding: 20px 16px !important;
-              }
-              .candidate-header {
-                padding: 16px !important;
-              }
-              .candidate-body {
-                padding: 16px !important;
-              }
-            }
-          `}</style>
-          <div className="sidebar-header" style={{ padding: '0 20px 16px 20px', borderBottom: '1px solid #F0F4F9' }}>
-            <h2 style={{ fontSize: '20px', fontWeight: '800', color: 'black', margin: 0 }}>Dashboard</h2>
-          </div>
-          <div className="sidebar-nav" style={{ display: 'flex', flexDirection: 'column', marginTop: '12px' }}>
-            <a href="#" onClick={(e) => { e.preventDefault(); navigate('/admin/dashboard'); }} className="sidebar-link" style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 20px', textDecoration: 'none', fontSize: '14px', fontWeight: '500', color: 'black' }}>Dashboard</a>
-            <a href="#" onClick={(e) => { e.preventDefault(); navigate('/admin/database'); }} className="sidebar-link" style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 20px', textDecoration: 'none', fontSize: '14px', fontWeight: '500', color: 'black' }}>Voter Database</a>
-            <a href="#" onClick={(e) => { e.preventDefault(); navigate('/admin/elections'); }} className="sidebar-link" style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 20px', textDecoration: 'none', fontSize: '14px', fontWeight: '500', color: 'black' }}>Manage Elections</a>
-            <a href="#" onClick={(e) => e.preventDefault()} className="sidebar-link active" style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 20px', textDecoration: 'none', fontSize: '14px', fontWeight: '500', color: '#002F6C', background: '#E8F0FE', borderLeft: '3px solid #002F6C' }}>Manage Candidates</a>
-            <a href="#" onClick={(e) => e.preventDefault()} className="sidebar-link" style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 20px', textDecoration: 'none', fontSize: '14px', fontWeight: '500', color: 'black' }}>Guidelines</a>
-            <a href="#" onClick={(e) => { e.preventDefault(); navigate('/admin/announcements'); }} className="sidebar-link" style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 20px', textDecoration: 'none', fontSize: '14px', fontWeight: '500', color: 'black' }}>Announcements</a>
-            <a href="#" onClick={(e) => { e.preventDefault(); navigate('/admin/security'); }} className="sidebar-link" style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 20px', textDecoration: 'none', fontSize: '14px', fontWeight: '500', color: 'black' }}>Security Log</a>
-            <a href="#" onClick={handleLogout} className="sidebar-link logout-link" style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '16px 20px 12px', textDecoration: 'none', fontSize: '14px', fontWeight: '500', color: '#C62828', marginTop: '28px', borderTop: '1px solid #F0F4F9' }}>Logout</a>
-          </div>
-        </div>
+        <AdminSidebar />
 
         {/* Main Content */}
         <div className="main-content" style={{ flex: '1', display: 'flex', flexDirection: 'column', gap: '28px', minWidth: '0', order: 2 }}>

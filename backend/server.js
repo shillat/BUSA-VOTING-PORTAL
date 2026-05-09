@@ -786,8 +786,6 @@ app.get('/api/elections/active', (req, res) => {
     FROM elections e 
     LEFT JOIN admin_users a ON e.created_by = a.id 
     WHERE e.status = 'active' 
-    AND datetime(e.start_date) <= datetime('now') 
-    AND datetime(e.end_date) >= datetime('now')
     ORDER BY e.start_date ASC
   `;
 
@@ -807,7 +805,11 @@ app.put('/api/elections/:id/status', authenticateToken, (req, res) => {
     return res.status(400).json({ error: 'Invalid status' });
   }
 
-  db.run("UPDATE elections SET status = ? WHERE id = ?", [status, id], function (err) {
+  const updateSql = status === 'active'
+    ? "UPDATE elections SET status = ?, start_date = CURRENT_TIMESTAMP, end_date = CASE WHEN datetime(end_date) <= datetime('now') THEN datetime('now', '+1 day') ELSE end_date END WHERE id = ?"
+    : "UPDATE elections SET status = ? WHERE id = ?";
+
+  db.run(updateSql, [status, id], function (err) {
     if (err) return res.status(500).json({ error: 'Database error' });
 
     if (this.changes === 0) {
@@ -986,7 +988,7 @@ app.post('/api/vote', authenticateToken, (req, res) => {
 
   // Check if election is active
   db.get(
-    "SELECT * FROM elections WHERE id = ? AND status = 'active' AND datetime(start_date) <= datetime('now') AND datetime(end_date) >= datetime('now')",
+    "SELECT * FROM elections WHERE id = ? AND status = 'active'",
     [election_id],
     (err, election) => {
       if (err) return res.status(500).json({ error: 'Database error' });

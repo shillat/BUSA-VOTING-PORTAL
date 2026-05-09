@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { electionAPI, utils } from './api';
 import Footer from './Footer';
 import AdminTopNavbar from './AdminTopNavbar';
+import AdminSidebar from './AdminSidebar';
 
 const ManageElections = () => {
   const navigate = useNavigate();
@@ -18,7 +19,7 @@ const ManageElections = () => {
       setLoading(true);
       const data = await electionAPI.getAll();
       setElections(data);
-    } catch (err) {
+    } catch {
       utils.showToast('Failed to fetch elections', true);
     } finally {
       setLoading(false);
@@ -28,12 +29,6 @@ const ManageElections = () => {
   const [newTitle, setNewTitle] = useState('');
   const [newDate, setNewDate] = useState('');
   const [newDesc, setNewDesc] = useState('');
-
-  const handleLogout = (e) => {
-    e.preventDefault();
-    localStorage.removeItem('authToken');
-    navigate('/');
-  };
 
   const handleCreateElection = async () => {
     if (!newTitle.trim()) {
@@ -85,7 +80,7 @@ const ManageElections = () => {
       } else if (action === 'manage') {
         utils.showToast('Managing candidates (demo)', false);
       }
-    } catch (err) {
+    } catch {
       utils.showToast('Failed to perform action', true);
     }
   };
@@ -113,22 +108,7 @@ const ManageElections = () => {
 
       {/* Dashboard Layout */}
       <div className="dashboard-layout" style={{ display: 'flex', gap: '32px', padding: '28px 40px 32px 40px', flex: '1' }}>
-        {/* Sidebar */}
-        <div className="sidebar" style={{ width: '260px', flexShrink: '0', background: '#FFFFFF', borderRadius: '24px', padding: '20px 0', border: '1px solid #E9EDF2', height: 'fit-content' }}>
-          <div className="sidebar-header" style={{ padding: '0 20px 16px 20px', borderBottom: '1px solid #F0F4F9' }}>
-            <h2 style={{ fontSize: '20px', fontWeight: '800', color: 'black', margin: 0 }}>Dashboard</h2>
-          </div>
-          <div className="sidebar-nav" style={{ display: 'flex', flexDirection: 'column', marginTop: '12px' }}>
-            <a href="#" onClick={(e) => { e.preventDefault(); navigate('/admin/dashboard'); }} className="sidebar-link" style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 20px', textDecoration: 'none', fontSize: '14px', fontWeight: '500', color: 'black' }}>Dashboard</a>
-            <a href="#" onClick={(e) => { e.preventDefault(); navigate('/admin/database'); }} className="sidebar-link" style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 20px', textDecoration: 'none', fontSize: '14px', fontWeight: '500', color: 'black' }}>Voter Database</a>
-            <a href="#" onClick={(e) => e.preventDefault()} className="sidebar-link active" style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 20px', textDecoration: 'none', fontSize: '14px', fontWeight: '500', color: '#002F6C', background: '#E8F0FE', borderLeft: '3px solid #002F6C' }}>Manage Elections</a>
-            <a href="#" onClick={(e) => e.preventDefault()} className="sidebar-link" style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 20px', textDecoration: 'none', fontSize: '14px', fontWeight: '500', color: 'black' }}>Manage Candidates</a>
-            <a href="#" onClick={(e) => e.preventDefault()} className="sidebar-link" style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 20px', textDecoration: 'none', fontSize: '14px', fontWeight: '500', color: 'black' }}>Guidelines</a>
-            <a href="#" onClick={(e) => { e.preventDefault(); navigate('/admin/announcements'); }} className="sidebar-link" style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 20px', textDecoration: 'none', fontSize: '14px', fontWeight: '500', color: 'black' }}>Announcements</a>
-            <a href="#" onClick={(e) => { e.preventDefault(); navigate('/admin/security'); }} className="sidebar-link" style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 20px', textDecoration: 'none', fontSize: '14px', fontWeight: '500', color: 'black' }}>Security Log</a>
-            <a href="#" onClick={handleLogout} className="sidebar-link logout-link" style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '16px 20px 12px', textDecoration: 'none', fontSize: '14px', fontWeight: '500', color: '#C62828', marginTop: '28px', borderTop: '1px solid #F0F4F9' }}>Logout</a>
-          </div>
-        </div>
+        <AdminSidebar />
 
         {/* Main Content */}
         <div className="main-content" style={{ flex: '1', display: 'flex', flexDirection: 'column', gap: '28px' }}>

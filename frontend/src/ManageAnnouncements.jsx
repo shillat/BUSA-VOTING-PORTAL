@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { announcementAPI, utils } from './api';
 import Footer from './Footer';
 import AdminTopNavbar from './AdminTopNavbar';
+import AdminSidebar from './AdminSidebar';
 
 const ManageAnnouncements = () => {
-  const navigate = useNavigate();
   const [announcements, setAnnouncements] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -18,7 +17,7 @@ const ManageAnnouncements = () => {
       setLoading(true);
       const data = await announcementAPI.getAll();
       setAnnouncements(data);
-    } catch (err) {
+    } catch {
       utils.showToast('Failed to fetch announcements', true);
     } finally {
       setLoading(false);
@@ -29,19 +28,13 @@ const ManageAnnouncements = () => {
   const [category, setCategory] = useState('General');
   const [content, setContent] = useState('');
 
-  const handleLogout = (e) => {
-    e.preventDefault();
-    localStorage.removeItem('authToken');
-    navigate('/');
-  };
-
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this announcement?')) {
       try {
         await announcementAPI.delete(id);
         utils.showToast('🗑️ Announcement removed.', false);
         fetchAnnouncements();
-      } catch (err) {
+      } catch {
         utils.showToast('Failed to delete announcement', true);
       }
     }
@@ -69,7 +62,7 @@ const ManageAnnouncements = () => {
       setContent('');
       utils.showToast(`✅ Published successfully`, false);
       fetchAnnouncements();
-    } catch (err) {
+    } catch {
       utils.showToast('Failed to publish', true);
     } finally {
       setLoading(false);
@@ -82,23 +75,7 @@ const ManageAnnouncements = () => {
 
       {/* Dashboard Layout */}
       <div className="dashboard-layout" style={{ display: 'flex', gap: '32px', padding: '28px 40px 32px 40px', flex: '1' }}>
-        {/* Sidebar */}
-        <div className="sidebar" style={{ width: '260px', flexShrink: '0', background: '#FFFFFF', borderRadius: '24px', padding: '20px 0', border: '1px solid #E9EDF2', height: 'fit-content' }}>
-          <div className="sidebar-header" style={{ padding: '0 20px 16px 20px', borderBottom: '1px solid #F0F4F9' }}>
-            <h2 style={{ fontSize: '20px', fontWeight: '800', color: 'black', margin: 0 }}>Dashboard</h2>
-          </div>
-          <div className="sidebar-nav" style={{ display: 'flex', flexDirection: 'column', marginTop: '12px' }}>
-            <a href="#" onClick={(e) => { e.preventDefault(); navigate('/admin/dashboard'); }} className="sidebar-link" style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 20px', textDecoration: 'none', fontSize: '14px', fontWeight: '500', color: 'black' }}>Dashboard</a>
-            <a href="#" onClick={(e) => { e.preventDefault(); navigate('/admin/database'); }} className="sidebar-link" style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 20px', textDecoration: 'none', fontSize: '14px', fontWeight: '500', color: 'black' }}>Voter Database</a>
-            <a href="#" onClick={(e) => { e.preventDefault(); navigate('/admin/elections'); }} className="sidebar-link" style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 20px', textDecoration: 'none', fontSize: '14px', fontWeight: '500', color: 'black' }}>Manage Elections</a>
-            <a href="#" onClick={(e) => { e.preventDefault(); navigate('/admin/candidates'); }} className="sidebar-link" style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 20px', textDecoration: 'none', fontSize: '14px', fontWeight: '500', color: 'black' }}>Manage Candidates</a>
-            <a href="#" onClick={(e) => { e.preventDefault(); navigate('/admin/guidelines'); }} className="sidebar-link" style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 20px', textDecoration: 'none', fontSize: '14px', fontWeight: '500', color: 'black' }}>Guidelines</a>
-            <a href="#" onClick={(e) => e.preventDefault()} className="sidebar-link active" style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 20px', textDecoration: 'none', fontSize: '14px', fontWeight: '500', color: '#002F6C', background: '#E8F0FE', borderLeft: '3px solid #002F6C' }}>Announcements</a>
-            <a href="#" onClick={(e) => { e.preventDefault(); navigate('/admin/security'); }} className="sidebar-link" style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 20px', textDecoration: 'none', fontSize: '14px', fontWeight: '500', color: 'black' }}>Security Log</a>
-
-            <a href="#" onClick={handleLogout} className="sidebar-link logout-link" style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '16px 20px 12px', textDecoration: 'none', fontSize: '14px', fontWeight: '500', color: '#C62828', marginTop: '28px', borderTop: '1px solid #F0F4F9' }}>Logout</a>
-          </div>
-        </div>
+        <AdminSidebar />
 
         {/* Main Content */}
         <div className="main-content" style={{ flex: '1', display: 'flex', flexDirection: 'column', gap: '24px' }}>
