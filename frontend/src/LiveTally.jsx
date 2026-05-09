@@ -1,161 +1,198 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { BarChart3, CheckCircle2, Database, RefreshCw, UserCheck } from 'lucide-react';
 import { utils, electionAPI } from './api';
 import Navbar from './Navbar';
 import Footer from './Footer';
 
+const defaultStats = {
+  total_votes: 0,
+  voters_turned_up: 0,
+  registered_voters: 0,
+  total_eligible_voters: 0,
+  total_voters: 0
+};
+
 const LiveTally = () => {
-  const navigate = useNavigate();
   const [lastUpdated, setLastUpdated] = useState('Just now');
-  const [stats, setStats] = useState({ total_votes: 0, total_voters: 0 });
+  const [stats, setStats] = useState(defaultStats);
   const [activeResults, setActiveResults] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const handleAuditLog = () => {
-    utils.showToast('🔗 Audit log: All tallies cryptographically verified on blockchain. Hash: 0x7f83b1657ff1fc53b92dc18148a1d65dfc2d4b1f', true);
+  const fetchTally = async () => {
+    try {
+      setLoading(true);
+      const [globalStats, elections] = await Promise.all([
+        electionAPI.getGlobalTally(),
+        electionAPI.getActive()
+      ]);
+
+      const tallies = await Promise.all(
+        elections.map((election) => electionAPI.getLiveTally(election.id))
+      );
+
+      setStats({
+        total_votes: globalStats.total_votes || 0,
+        voters_turned_up: globalStats.voters_turned_up || 0,
+        registered_voters: globalStats.registered_voters || 0,
+        total_eligible_voters: globalStats.total_eligible_voters || globalStats.total_voters || 0,
+        total_voters: globalStats.total_voters || globalStats.total_eligible_voters || 0
+      });
+      setActiveResults(tallies);
+      setLastUpdated(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
+    } catch (error) {
+      utils.showToast(error.message || 'Failed to load live tally', true);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
-    // Use placeholder data directly instead of API calls
-    const placeholderStats = { total_votes: 1000, total_voters: 2000 };
-    const placeholderResults = [
-      {
-        election_id: 4,
-        election: {
-          title: "Presidential Election"
-        },
-        total_votes: 500,
-        results: [
-          { candidate_id: 1, name: "ABRAHAM OKOCH", position: "President", votes: 285, percentage: 57.0, vote_count: 285 },
-          { candidate_id: 2, name: "FUBI JOVIA", position: "President", votes: 215, percentage: 43.0, vote_count: 215 }
-        ]
-      },
-      {
-        election_id: 5,
-        election: {
-          title: "Faculty of Science and Technology MP Election"
-        },
-        total_votes: 345,
-        results: [
-          { candidate_id: 3, name: "LUZZE LINUS", position: "MP - Faculty of Science and Technology", votes: 180, percentage: 52.2, vote_count: 180 },
-          { candidate_id: 4, name: "NAKAMYA BELINDA", position: "MP - Faculty of Science and Technology", votes: 165, percentage: 47.8, vote_count: 165 }
-        ]
-      },
-      {
-        election_id: 6,
-        election: {
-          title: "Eastern Region MP Election"
-        },
-        total_votes: 155,
-        results: [
-          { candidate_id: 5, name: "OKELLO PETER", position: "MP - Eastern Region", votes: 95, percentage: 61.3, vote_count: 95 },
-          { candidate_id: 6, name: "SHILLAH NAIGAGA", position: "MP - Eastern Region", votes: 60, percentage: 38.7, vote_count: 60 }
-        ]
-      }
-    ];
-    
-    setStats(placeholderStats);
-    setActiveResults(placeholderResults);
-    setLoading(false);
-    
-    const interval = setInterval(() => {
-      const now = new Date();
-      setLastUpdated(`${now.getHours()}:${now.getMinutes().toString().padStart(2, '0')}`);
-    }, 30000);
+    fetchTally();
+    const interval = setInterval(fetchTally, 30000);
     return () => clearInterval(interval);
   }, []);
 
-  const participationRate = stats.total_voters > 0 
-    ? Math.round((stats.total_votes / stats.total_voters) * 100) 
+  const handleAuditLog = () => {
+    utils.showToast('Audit log: Live tally figures are pulled from the voting database.', false);
+  };
+
+  const eligibleVoters = stats.total_eligible_voters || stats.total_voters || 0;
+  const turnoutRate = eligibleVoters > 0
+    ? Math.round((stats.voters_turned_up / eligibleVoters) * 100)
     : 0;
+  const registrationRate = eligibleVoters > 0
+    ? Math.round((stats.registered_voters / eligibleVoters) * 100)
+    : 0;
+
+  const summaryCards = [
+    {
+      label: 'Total Ballots Cast',
+      value: stats.total_votes.toLocaleString(),
+      sub: `${stats.voters_turned_up.toLocaleString()} unique voters have cast at least one ballot`,
+      percent: Math.min(turnoutRate, 100),
+      icon: BarChart3
+    },
+    {
+      label: 'Voter Turnout',
+      value: `${turnoutRate}%`,
+      sub: `${stats.voters_turned_up.toLocaleString()} of ${eligibleVoters.toLocaleString()} eligible students turned up`,
+      percent: turnoutRate,
+      icon: UserCheck
+    },
+    {
+      label: 'Voter IDs Issued',
+      value: stats.registered_voters.toLocaleString(),
+      sub: `${registrationRate}% of eligible students completed voter registration`,
+      percent: registrationRate,
+      icon: CheckCircle2
+    },
+    {
+      label: 'Eligible Voters',
+      value: eligibleVoters.toLocaleString(),
+      sub: 'Based on the admin student master list',
+      percent: 100,
+      icon: Database
+    }
+  ];
 
   return (
     <div className="container">
       <Navbar />
 
-      {/* Blockchain Security Banner */}
-      <div style={{ background: 'linear-gradient(135deg, #0A2540 0%, #1A3A5C 100%)', margin: '20px 16px 16px 16px', borderRadius: '16px', padding: '16px 16px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+      <div style={{ background: 'linear-gradient(135deg, #0A2540 0%, #1A3A5C 100%)', margin: '20px 16px 16px 16px', borderRadius: '8px', padding: '16px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <span style={{ fontSize: '24px' }}>🔗</span>
+          <Database size={24} color="white" />
           <div>
-            <div style={{ color: 'white', fontWeight: '700', fontSize: '16px', letterSpacing: '0.3px', lineHeight: '1.3' }}>Blockchain Security</div>
-            <div style={{ color: 'rgba(255, 255, 255, 0.7)', fontSize: '12px', marginTop: '2px', lineHeight: '1.3' }}>All tallies are cryptographically locked in ledger.</div>
+            <div style={{ color: 'white', fontWeight: '700', fontSize: '16px', lineHeight: '1.3' }}>Live Database Tally</div>
+            <div style={{ color: 'rgba(255, 255, 255, 0.75)', fontSize: '12px', marginTop: '2px', lineHeight: '1.3' }}>
+              Turnout is calculated against all eligible students in the admin master list.
+            </div>
           </div>
         </div>
-        <button onClick={handleAuditLog} style={{ background: 'rgba(255, 255, 255, 0.15)', border: '1px solid rgba(255, 255, 255, 0.3)', padding: '8px 16px', borderRadius: '20px', color: 'white', fontWeight: '600', fontSize: '13px', cursor: 'pointer', alignSelf: 'flex-start' }}>View Audit Log</button>
+        <button onClick={handleAuditLog} style={{ background: 'rgba(255, 255, 255, 0.15)', border: '1px solid rgba(255, 255, 255, 0.3)', padding: '8px 16px', borderRadius: '8px', color: 'white', fontWeight: '600', fontSize: '13px', cursor: 'pointer', alignSelf: 'flex-start' }}>
+          View Audit Note
+        </button>
       </div>
 
-      {/* Live Tally Header */}
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '0 16px', marginBottom: '16px', gap: '12px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
           <div style={{ width: '10px', height: '10px', background: '#4CAF50', borderRadius: '50%', animation: 'pulse 1.2s infinite' }}></div>
           <h1 style={{ fontSize: '20px', fontWeight: '800', color: 'black', margin: 0, lineHeight: '1.2' }}>LIVE ELECTION TALLY</h1>
         </div>
-        <div style={{ fontSize: '13px', color: 'black', background: '#F5F8FC', padding: '6px 14px', borderRadius: '40px' }}>Last Updated: {lastUpdated}</div>
+        <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'center' }}>
+          <div style={{ fontSize: '13px', color: 'black', background: '#F5F8FC', padding: '6px 14px', borderRadius: '8px' }}>Last Updated: {lastUpdated}</div>
+          <button onClick={fetchTally} disabled={loading} style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', border: '1px solid #D8E2EC', background: 'white', borderRadius: '8px', padding: '7px 12px', cursor: loading ? 'not-allowed' : 'pointer', fontWeight: '700', color: '#102033' }}>
+            <RefreshCw size={14} />
+            {loading ? 'Refreshing' : 'Refresh'}
+          </button>
+        </div>
       </div>
 
-      {/* Stats Row */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', padding: '0 24px', marginBottom: '32px' }}>
-        {[
-          { label: "Total Ballots Cast", value: stats.total_votes.toLocaleString(), sub: `of ${stats.total_voters.toLocaleString()} total registered`, percent: participationRate },
-          { label: "Participation Rate", value: `${participationRate}%`, sub: `${stats.total_voters.toLocaleString()} Total Registered Voters`, percent: participationRate }
-        ].map((stat, idx) => (
-          <div key={idx} style={{ background: '#F8FAFE', borderRadius: '16px', padding: '20px', border: '1px solid #EDF2F7' }}>
-            <div style={{ fontSize: '14px', fontWeight: '600', textTransform: 'uppercase', color: 'black', marginBottom: '12px' }}>{stat.label}</div>
-            <div style={{ fontSize: '32px', fontWeight: '800', color: '#1A2C3E', marginBottom: '6px', lineHeight: '1.2' }}>{stat.value}</div>
-            <div style={{ fontSize: '13px', color: 'black' }}>{stat.sub}</div>
-            <div style={{ background: '#E2E9F2', borderRadius: '20px', height: '8px', marginTop: '16px', overflow: 'hidden' }}>
-              <div style={{ 
-                background: 'linear-gradient(90deg, #002F6C 0%, #1A4A7A 100%)', 
-                width: `${stat.percent}%`, 
-                height: '100%', 
-                borderRadius: '20px',
-                transition: 'width 1.2s cubic-bezier(0.4, 0, 0.2, 1)'
-              }}></div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px', padding: '0 24px', marginBottom: '32px' }}>
+        {summaryCards.map((stat) => {
+          const Icon = stat.icon;
+          return (
+            <div key={stat.label} style={{ background: '#F8FAFE', borderRadius: '8px', padding: '20px', border: '1px solid #EDF2F7' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
+                <div style={{ fontSize: '13px', fontWeight: '700', textTransform: 'uppercase', color: 'black' }}>{stat.label}</div>
+                <Icon size={20} color="#002F6C" />
+              </div>
+              <div style={{ fontSize: '32px', fontWeight: '800', color: '#1A2C3E', marginBottom: '6px', lineHeight: '1.2' }}>{stat.value}</div>
+              <div style={{ fontSize: '13px', color: 'black', minHeight: '36px' }}>{stat.sub}</div>
+              <div style={{ background: '#E2E9F2', borderRadius: '20px', height: '8px', marginTop: '16px', overflow: 'hidden' }}>
+                <div style={{
+                  background: 'linear-gradient(90deg, #002F6C 0%, #1A4A7A 100%)',
+                  width: `${Math.min(stat.percent, 100)}%`,
+                  height: '100%',
+                  borderRadius: '20px',
+                  transition: 'width 1.2s cubic-bezier(0.4, 0, 0.2, 1)'
+                }}></div>
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
-      {/* Candidate Races */}
       <div style={{ padding: '0 24px', display: 'flex', flexDirection: 'column', gap: '20px', marginBottom: '32px' }}>
         {!loading && activeResults.length === 0 ? (
-          <div style={{ width: '100%', textAlign: 'center', padding: '40px 20px', background: '#F8FAFE', borderRadius: '16px', border: '1px dashed #CBD5E1' }}>
-            <div style={{ fontSize: '48px', marginBottom: '20px' }}>🗳️</div>
+          <div style={{ width: '100%', textAlign: 'center', padding: '40px 20px', background: '#F8FAFE', borderRadius: '8px', border: '1px dashed #CBD5E1' }}>
             <h3 style={{ color: 'black', marginBottom: '8px' }}>No Active Election Sessions</h3>
-            <p style={{ color: 'black' }}>Results will appear here in real-time once polling begins.</p>
+            <p style={{ color: 'black' }}>Results will appear here in real time once polling begins.</p>
           </div>
         ) : (
           activeResults.map((item, idx) => (
-            <div key={idx} style={{ width: '100%', background: '#FFFFFF', border: '1px solid #EDF2F7', borderRadius: '16px', overflow: 'hidden', boxShadow: '0 2px 8px rgba(0, 0, 0, 0.03)' }}>
-              <div style={{ background: '#F8FAFE', padding: '18px 24px', borderBottom: '1px solid #EDF2F7', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <h2 style={{ fontSize: '20px', fontWeight: '800', color: 'black', margin: 0 }}>{item.election.title.toUpperCase()}</h2>
-                <span style={{ fontSize: '12px', background: '#E2E8F0', padding: '4px 10px', borderRadius: '20px', color: '#475569', fontWeight: '600' }}>{item.total_votes} TOTAL VOTES</span>
+            <div key={item.election?.id || idx} style={{ width: '100%', background: '#FFFFFF', border: '1px solid #EDF2F7', borderRadius: '8px', overflow: 'hidden', boxShadow: '0 2px 8px rgba(0, 0, 0, 0.03)' }}>
+              <div style={{ background: '#F8FAFE', padding: '18px 24px', borderBottom: '1px solid #EDF2F7', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '14px', flexWrap: 'wrap' }}>
+                <h2 style={{ fontSize: '20px', fontWeight: '800', color: 'black', margin: 0 }}>{(item.election?.title || 'Election').toUpperCase()}</h2>
+                <span style={{ fontSize: '12px', background: '#E2E8F0', padding: '4px 10px', borderRadius: '20px', color: '#475569', fontWeight: '600' }}>{item.total_votes || 0} TOTAL VOTES</span>
               </div>
-              {item.results.length === 0 ? (
+              {(item.results || []).length === 0 ? (
                 <div style={{ padding: '40px', textAlign: 'center', color: 'black' }}>No candidates registered for this election yet.</div>
               ) : (
-                item.results.map((cand, cIdx) => (
-                  <div key={cIdx} style={{ padding: '20px 24px', borderBottom: cIdx < item.results.length - 1 ? '1px solid #F0F4F9' : 'none' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-                      <span style={{ fontWeight: '700', fontSize: '18px', color: '#1A2C3E' }}>{cand.name}</span>
-                      <span style={{ fontWeight: '800', fontSize: '24px', color: '#002F6C' }}>{cand.percentage}%</span>
+                item.results.map((cand, cIdx) => {
+                  const percentage = Number(cand.percentage || 0);
+                  return (
+                    <div key={cand.id || cand.candidate_id || cIdx} style={{ padding: '20px 24px', borderBottom: cIdx < item.results.length - 1 ? '1px solid #F0F4F9' : 'none' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px', gap: '14px' }}>
+                        <span style={{ fontWeight: '700', fontSize: '18px', color: '#1A2C3E' }}>{cand.name}</span>
+                        <span style={{ fontWeight: '800', fontSize: '24px', color: '#002F6C' }}>{percentage}%</span>
+                      </div>
+                      <div style={{ background: '#EFF3F8', borderRadius: '12px', height: '10px', overflow: 'hidden' }}>
+                        <div style={{
+                          background: cIdx === 0 ? 'linear-gradient(90deg, #002F6C 0%, #1A4A7A 100%)' : 'linear-gradient(90deg, #6F8FAC 0%, #8A9BB0 100%)',
+                          width: `${Math.min(percentage, 100)}%`,
+                          height: '100%',
+                          borderRadius: '12px',
+                          transition: 'width 1s cubic-bezier(0.4, 0, 0.2, 1)'
+                        }}></div>
+                      </div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '10px', fontSize: '12px', color: 'black', gap: '14px' }}>
+                        <span>{cand.position}</span>
+                        <span>{Number(cand.vote_count || 0).toLocaleString()} votes</span>
+                      </div>
                     </div>
-                    <div style={{ background: '#EFF3F8', borderRadius: '12px', height: '10px', overflow: 'hidden' }}>
-                      <div style={{ 
-                        background: cIdx === 0 ? 'linear-gradient(90deg, #002F6C 0%, #1A4A7A 100%)' : 'linear-gradient(90deg, #6F8FAC 0%, #8A9BB0 100%)', 
-                        width: `${cand.percentage}%`, 
-                        height: '100%', 
-                        borderRadius: '12px',
-                        transition: 'width 1s cubic-bezier(0.4, 0, 0.2, 1)'
-                      }}></div>
-                    </div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '10px', fontSize: '12px', color: 'black' }}>
-                      <span>{cand.position}</span>
-                      <span>{cand.vote_count.toLocaleString()} votes</span>
-                    </div>
-                  </div>
-                ))
+                  );
+                })
               )}
             </div>
           ))

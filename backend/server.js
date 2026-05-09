@@ -1097,12 +1097,23 @@ app.get('/api/global-tally', (req, res) => {
   db.get("SELECT COUNT(*) as total_votes FROM votes", (err, voteRow) => {
     if (err) return res.status(500).json({ error: 'Database error' });
 
-    db.get("SELECT COUNT(*) as total_voters FROM voter_registrations WHERE status = 'Approved'", (err, voterRow) => {
+    db.get("SELECT COUNT(*) as total_eligible_voters FROM students_master", (err, eligibleRow) => {
       if (err) return res.status(500).json({ error: 'Database error' });
 
-      res.json({
-        total_votes: voteRow.total_votes || 0,
-        total_voters: voterRow.total_voters || 0
+      db.get("SELECT COUNT(DISTINCT voter_reg_no) as voters_turned_up FROM votes", (err, turnoutRow) => {
+        if (err) return res.status(500).json({ error: 'Database error' });
+
+        db.get("SELECT COUNT(*) as registered_voters FROM voter_registrations WHERE status = 'Approved'", (err, registeredRow) => {
+          if (err) return res.status(500).json({ error: 'Database error' });
+
+          res.json({
+            total_votes: voteRow.total_votes || 0,
+            voters_turned_up: turnoutRow.voters_turned_up || 0,
+            registered_voters: registeredRow.registered_voters || 0,
+            total_eligible_voters: eligibleRow.total_eligible_voters || 0,
+            total_voters: eligibleRow.total_eligible_voters || 0
+          });
+        });
       });
     });
   });
@@ -1771,11 +1782,12 @@ app.get('/api/students', authenticateToken, (req, res) => {
 
 // Add new student
 app.post('/api/students', authenticateToken, (req, res) => {
-  const { reg_no, name, email, type, is_registered_sem, year_of_study, campus, department } = req.body;
+  const { reg_no, name, email, type, is_registered_sem, expected_grad_year, year_of_study, campus, department } = req.body;
   const adminId = req.user.admin_id;
+  const gradYear = expected_grad_year || year_of_study;
 
-  if (!reg_no || !name || !email || !type || !year_of_study || !campus) {
-    return res.status(400).json({ error: 'Required fields: reg_no, name, email, type, year_of_study, campus' });
+  if (!reg_no || !name || !email || !type || !gradYear || !campus) {
+    return res.status(400).json({ error: 'Required fields: reg_no, name, email, type, expected_grad_year, campus' });
   }
 
   const query = `
@@ -1783,7 +1795,7 @@ app.post('/api/students', authenticateToken, (req, res) => {
     VALUES (?, ?, ?, ?, ?, ?, ?, ?)
   `;
 
-  db.run(query, [reg_no, name, email, type, is_registered_sem ? 1 : 0, year_of_study, campus, department], function (err) {
+  db.run(query, [reg_no, name, email, type, is_registered_sem ? 1 : 0, gradYear, campus, department], function (err) {
     if (err) {
       if (err.message.includes('UNIQUE constraint failed')) {
         return res.status(400).json({ error: 'Student with this registration number already exists' });
@@ -1803,11 +1815,12 @@ app.post('/api/students', authenticateToken, (req, res) => {
 // Update student
 app.put('/api/students/:reg_no', authenticateToken, (req, res) => {
   const { reg_no } = req.params;
-  const { name, email, type, is_registered_sem, year_of_study, campus, department } = req.body;
+  const { name, email, type, is_registered_sem, expected_grad_year, year_of_study, campus, department } = req.body;
   const adminId = req.user.admin_id;
+  const gradYear = expected_grad_year || year_of_study;
 
-  if (!name || !email || !type || !year_of_study || !campus) {
-    return res.status(400).json({ error: 'Required fields: name, email, type, year_of_study, campus' });
+  if (!name || !email || !type || !gradYear || !campus) {
+    return res.status(400).json({ error: 'Required fields: name, email, type, expected_grad_year, campus' });
   }
 
   const query = `
@@ -1816,7 +1829,7 @@ app.put('/api/students/:reg_no', authenticateToken, (req, res) => {
     WHERE reg_no = ?
   `;
 
-  db.run(query, [name, email, type, is_registered_sem ? 1 : 0, year_of_study, campus, department, reg_no], function (err) {
+  db.run(query, [name, email, type, is_registered_sem ? 1 : 0, gradYear, campus, department, reg_no], function (err) {
     if (err) return res.status(500).json({ error: 'Database error' });
 
     if (this.changes === 0) {
@@ -1827,6 +1840,93 @@ app.put('/api/students/:reg_no', authenticateToken, (req, res) => {
     res.json({
       success: true,
       message: 'Student updated successfully'
+    });
+  });
+});
+
+// Bulk import student master list. This is the official admin-managed list used by voter validation.
+app.post('/api/students/bulk', authenticateToken, (req, res) => {
+  const { students } = req.body;
+  const adminId = req.user.admin_id;
+
+  if (!Array.isArray(students) || students.length === 0) {
+    return res.status(400).json({ error: 'Provide a non-empty students array' });
+  }
+
+  const normalized = students.map((student) => ({
+    reg_no: String(student.reg_no || '').trim(),
+    name: String(student.name || '').trim(),
+    email: String(student.email || '').trim(),
+    type: String(student.type || 'Regular').trim(),
+    is_registered_sem: student.is_registered_sem === true || student.is_registered_sem === 1 || String(student.is_registered_sem).toLowerCase() === 'true' || String(student.is_registered_sem).toLowerCase() === 'yes',
+    expected_grad_year: student.expected_grad_year || student.year_of_study,
+    campus: String(student.campus || 'main').trim(),
+    department: String(student.department || '').trim()
+  }));
+
+  const invalidRows = normalized
+    .map((student, index) => ({ ...student, row: index + 1 }))
+    .filter((student) => !student.reg_no || !student.name || !student.email || !student.type || !student.expected_grad_year || !student.campus);
+
+  if (invalidRows.length > 0) {
+    return res.status(400).json({
+      error: `Import failed. ${invalidRows.length} row(s) are missing required fields.`,
+      invalid_rows: invalidRows.slice(0, 10)
+    });
+  }
+
+  const query = `
+    INSERT INTO students_master (reg_no, name, email, type, is_registered_sem, expected_grad_year, campus, department)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    ON CONFLICT(reg_no) DO UPDATE SET
+      name = excluded.name,
+      email = excluded.email,
+      type = excluded.type,
+      is_registered_sem = excluded.is_registered_sem,
+      expected_grad_year = excluded.expected_grad_year,
+      campus = excluded.campus,
+      department = excluded.department
+  `;
+
+  db.serialize(() => {
+    db.run('BEGIN TRANSACTION');
+    const stmt = db.prepare(query);
+    let failed = null;
+
+    normalized.forEach((student, index) => {
+      if (failed) return;
+      stmt.run([
+        student.reg_no,
+        student.name,
+        student.email,
+        student.type,
+        student.is_registered_sem ? 1 : 0,
+        student.expected_grad_year,
+        student.campus,
+        student.department
+      ], (err) => {
+        if (err && !failed) failed = { row: index + 1, message: err.message };
+      });
+    });
+
+    stmt.finalize((err) => {
+      if (err && !failed) failed = { message: err.message };
+
+      if (failed) {
+        db.run('ROLLBACK');
+        return res.status(500).json({ error: 'Bulk import failed', details: failed });
+      }
+
+      db.run('COMMIT', (commitErr) => {
+        if (commitErr) return res.status(500).json({ error: 'Bulk import failed' });
+
+        logSecurityEvent('admin', adminId, 'STUDENTS_BULK_IMPORTED', req.ip, req.get('User-Agent'), `Rows imported: ${normalized.length}`);
+        res.json({
+          success: true,
+          message: `${normalized.length} student record(s) imported successfully`,
+          imported: normalized.length
+        });
+      });
     });
   });
 });

@@ -115,7 +115,7 @@ export const authAPI = {
     if (adminInfo) {
       try {
         return { ...JSON.parse(adminInfo), type: 'admin' };
-      } catch (e) {
+      } catch {
         localStorage.removeItem('adminInfo');
       }
     }
@@ -123,7 +123,7 @@ export const authAPI = {
     if (voterInfo) {
       try {
         return { ...JSON.parse(voterInfo), type: 'voter' };
-      } catch (e) {
+      } catch {
         localStorage.removeItem('voterInfo');
       }
     }
@@ -302,7 +302,7 @@ export const votingAPI = {
   },
 
   // Check if voter has already voted in election
-  hasVoted: async (electionId) => {
+  hasVoted: async () => {
     try {
       const currentUser = authAPI.getCurrentUser();
       if (!currentUser || currentUser.type !== 'voter') {
@@ -312,7 +312,7 @@ export const votingAPI = {
       // This would require a new backend endpoint to check voting status
       // For now, we'll assume the backend handles this check during voting
       return false;
-    } catch (error) {
+    } catch {
       return false;
     }
   },
@@ -372,6 +372,16 @@ export const adminAPI = {
     return await apiRequest('/admin/ratings-stats');
   },
 
+  // Get all voter ratings
+  getRatings: async () => {
+    return await apiRequest('/admin/ratings');
+  },
+
+  // Get all voter written reviews
+  getReviews: async () => {
+    return await apiRequest('/admin/reviews');
+  },
+
   // Get recent reviews
   getRecentReviews: async () => {
     return await apiRequest('/admin/recent-reviews');
@@ -390,6 +400,36 @@ export const adminAPI = {
     }
 
     return response.blob();
+  },
+};
+
+// Student Master List APIs
+export const studentAPI = {
+  getAll: async () => {
+    return await apiRequest('/students');
+  },
+  create: async (studentData) => {
+    return await apiRequest('/students', {
+      method: 'POST',
+      body: JSON.stringify(studentData),
+    });
+  },
+  update: async (regNo, studentData) => {
+    return await apiRequest(`/students/${encodeURIComponent(regNo)}`, {
+      method: 'PUT',
+      body: JSON.stringify(studentData),
+    });
+  },
+  delete: async (regNo) => {
+    return await apiRequest(`/students/${encodeURIComponent(regNo)}`, {
+      method: 'DELETE',
+    });
+  },
+  bulkImport: async (students) => {
+    return await apiRequest('/students/bulk', {
+      method: 'POST',
+      body: JSON.stringify({ students }),
+    });
   },
 };
 
@@ -529,6 +569,7 @@ export default {
   votingAPI,
   ratingsAPI,
   adminAPI,
+  studentAPI,
   publicAPI,
   announcementAPI,
   guidelineAPI,

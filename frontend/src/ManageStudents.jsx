@@ -1,871 +1,894 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import LogoMark from './LogoMark';
+import {
+  ArrowLeft,
+  CheckCircle2,
+  Database,
+  Download,
+  FileUp,
+  Pencil,
+  Plus,
+  Search,
+  Trash2,
+  UploadCloud,
+  X
+} from 'lucide-react';
+import AdminTopNavbar from './AdminTopNavbar';
+import Footer from './Footer';
+import { studentAPI, utils } from './api';
+
+const emptyStudent = {
+  reg_no: '',
+  name: '',
+  email: '',
+  type: 'Regular',
+  is_registered_sem: true,
+  expected_grad_year: '',
+  campus: 'main',
+  department: ''
+};
+
+const departments = [
+  ['CI', 'Computing and Informatics'],
+  ['Business', 'Business Administration'],
+  ['RS', 'Religious Studies'],
+  ['EDS', 'Education in Sciences'],
+  ['EDA', 'Education in Arts'],
+  ['Health', 'Health Sciences'],
+  ['NaturalSciences', 'Natural Sciences']
+];
+
+const normalizeStudent = (student) => ({
+  ...student,
+  is_registered_sem: student.is_registered_sem === true || student.is_registered_sem === 1
+});
+
+const parseCsvLine = (line) => {
+  const cells = [];
+  let current = '';
+  let inQuotes = false;
+
+  for (let i = 0; i < line.length; i += 1) {
+    const char = line[i];
+    const next = line[i + 1];
+
+    if (char === '"' && next === '"') {
+      current += '"';
+      i += 1;
+    } else if (char === '"') {
+      inQuotes = !inQuotes;
+    } else if (char === ',' && !inQuotes) {
+      cells.push(current.trim());
+      current = '';
+    } else {
+      current += char;
+    }
+  }
+
+  cells.push(current.trim());
+  return cells;
+};
+
+const parseStudentCsv = (text) => {
+  const rows = text.split(/\r?\n/).map((row) => row.trim()).filter(Boolean);
+  if (rows.length < 2) return [];
+
+  const headers = parseCsvLine(rows[0]).map((header) => header.toLowerCase().trim());
+  return rows.slice(1).map((row) => {
+    const values = parseCsvLine(row);
+    const item = {};
+
+    headers.forEach((header, index) => {
+      item[header] = values[index] || '';
+    });
+
+    return {
+      reg_no: item.reg_no || item.registration_number || item.registration_no || item.regno,
+      name: item.name || item.full_name || item.student_name,
+      email: item.email || item.email_address,
+      type: item.type || item.student_type || 'Regular',
+      is_registered_sem: item.is_registered_sem || item.registered || item.registered_current_semester || item.current_semester,
+      expected_grad_year: item.expected_grad_year || item.graduation_year || item.year_of_study,
+      campus: item.campus || 'main',
+      department: item.department || item.faculty || ''
+    };
+  });
+};
 
 const ManageStudents = () => {
   const navigate = useNavigate();
+  const fileInputRef = useRef(null);
   const [students, setStudents] = useState([]);
-  const [filteredStudents, setFilteredStudents] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [showAddForm, setShowAddForm] = useState(false);
+  const [typeFilter, setTypeFilter] = useState('all');
+  const [statusFilter, setStatusFilter] = useState('all');
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [importing, setImporting] = useState(false);
+  const [showForm, setShowForm] = useState(false);
   const [editingStudent, setEditingStudent] = useState(null);
-  const [formData, setFormData] = useState({
-    reg_no: '',
-    name: '',
-    email: '',
-    type: 'Regular',
-    is_registered_sem: false,
-    expected_grad_year: '',
-    campus: 'main',
-    department: ''
-  });
+  const [formData, setFormData] = useState(emptyStudent);
 
-  useEffect(() => {
-    // Use placeholder data instead of API call
-    const placeholderStudents = [
-      {
-        reg_no: '24/BCC/BU/R/0001',
-        name: 'John Smith',
-        email: 'john.smith@busa.edu',
-        type: 'Regular',
-        is_registered_sem: true,
-        expected_grad_year: 2028,
-        campus: 'main',
-        department: 'CI'
-      },
-      {
-        reg_no: '24/BED/BU/R/0002',
-        name: 'Sarah Johnson',
-        email: 'sarah.johnson@busa.edu',
-        type: 'Regular',
-        is_registered_sem: true,
-        expected_grad_year: 2027,
-        campus: 'main',
-        department: 'EDA'
-      },
-      {
-        reg_no: '23/BBA/BU/I/0003',
-        name: 'Michael Brown',
-        email: 'michael.brown@busa.edu',
-        type: 'In-service',
-        is_registered_sem: false,
-        expected_grad_year: 2026,
-        campus: 'kampala',
-        department: 'Business'
-      }
-    ];
-    
-    setStudents(placeholderStudents);
-    setFilteredStudents(placeholderStudents);
-    setLoading(false);
-  }, []);
-
-  // Search functionality
-  useEffect(() => {
-    const filtered = students.filter(student => 
-      student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      student.reg_no.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      student.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      student.type.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    setFilteredStudents(filtered);
-  }, [searchTerm, students]);
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    
-    // Placeholder functionality - simulate adding/editing without API calls
+  const fetchStudents = async () => {
     try {
-      if (editingStudent) {
-        // Update existing student
-        setStudents(prev => prev.map(student => 
-          student.reg_no === editingStudent.reg_no 
-            ? { ...formData, reg_no: editingStudent.reg_no }
-            : student
-        ));
-        alert('Voter updated successfully!');
-      } else {
-        // Add new student
-        const newStudent = { ...formData, reg_no: formData.reg_no };
-        setStudents(prev => [...prev, newStudent]);
-        alert('Voter added successfully!');
-      }
-      
-      resetForm();
+      setLoading(true);
+      const data = await studentAPI.getAll();
+      setStudents(data.map(normalizeStudent));
     } catch (error) {
-      console.error('Error:', error);
-      alert('Operation failed');
+      utils.showToast(error.message || 'Failed to load admin student list', true);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleEdit = (student) => {
+  useEffect(() => {
+    fetchStudents();
+  }, []);
+
+  const filteredStudents = useMemo(() => {
+    const term = searchTerm.trim().toLowerCase();
+
+    return students.filter((student) => {
+      const matchesSearch = !term || [
+        student.reg_no,
+        student.name,
+        student.email,
+        student.type,
+        student.campus,
+        student.department
+      ].some((value) => String(value || '').toLowerCase().includes(term));
+
+      const matchesType = typeFilter === 'all' || student.type === typeFilter;
+      const matchesStatus = statusFilter === 'all'
+        || (statusFilter === 'registered' && student.is_registered_sem)
+        || (statusFilter === 'not_registered' && !student.is_registered_sem);
+
+      return matchesSearch && matchesType && matchesStatus;
+    });
+  }, [students, searchTerm, typeFilter, statusFilter]);
+
+  const stats = useMemo(() => ({
+    total: students.length,
+    regular: students.filter((student) => student.type === 'Regular').length,
+    inService: students.filter((student) => student.type === 'In-Service').length,
+    registered: students.filter((student) => student.is_registered_sem).length
+  }), [students]);
+
+  const openCreateForm = () => {
+    setEditingStudent(null);
+    setFormData(emptyStudent);
+    setShowForm(true);
+  };
+
+  const openEditForm = (student) => {
     setEditingStudent(student);
     setFormData({
       reg_no: student.reg_no,
       name: student.name,
       email: student.email,
       type: student.type,
-      is_registered_sem: student.is_registered_sem,
-      expected_grad_year: student.expected_grad_year,
-      campus: student.campus,
+      is_registered_sem: !!student.is_registered_sem,
+      expected_grad_year: student.expected_grad_year || '',
+      campus: student.campus || 'main',
       department: student.department || ''
     });
-    setShowAddForm(true);
+    setShowForm(true);
   };
 
-  const handleDelete = async (regNo) => {
-    if (!confirm('Are you sure you want to delete this voter?')) return;
-    
-    // Placeholder functionality - simulate deletion without API calls
-    try {
-      setStudents(prev => prev.filter(student => student.reg_no !== regNo));
-      alert('Voter deleted successfully!');
-    } catch (error) {
-      console.error('Error:', error);
-      alert('Delete failed');
-    }
-  };
-
-  const resetForm = () => {
-    setFormData({
-      reg_no: '',
-      name: '',
-      email: '',
-      type: 'Regular',
-      is_registered_sem: false,
-      expected_grad_year: '',
-      campus: 'main',
-      department: ''
-    });
+  const closeForm = () => {
+    setShowForm(false);
     setEditingStudent(null);
-    setShowAddForm(false);
+    setFormData(emptyStudent);
   };
 
-  const handleInputChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setFormData(prev => ({
-      ...prev,
+  const handleInputChange = (event) => {
+    const { name, value, type, checked } = event.target;
+    setFormData((previous) => ({
+      ...previous,
       [name]: type === 'checkbox' ? checked : value
     }));
   };
 
-  if (loading) {
-    return (
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-        <div>Loading students...</div>
-      </div>
-    );
-  }
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setSaving(true);
+
+    try {
+      if (editingStudent) {
+        await studentAPI.update(editingStudent.reg_no, formData);
+        utils.showToast('Student record updated', false);
+      } else {
+        await studentAPI.create(formData);
+        utils.showToast('Student added to the validation list', false);
+      }
+
+      closeForm();
+      await fetchStudents();
+    } catch (error) {
+      utils.showToast(error.message || 'Could not save student record', true);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleDelete = async (student) => {
+    if (!confirm(`Remove ${student.name} from the admin validation list?`)) return;
+
+    try {
+      await studentAPI.delete(student.reg_no);
+      utils.showToast('Student removed from admin list', false);
+      await fetchStudents();
+    } catch (error) {
+      utils.showToast(error.message || 'Could not delete student', true);
+    }
+  };
+
+  const handleCsvUpload = async (event) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    try {
+      setImporting(true);
+      const text = await file.text();
+      const parsed = parseStudentCsv(text);
+
+      if (parsed.length === 0) {
+        throw new Error('The CSV needs a header row and at least one student row.');
+      }
+
+      const response = await studentAPI.bulkImport(parsed);
+      utils.showToast(response.message || 'Student list imported', false);
+      await fetchStudents();
+    } catch (error) {
+      utils.showToast(error.message || 'Could not import CSV list', true);
+    } finally {
+      setImporting(false);
+      event.target.value = '';
+    }
+  };
+
+  const downloadTemplate = () => {
+    const template = [
+      'reg_no,name,email,type,is_registered_sem,expected_grad_year,campus,department',
+      '24/BSE/BU/R/0008,Atukwatse Blessing,student@example.com,Regular,true,2027,main,CI',
+      '24/BTH/BU/H/0003,Naigaga Shillah,student2@example.com,In-Service,false,2027,virtual,RS'
+    ].join('\n');
+    const blob = new Blob([template], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'busa-student-list-template.csv';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
 
   return (
-    <>
+    <div className="portal-container student-admin-page">
       <style>{`
-        .manage-students-container {
+        .student-admin-page {
           width: 100%;
-          max-width: 1400px;
-          margin: 0 auto;
-          font-family: 'Inter', sans-serif;
-          background: #F8FAFC;
+          max-width: 1280px;
           min-height: 100vh;
+          margin: 0 auto;
+          background: #F5F8FB;
+          font-family: 'Inter', sans-serif;
         }
-        
-        .top-header {
+
+        .student-admin-shell {
+          padding: 28px 40px 40px;
+        }
+
+        .student-admin-heading {
           display: flex;
-          justify-content: space-between;
-          align-items: center;
-          padding: 28px 48px 20px 48px;
-          border-bottom: 1px solid #EFF3F8;
-          background: white;
-        }
-        
-        .logo-area {
-          display: flex;
-          align-items: center;
-          gap: 16px;
-        }
-        
-        .portal-title {
-          font-weight: 700;
-          font-size: 20px;
-          letter-spacing: -0.3px;
-          color: #0B2B44;
-          background: #F8FAFE;
-          padding: 6px 20px;
-          border-radius: 40px;
-        }
-        
-        .back-link {
-          background: none;
-          border: none;
-          font-size: 15px;
-          font-weight: 500;
-          color: #2A6F8F;
-          border-bottom: 1px dashed #B9D4E3;
-          padding-bottom: 2px;
-          cursor: pointer;
-        }
-        
-        .main-content {
-          padding: 40px 48px 60px;
-        }
-        
-        .page-header {
-          display: flex;
-          justify-content: space-between;
           align-items: flex-start;
-          padding: 32px 48px 24px 48px;
+          justify-content: space-between;
           gap: 24px;
+          margin-bottom: 22px;
         }
-        
-        .page-header > div {
-          flex: 1;
-        }
-        
-        .page-title {
-          font-size: 32px;
+
+        .student-admin-kicker {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          color: #0B5C79;
+          font-size: 12px;
           font-weight: 800;
-          color: #1A2C3E;
-          margin: 0 0 16px 0;
+          text-transform: uppercase;
+          margin-bottom: 10px;
         }
-        
-        .search-container {
-          position: relative;
-          max-width: 400px;
+
+        .student-admin-heading h1 {
+          margin: 0;
+          color: #102033;
+          font-size: 30px;
+          font-weight: 850;
         }
-        
-        .search-input {
-          width: 100%;
-          padding: 12px 16px 12px 45px;
-          border: 2px solid #E2E9F2;
-          border-radius: 12px;
+
+        .student-admin-heading p {
+          margin: 8px 0 0;
+          color: #516173;
+          max-width: 720px;
+          line-height: 1.55;
           font-size: 14px;
-          outline: none;
-          transition: all 0.3s ease;
         }
-        
-        .search-input:focus {
-          border-color: #002F6C;
-          box-shadow: 0 0 0 3px rgba(0, 47, 108, 0.1);
+
+        .student-action-row {
+          display: flex;
+          gap: 10px;
+          flex-wrap: wrap;
+          justify-content: flex-end;
         }
-        
-        .search-icon {
+
+        .student-btn {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+          border: 1px solid #D8E2EC;
+          background: #FFFFFF;
+          color: #102033;
+          min-height: 42px;
+          padding: 0 16px;
+          border-radius: 8px;
+          font-size: 13px;
+          font-weight: 750;
+          cursor: pointer;
+          transition: 0.18s ease;
+        }
+
+        .student-btn:hover {
+          border-color: #8FB0C5;
+          transform: translateY(-1px);
+        }
+
+        .student-btn-primary {
+          background: #003B73;
+          border-color: #003B73;
+          color: #FFFFFF;
+        }
+
+        .student-btn-danger {
+          color: #B42318;
+          background: #FFF7F6;
+          border-color: #FED7D2;
+        }
+
+        .student-btn:disabled {
+          cursor: not-allowed;
+          opacity: 0.6;
+          transform: none;
+        }
+
+        .student-stats-grid {
+          display: grid;
+          grid-template-columns: repeat(4, minmax(0, 1fr));
+          gap: 14px;
+          margin-bottom: 18px;
+        }
+
+        .student-stat {
+          background: #FFFFFF;
+          border: 1px solid #DFE8F1;
+          border-radius: 8px;
+          padding: 16px;
+        }
+
+        .student-stat span {
+          color: #607086;
+          font-size: 12px;
+          font-weight: 750;
+        }
+
+        .student-stat strong {
+          display: block;
+          margin-top: 6px;
+          color: #12263A;
+          font-size: 28px;
+          line-height: 1;
+        }
+
+        .student-toolbar {
+          display: grid;
+          grid-template-columns: minmax(280px, 1fr) 170px 190px auto;
+          gap: 10px;
+          background: #FFFFFF;
+          border: 1px solid #DFE8F1;
+          border-radius: 8px;
+          padding: 14px;
+          margin-bottom: 18px;
+          align-items: center;
+        }
+
+        .student-search {
+          position: relative;
+        }
+
+        .student-search svg {
           position: absolute;
-          left: 16px;
+          left: 13px;
           top: 50%;
           transform: translateY(-50%);
-          font-size: 16px;
-          color: #64748B;
+          color: #607086;
         }
-        
-        .add-student-btn {
-          background: #002F6C;
-          color: white;
-          border: none;
-          padding: 12px 24px;
-          border-radius: 8px;
-          font-size: 14px;
-          font-weight: 600;
-          cursor: pointer;
-          transition: all 0.3s ease;
-          white-space: nowrap;
-        }
-        
-        .add-student-btn:hover {
-          background: #0A4175;
-          transform: translateY(-2px);
-        }
-        
-        .table-container {
-          background: white;
-          border-radius: 16px;
-          overflow-x: auto;
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-          margin: 0 24px 48px 24px;
-          min-width: 100%;
-        }
-        
-        .voters-table {
+
+        .student-search input,
+        .student-toolbar select,
+        .student-form-field input,
+        .student-form-field select {
           width: 100%;
+          min-height: 42px;
+          border: 1px solid #D8E2EC;
+          border-radius: 8px;
+          background: #FFFFFF;
+          color: #12263A;
+          font-size: 14px;
+          padding: 0 12px;
+        }
+
+        .student-search input {
+          padding-left: 40px;
+        }
+
+        .student-upload-panel {
+          display: grid;
+          grid-template-columns: auto 1fr auto;
+          gap: 16px;
+          align-items: center;
+          background: #EBF5FA;
+          border: 1px solid #CDE2EC;
+          border-radius: 8px;
+          padding: 16px;
+          margin-bottom: 18px;
+        }
+
+        .student-upload-panel h2 {
+          margin: 0 0 4px;
+          color: #102033;
+          font-size: 16px;
+        }
+
+        .student-upload-panel p {
+          margin: 0;
+          color: #516173;
+          font-size: 13px;
+          line-height: 1.45;
+        }
+
+        .student-table-wrap {
+          background: #FFFFFF;
+          border: 1px solid #DFE8F1;
+          border-radius: 8px;
+          overflow: auto;
+        }
+
+        .student-table {
+          width: 100%;
+          min-width: 980px;
           border-collapse: collapse;
         }
-        
-        .voters-table th {
-          background: #F8FAFE;
-          padding: 16px;
+
+        .student-table th {
+          background: #F7FAFD;
+          color: #4B5F73;
+          font-size: 11px;
+          font-weight: 850;
+          letter-spacing: 0;
           text-align: left;
-          font-weight: 700;
-          font-size: 14px;
-          color: #1A2C3E;
-          border-bottom: 2px solid #EDF2F7;
+          text-transform: uppercase;
+          padding: 12px 14px;
+          border-bottom: 1px solid #DFE8F1;
         }
-        
-        .voters-table td {
-          padding: 16px;
-          border-bottom: 1px solid #F0F4F9;
-          font-size: 14px;
-          color: #374151;
+
+        .student-table td {
+          padding: 14px;
+          border-bottom: 1px solid #EDF2F7;
+          color: #203244;
+          font-size: 13px;
+          vertical-align: middle;
         }
-        
-        .voters-table tbody tr:hover {
-          background: #F8FAFE;
-        }
-        
-        .voters-table tbody tr:last-child td {
+
+        .student-table tr:last-child td {
           border-bottom: none;
         }
-        
-        .type-badge {
-          padding: 4px 12px;
-          border-radius: 20px;
+
+        .student-name-cell strong {
+          display: block;
+          color: #12263A;
+          font-size: 14px;
+          margin-bottom: 4px;
+        }
+
+        .student-name-cell span {
+          color: #66788A;
           font-size: 12px;
-          font-weight: 600;
-          display: inline-block;
         }
-        
-        .type-regular {
-          background: #E8F0FE;
-          color: #002F6C;
+
+        .student-chip {
+          display: inline-flex;
+          align-items: center;
+          min-height: 24px;
+          border-radius: 999px;
+          padding: 0 10px;
+          font-size: 12px;
+          font-weight: 750;
+          white-space: nowrap;
         }
-        
-        .type-in-service {
-          background: #FEF3C7;
-          color: #92400E;
+
+        .student-chip-regular {
+          background: #E7F4EE;
+          color: #146C43;
         }
-        
-        .action-buttons {
+
+        .student-chip-service {
+          background: #FFF1D8;
+          color: #9A5B00;
+        }
+
+        .student-chip-registered {
+          background: #E7F4EE;
+          color: #146C43;
+        }
+
+        .student-chip-not-registered {
+          background: #FDECEC;
+          color: #B42318;
+        }
+
+        .student-table-actions {
           display: flex;
           gap: 8px;
         }
-        
-        .action-btn {
-          padding: 6px 12px;
-          border: none;
-          border-radius: 6px;
-          font-size: 12px;
-          font-weight: 600;
+
+        .student-icon-btn {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          width: 34px;
+          height: 34px;
+          border: 1px solid #D8E2EC;
+          border-radius: 8px;
+          background: #FFFFFF;
+          color: #28445D;
           cursor: pointer;
-          transition: all 0.3s ease;
         }
-        
-        .edit-btn {
-          background: #002F6C;
-          color: white;
+
+        .student-icon-btn-danger {
+          color: #B42318;
+          border-color: #FED7D2;
+          background: #FFF7F6;
         }
-        
-        .edit-btn:hover {
-          background: #0A4175;
+
+        .student-empty {
+          padding: 56px 24px;
+          text-align: center;
+          color: #607086;
         }
-        
-        .delete-btn {
-          background: #DC2626;
-          color: white;
+
+        .student-modal-backdrop {
+          position: fixed;
+          inset: 0;
+          background: rgba(11, 24, 38, 0.52);
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          padding: 20px;
+          z-index: 1000;
         }
-        
-        .delete-btn:hover {
-          background: #B91C1C;
+
+        .student-modal {
+          width: min(760px, 100%);
+          max-height: 92vh;
+          overflow: auto;
+          background: #FFFFFF;
+          border-radius: 8px;
+          box-shadow: 0 24px 70px rgba(8, 18, 31, 0.24);
         }
-        
-        .status-badge {
-          padding: 4px 12px;
-          border-radius: 20px;
-          font-size: 12px;
-          font-weight: 600;
-          display: inline-block;
-        }
-        
-        .status-registered {
-          background: #D1FAE5;
-          color: #065F46;
-        }
-        
-        .status-pending {
-          background: #FEF3C7;
-          color: #92400E;
-        }
-        
-        .students-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-          gap: 24px;
-          margin-bottom: 40px;
-        }
-        
-        .student-card {
-          background: white;
-          border-radius: 16px;
-          padding: 24px;
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-          border: 1px solid #E8EDF4;
-          transition: transform 0.2s, box-shadow 0.2s;
-        }
-        
-        .student-card:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-        }
-        
-        .student-header {
+
+        .student-modal-header {
           display: flex;
           justify-content: space-between;
           align-items: flex-start;
-          margin-bottom: 16px;
+          gap: 18px;
+          padding: 22px 24px;
+          border-bottom: 1px solid #E6EDF4;
         }
-        
-        .student-info h3 {
-          font-size: 18px;
-          font-weight: 700;
-          color: #1A2C3E;
-          margin: 0 0 8px 0;
-        }
-        
-        .student-info p {
-          font-size: 14px;
-          color: #64748B;
-          margin: 4px 0;
-        }
-        
-        .student-type {
-          display: inline-block;
-          padding: 4px 12px;
-          border-radius: 20px;
-          font-size: 12px;
-          font-weight: 600;
-          text-transform: uppercase;
-          letter-spacing: 0.5px;
-        }
-        
-        .type-regular {
-          background: #E8F5E9;
-          color: #2E7D32;
-        }
-        
-        .type-in-service {
-          background: #FFF3E0;
-          color: #F57C00;
-        }
-        
-        .student-actions {
-          display: flex;
-          gap: 8px;
-        }
-        
-        .action-btn {
-          padding: 6px 12px;
-          border: none;
-          border-radius: 6px;
-          font-size: 13px;
-          font-weight: 500;
-          cursor: pointer;
-          transition: all 0.2s;
-        }
-        
-        .edit-btn {
-          background: #EFF3F8;
-          color: #2A6F8F;
-        }
-        
-        .edit-btn:hover {
-          background: #E2E8F0;
-        }
-        
-        .delete-btn {
-          background: #FFEBEE;
-          color: #D32F2F;
-        }
-        
-        .delete-btn:hover {
-          background: #FFCDD2;
-        }
-        
-        .modal-overlay {
-          position: fixed;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          background: rgba(0, 0, 0, 0.5);
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          z-index: 1000;
-        }
-        
-        .modal-content {
-          background: white;
-          border-radius: 16px;
-          padding: 32px;
-          width: 90%;
-          max-width: 500px;
-          max-height: 90vh;
-          overflow-y: auto;
-        }
-        
-        .modal-header {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          margin-bottom: 24px;
-        }
-        
-        .modal-title {
-          font-size: 24px;
-          font-weight: 700;
-          color: #1A2C3E;
+
+        .student-modal-header h2 {
           margin: 0;
+          color: #102033;
+          font-size: 20px;
         }
-        
-        .close-btn {
-          background: none;
-          border: none;
-          font-size: 24px;
-          cursor: pointer;
-          color: #64748B;
-          padding: 0;
-          width: 32px;
-          height: 32px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          border-radius: 50%;
+
+        .student-modal-header p {
+          margin: 5px 0 0;
+          color: #66788A;
+          font-size: 13px;
         }
-        
-        .close-btn:hover {
-          background: #F1F5F9;
+
+        .student-form {
+          padding: 24px;
         }
-        
-        .form-group {
-          margin-bottom: 20px;
+
+        .student-form-grid {
+          display: grid;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 16px;
         }
-        
-        .form-group label {
+
+        .student-form-field label {
           display: block;
-          font-size: 14px;
-          font-weight: 600;
-          color: #374151;
-          margin-bottom: 6px;
+          margin-bottom: 7px;
+          color: #34485B;
+          font-size: 12px;
+          font-weight: 800;
         }
-        
-        .form-group input,
-        .form-group select {
-          width: 100%;
-          padding: 10px 14px;
-          border: 1px solid #D1D5DB;
-          border-radius: 8px;
-          font-size: 15px;
-          transition: border-color 0.2s;
-        }
-        
-        .form-group input:focus,
-        .form-group select:focus {
-          outline: none;
-          border-color: #002F6C;
-          box-shadow: 0 0 0 3px rgba(0, 47, 108, 0.1);
-        }
-        
-        .checkbox-group {
+
+        .student-form-check {
           display: flex;
           align-items: center;
-          gap: 8px;
+          gap: 10px;
+          margin-top: 16px;
+          padding: 13px 14px;
+          border: 1px solid #D8E2EC;
+          border-radius: 8px;
+          background: #F8FBFD;
         }
-        
-        .checkbox-group input[type="checkbox"] {
-          width: auto;
+
+        .student-form-check input {
+          width: 18px;
+          height: 18px;
         }
-        
-        .form-actions {
+
+        .student-form-actions {
           display: flex;
-          gap: 12px;
           justify-content: flex-end;
-          margin-top: 24px;
+          gap: 10px;
+          padding-top: 22px;
         }
-        
-        .btn-submit {
-          background: #002F6C;
-          color: white;
-          border: none;
-          padding: 12px 24px;
-          border-radius: 8px;
-          font-weight: 600;
-          font-size: 15px;
-          cursor: pointer;
-        }
-        
-        .btn-cancel {
-          background: #F1F5F9;
-          color: #64748B;
-          border: none;
-          padding: 12px 24px;
-          border-radius: 8px;
-          font-weight: 600;
-          font-size: 15px;
-          cursor: pointer;
-        }
-        
-        .empty-state {
-          text-align: center;
-          padding: 60px 20px;
-        }
-        
-        .empty-state h3 {
-          font-size: 24px;
-          color: #64748B;
-          margin-bottom: 12px;
-        }
-        
-        .empty-state p {
-          font-size: 16px;
-          color: #94A3B8;
-        }
-        
-        @media (max-width: 768px) {
-          .top-header {
-            padding: 20px 24px;
-            flex-direction: column;
-            gap: 16px;
-            text-align: center;
+
+        @media (max-width: 900px) {
+          .student-admin-shell {
+            padding: 20px 16px 28px;
           }
-          
-          .main-content {
-            padding: 32px 24px;
-          }
-          
-          .page-header {
+
+          .student-admin-heading,
+          .student-upload-panel {
+            grid-template-columns: 1fr;
             flex-direction: column;
-            gap: 16px;
             align-items: stretch;
           }
-          
-          .students-grid {
+
+          .student-action-row {
+            justify-content: flex-start;
+          }
+
+          .student-stats-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+          }
+
+          .student-toolbar {
             grid-template-columns: 1fr;
-            gap: 16px;
           }
-          
-          .student-card {
-            padding: 20px;
-          }
-          
-          .modal-content {
-            padding: 24px;
-            margin: 20px;
+
+          .student-form-grid {
+            grid-template-columns: 1fr;
           }
         }
       `}</style>
 
-      <div className="manage-students-container">
-        {/* Header */}
-        <div className="top-header">
-          <div className="logo-area">
-            <LogoMark size={48} radius={14} />
-            <div className="portal-title">BUSA ONLINE VOTING PORTAL</div>
-          </div>
-          <button className="back-link" onClick={() => navigate('/admin-dashboard')}>
-            ← Back to Dashboard
-          </button>
-        </div>
+      <AdminTopNavbar />
 
-        {/* Main Content */}
-        <div className="main-content">
-          {/* Page Header with Search and Add Button */}
-          <div className="page-header">
-            <div>
-              <h1 className="page-title">Manage Voters</h1>
-              <div className="search-container">
-                <input
-                  type="text"
-                  placeholder="Search by name, registration number, email, or type..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="search-input"
-                />
-                <div className="search-icon">🔍</div>
-              </div>
+      <main className="student-admin-shell">
+        <section className="student-admin-heading">
+          <div>
+            <div className="student-admin-kicker">
+              <Database size={16} />
+              Admin student master list
             </div>
-            <button className="add-student-btn" onClick={() => setShowAddForm(true)}>
-              + Add New Voter
+            <h1>Manage Voter Eligibility</h1>
+            <p>
+              Upload or maintain the official student list here. The voter registration validator checks this admin-managed list before approving a student.
+            </p>
+          </div>
+          <div className="student-action-row">
+            <button className="student-btn" onClick={() => navigate('/admin/dashboard')}>
+              <ArrowLeft size={16} />
+              Dashboard
+            </button>
+            <button className="student-btn student-btn-primary" onClick={openCreateForm}>
+              <Plus size={16} />
+              Add Student
             </button>
           </div>
+        </section>
 
-          {/* Students Table */}
-          {filteredStudents.length === 0 ? (
-            <div className="empty-state">
-              <h3>{searchTerm ? 'No voters found matching your search' : 'No voters found'}</h3>
-              <p>{searchTerm ? 'Try adjusting your search terms' : 'Add your first voter to get started'}</p>
+        <section className="student-stats-grid" aria-label="Student list summary">
+          <div className="student-stat"><span>Total on admin list</span><strong>{stats.total}</strong></div>
+          <div className="student-stat"><span>Regular students</span><strong>{stats.regular}</strong></div>
+          <div className="student-stat"><span>In-service students</span><strong>{stats.inService}</strong></div>
+          <div className="student-stat"><span>Current semester</span><strong>{stats.registered}</strong></div>
+        </section>
+
+        <section className="student-upload-panel">
+          <UploadCloud size={34} color="#0B5C79" />
+          <div>
+            <h2>Upload student list</h2>
+            <p>Use CSV columns: reg_no, name, email, type, is_registered_sem, expected_grad_year, campus, department. Existing registration numbers are updated.</p>
+          </div>
+          <div className="student-action-row">
+            <button className="student-btn" onClick={downloadTemplate}>
+              <Download size={16} />
+              Template
+            </button>
+            <button className="student-btn student-btn-primary" onClick={() => fileInputRef.current?.click()} disabled={importing}>
+              <FileUp size={16} />
+              {importing ? 'Importing...' : 'Import CSV'}
+            </button>
+            <input ref={fileInputRef} type="file" accept=".csv,text/csv" onChange={handleCsvUpload} hidden />
+          </div>
+        </section>
+
+        <section className="student-toolbar">
+          <div className="student-search">
+            <Search size={17} />
+            <input
+              type="search"
+              placeholder="Search by name, reg number, email, campus, department..."
+              value={searchTerm}
+              onChange={(event) => setSearchTerm(event.target.value)}
+            />
+          </div>
+          <select value={typeFilter} onChange={(event) => setTypeFilter(event.target.value)} aria-label="Filter by student type">
+            <option value="all">All student types</option>
+            <option value="Regular">Regular</option>
+            <option value="In-Service">In-Service</option>
+          </select>
+          <select value={statusFilter} onChange={(event) => setStatusFilter(event.target.value)} aria-label="Filter by semester status">
+            <option value="all">All semester statuses</option>
+            <option value="registered">Current semester</option>
+            <option value="not_registered">Not current semester</option>
+          </select>
+          <button className="student-btn" onClick={fetchStudents} disabled={loading}>
+            Refresh
+          </button>
+        </section>
+
+        <section className="student-table-wrap">
+          {loading ? (
+            <div className="student-empty">Loading the admin student list...</div>
+          ) : filteredStudents.length === 0 ? (
+            <div className="student-empty">
+              No student records match the current filters.
             </div>
           ) : (
-            <div className="table-container">
-              <table className="voters-table">
-                <thead>
-                  <tr>
-                    <th>Registration Number</th>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Type</th>
-                    <th>Campus</th>
-                    <th>Department</th>
-                    <th>Registration Status</th>
-                    <th>Graduation Year</th>
-                    <th>Actions</th>
+            <table className="student-table">
+              <thead>
+                <tr>
+                  <th>Student</th>
+                  <th>Registration No.</th>
+                  <th>Type</th>
+                  <th>Campus</th>
+                  <th>Department</th>
+                  <th>Semester</th>
+                  <th>Grad Year</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredStudents.map((student) => (
+                  <tr key={student.reg_no}>
+                    <td className="student-name-cell">
+                      <strong>{student.name}</strong>
+                      <span>{student.email}</span>
+                    </td>
+                    <td>{student.reg_no}</td>
+                    <td>
+                      <span className={`student-chip ${student.type === 'Regular' ? 'student-chip-regular' : 'student-chip-service'}`}>
+                        {student.type}
+                      </span>
+                    </td>
+                    <td>{student.campus || '-'}</td>
+                    <td>{student.department || '-'}</td>
+                    <td>
+                      <span className={`student-chip ${student.is_registered_sem ? 'student-chip-registered' : 'student-chip-not-registered'}`}>
+                        {student.is_registered_sem ? 'Current' : 'Not current'}
+                      </span>
+                    </td>
+                    <td>{student.expected_grad_year || '-'}</td>
+                    <td>
+                      <div className="student-table-actions">
+                        <button className="student-icon-btn" onClick={() => openEditForm(student)} title="Edit student">
+                          <Pencil size={15} />
+                        </button>
+                        <button className="student-icon-btn student-icon-btn-danger" onClick={() => handleDelete(student)} title="Delete student">
+                          <Trash2 size={15} />
+                        </button>
+                      </div>
+                    </td>
                   </tr>
-                </thead>
-                <tbody>
-                  {filteredStudents.map((student) => (
-                    <tr key={student.reg_no}>
-                      <td>{student.reg_no}</td>
-                      <td>{student.name}</td>
-                      <td>{student.email}</td>
-                      <td>
-                        <span className={`type-badge ${student.type === 'Regular' ? 'type-regular' : 'type-in-service'}`}>
-                          {student.type}
-                        </span>
-                      </td>
-                      <td>{student.campus}</td>
-                      <td>{student.department || '-'}</td>
-                      <td>
-                        <span className={`status-badge ${student.is_registered_sem ? 'status-registered' : 'status-pending'}`}>
-                          {student.is_registered_sem ? 'Registered' : 'Pending'}
-                        </span>
-                      </td>
-                      <td>{student.expected_grad_year}</td>
-                      <td>
-                        <div className="action-buttons">
-                          <button className="action-btn edit-btn" onClick={() => handleEdit(student)}>
-                            Edit
-                          </button>
-                          <button className="action-btn delete-btn" onClick={() => handleDelete(student.reg_no)}>
-                            Delete
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                ))}
+              </tbody>
+            </table>
           )}
-        </div>
+        </section>
+      </main>
 
-        {/* Add/Edit Student Modal */}
-        {showAddForm && (
-          <div className="modal-overlay" onClick={(e) => {
-            if (e.target === e.currentTarget) resetForm();
-          }}>
-            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-              <div className="modal-header">
-                <h2 className="modal-title">
-                  {editingStudent ? 'Edit Student' : 'Add New Student'}
-                </h2>
-                <button className="close-btn" onClick={resetForm}>×</button>
+      {showForm && (
+        <div className="student-modal-backdrop" onMouseDown={(event) => event.target === event.currentTarget && closeForm()}>
+          <div className="student-modal">
+            <div className="student-modal-header">
+              <div>
+                <h2>{editingStudent ? 'Edit student record' : 'Add student to validation list'}</h2>
+                <p>{editingStudent ? 'Update the student details used during voter validation.' : 'Create one official eligibility record for voter validation.'}</p>
               </div>
+              <button className="student-icon-btn" onClick={closeForm} title="Close">
+                <X size={18} />
+              </button>
+            </div>
 
-              <form onSubmit={handleSubmit}>
-                <div className="form-group">
-                  <label>Registration Number *</label>
-                  <input
-                    type="text"
-                    name="reg_no"
-                    value={formData.reg_no}
-                    onChange={handleInputChange}
-                    placeholder="e.g., 25/BSE/BU/R/0010"
-                    required
-                    disabled={!!editingStudent}
-                  />
+            <form className="student-form" onSubmit={handleSubmit}>
+              <div className="student-form-grid">
+                <div className="student-form-field">
+                  <label htmlFor="reg_no">Registration number</label>
+                  <input id="reg_no" name="reg_no" value={formData.reg_no} onChange={handleInputChange} disabled={!!editingStudent} required />
                 </div>
-
-                <div className="form-group">
-                  <label>Full Name *</label>
-                  <input
-                    type="text"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleInputChange}
-                    placeholder="Student's full name"
-                    required
-                  />
+                <div className="student-form-field">
+                  <label htmlFor="name">Full name</label>
+                  <input id="name" name="name" value={formData.name} onChange={handleInputChange} required />
                 </div>
-
-                <div className="form-group">
-                  <label>Email Address *</label>
-                  <input
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    placeholder="student@busa.edu"
-                    required
-                  />
+                <div className="student-form-field">
+                  <label htmlFor="email">Email address</label>
+                  <input id="email" name="email" type="email" value={formData.email} onChange={handleInputChange} required />
                 </div>
-
-                <div className="form-group">
-                  <label>Student Type *</label>
-                  <select name="type" value={formData.type} onChange={handleInputChange} required>
+                <div className="student-form-field">
+                  <label htmlFor="type">Student type</label>
+                  <select id="type" name="type" value={formData.type} onChange={handleInputChange} required>
                     <option value="Regular">Regular</option>
                     <option value="In-Service">In-Service</option>
                   </select>
                 </div>
-
-                <div className="form-group">
-                  <label>Expected Graduation Year *</label>
-                  <input
-                    type="number"
-                    name="expected_grad_year"
-                    value={formData.expected_grad_year}
-                    onChange={handleInputChange}
-                    placeholder="e.g., 2028"
-                    min="2020"
-                    max="2030"
-                    required
-                  />
+                <div className="student-form-field">
+                  <label htmlFor="expected_grad_year">Expected graduation year</label>
+                  <input id="expected_grad_year" name="expected_grad_year" type="number" min="2020" max="2035" value={formData.expected_grad_year} onChange={handleInputChange} required />
                 </div>
-
-                <div className="form-group">
-                  <label>Campus *</label>
-                  <select name="campus" value={formData.campus} onChange={handleInputChange} required>
-                    <option value="main">Main Campus</option>
+                <div className="student-form-field">
+                  <label htmlFor="campus">Campus</label>
+                  <select id="campus" name="campus" value={formData.campus} onChange={handleInputChange} required>
+                    <option value="main">Main campus</option>
                     <option value="virtual">Virtual</option>
                   </select>
                 </div>
-
-                <div className="form-group">
-                  <label>Department *</label>
-                  <select name="department" value={formData.department} onChange={handleInputChange} required>
-                    <option value="">Select Department</option>
-                    <option value="CI">Computing And Informatics</option>
-                    <option value="Business">Business Administration</option>
-                    <option value="RS">Religious Studies</option>
-                    <option value="EDS">Education In Sciences</option>
-                    <option value="EDA">Education In Arts</option>
-                    <option value="Health">Health Sciences</option>
-                    <option value="NaturalSciences">Natural Sciences</option>
+                <div className="student-form-field">
+                  <label htmlFor="department">Department</label>
+                  <select id="department" name="department" value={formData.department} onChange={handleInputChange} required>
+                    <option value="">Select department</option>
+                    {departments.map(([value, label]) => (
+                      <option key={value} value={value}>{label}</option>
+                    ))}
                   </select>
                 </div>
+              </div>
 
-                <div className="form-group">
-                  <div className="checkbox-group">
-                    <input
-                      type="checkbox"
-                      name="is_registered_sem"
-                      checked={formData.is_registered_sem}
-                      onChange={handleInputChange}
-                    />
-                    <label>Registered for Current Semester</label>
-                  </div>
-                </div>
+              <label className="student-form-check">
+                <input type="checkbox" name="is_registered_sem" checked={formData.is_registered_sem} onChange={handleInputChange} />
+                <span><CheckCircle2 size={16} /> Registered for the current semester/session</span>
+              </label>
 
-                <div className="form-actions">
-                  <button type="button" className="btn-cancel" onClick={resetForm}>
-                    Cancel
-                  </button>
-                  <button type="submit" className="btn-submit">
-                    {editingStudent ? 'Update Student' : 'Add Student'}
-                  </button>
-                </div>
-              </form>
-            </div>
+              <div className="student-form-actions">
+                <button type="button" className="student-btn" onClick={closeForm}>Cancel</button>
+                <button type="submit" className="student-btn student-btn-primary" disabled={saving}>
+                  {saving ? 'Saving...' : editingStudent ? 'Update Student' : 'Add Student'}
+                </button>
+              </div>
+            </form>
           </div>
-        )}
-      </div>
-    </>
+        </div>
+      )}
+
+      <Footer />
+    </div>
   );
 };
 

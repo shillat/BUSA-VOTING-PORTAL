@@ -19,6 +19,7 @@ import ManageCandidates from './ManageCandidates';
 import ManageStudents from './ManageStudents';
 import ManageGuidelines from './ManageGuidelines';
 import ManageElectionCalendar from './ManageElectionCalendar';
+import AdminReviews from './AdminReviews';
 import AllCandidates from './AllCandidates';
 import ElectionCalendar from './ElectionCalendar';
 import ElectionOverview from './ElectionOverview';
@@ -30,7 +31,7 @@ import PublicGuidelines from './PublicGuidelines';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import CandidateProfile from './CandidateProfile';
-import { electionAPI, announcementAPI, guidelineAPI, voterAPI, candidateAPI, utils } from './api';
+import { voterAPI, utils } from './api';
 import heroImage1 from './assets/heroImage1.png';
 import heroImage3 from './assets/heroImage3.png';
 import './App.css';
@@ -488,6 +489,11 @@ function App() {
             <Route path="/admin/calendar" element={
               <ProtectedRoute requiredRole="admin">
                 <ManageElectionCalendar />
+              </ProtectedRoute>
+            } />
+            <Route path="/admin/reviews" element={
+              <ProtectedRoute requiredRole="admin">
+                <AdminReviews />
               </ProtectedRoute>
             } />
             <Route path="/admin/verify" element={
