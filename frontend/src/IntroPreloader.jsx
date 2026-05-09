@@ -51,7 +51,7 @@ const IntroPreloader = ({ onComplete }) => {
           <div className="phone-screen">
             <div className="phone-speaker" aria-hidden="true"></div>
             <div className="phone-header">
-              <span>BUSA Voting Portal</span>
+              <span>BUSA Voting</span>
               <span className="secure-dot">Secure</span>
             </div>
             <div className="voter-id-panel">
