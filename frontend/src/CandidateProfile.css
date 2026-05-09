@@ -1,0 +1,282 @@
+/* Mobile Responsive Styles for CandidateProfile */
+
+/* Base Styles */
+.container {
+  width: 100%;
+  max-width: 100%;
+  padding: 0;
+}
+
+.profile-container {
+  padding: 32px 24px;
+}
+
+.profile-grid {
+  display: grid;
+  grid-template-columns: minmax(240px, 360px) 1fr;
+  gap: 32px;
+  background: #FFFFFF;
+  border: 1px solid #EDF2F7;
+  border-radius: 16px;
+  padding: 28px;
+}
+
+.profile-image {
+  width: 100%;
+  height: 420px;
+  object-fit: cover;
+  object-position: center top;
+  border-radius: 12px;
+}
+
+.profile-image-placeholder {
+  width: 100%;
+  height: 420px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #002F6C 0%, #1A4A7A 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 72px;
+  font-weight: 800;
+  color: white;
+}
+
+.profile-content h1 {
+  font-size: 36px;
+  font-weight: 850;
+  color: #102033;
+  margin: 0 0 10px;
+}
+
+.profile-content .position {
+  font-size: 20px;
+  font-weight: 700;
+  color: black;
+  margin-bottom: 18px;
+}
+
+.profile-content .election-title {
+  font-size: 13px;
+  font-weight: 800;
+  color: #002F6C;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.profile-content .faculty {
+  font-size: 16px;
+  color: black;
+  margin-bottom: 10px;
+}
+
+.profile-content .slogan {
+  font-size: 18px;
+  color: #002F6C;
+  font-style: italic;
+  margin-bottom: 22px;
+}
+
+.manifesto-section {
+  background: #F8FAFE;
+  border: 1px solid #EDF2F7;
+  border-radius: 12px;
+  padding: 22px;
+}
+
+.manifesto-section h2 {
+  font-size: 20px;
+  color: black;
+  margin-top: 0;
+}
+
+.manifesto-section p {
+  color: black;
+  line-height: 1.8;
+  white-space: pre-wrap;
+}
+
+.back-button {
+  margin-bottom: 24px;
+}
+
+.error-container {
+  text-align: center;
+  padding: 80px 20px;
+  background: #F8FAFE;
+  border-radius: 16px;
+  border: 1px dashed #CBD5E1;
+  margin: 40px 0;
+}
+
+.error-container h2 {
+  color: black;
+  margin-bottom: 12px;
+}
+
+.error-container p {
+  color: black;
+  max-width: 500px;
+  margin: 0 auto 32px;
+}
+
+.loading-container {
+  text-align: center;
+  padding: 100px 20px;
+}
+
+/* Mobile Responsive Styles */
+@media (max-width: 768px) {
+  .profile-container {
+    padding: 20px 16px;
+  }
+  
+  .profile-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+    padding: 20px;
+  }
+  
+  .profile-image,
+  .profile-image-placeholder {
+    height: 300px;
+    max-width: 100%;
+  }
+  
+  .profile-content h1 {
+    font-size: 28px;
+    margin-bottom: 8px;
+  }
+  
+  .profile-content .position {
+    font-size: 18px;
+    margin-bottom: 16px;
+  }
+  
+  .profile-content .election-title {
+    font-size: 12px;
+    margin-bottom: 8px;
+  }
+  
+  .profile-content .faculty {
+    font-size: 15px;
+    margin-bottom: 8px;
+  }
+  
+  .profile-content .slogan {
+    font-size: 16px;
+    margin-bottom: 20px;
+  }
+  
+  .manifesto-section {
+    padding: 18px;
+  }
+  
+  .manifesto-section h2 {
+    font-size: 18px;
+  }
+  
+  .manifesto-section p {
+    font-size: 15px;
+    line-height: 1.6;
+  }
+  
+  .back-button {
+    margin-bottom: 20px;
+  }
+}
+
+/* Small Mobile Styles */
+@media (max-width: 480px) {
+  .profile-container {
+    padding: 16px 12px;
+  }
+  
+  .profile-grid {
+    padding: 16px;
+    gap: 20px;
+  }
+  
+  .profile-image,
+  .profile-image-placeholder {
+    height: 250px;
+  }
+  
+  .profile-content h1 {
+    font-size: 24px;
+  }
+  
+  .profile-content .position {
+    font-size: 16px;
+    margin-bottom: 14px;
+  }
+  
+  .profile-content .faculty {
+    font-size: 14px;
+  }
+  
+  .profile-content .slogan {
+    font-size: 15px;
+    margin-bottom: 18px;
+  }
+  
+  .manifesto-section {
+    padding: 16px;
+  }
+  
+  .manifesto-section h2 {
+    font-size: 16px;
+  }
+  
+  .manifesto-section p {
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  
+  .error-container {
+    padding: 60px 16px;
+    margin: 20px 0;
+  }
+  
+  .error-container h2 {
+    font-size: 20px;
+  }
+  
+  .error-container p {
+    font-size: 14px;
+  }
+  
+  .loading-container {
+    padding: 80px 16px;
+  }
+  
+  .loading-container h2 {
+    font-size: 18px;
+  }
+}
+
+/* Button Styles */
+.btn {
+  background: #002F6C;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  transition: background-color 0.2s ease;
+}
+
+.btn:hover {
+  background: #003d8a;
+}
+
+@media (max-width: 480px) {
+  .btn {
+    padding: 10px 20px;
+    font-size: 13px;
+  }
+}

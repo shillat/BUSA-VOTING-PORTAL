@@ -3,6 +3,7 @@ import { candidateAPI, electionAPI, utils } from './api';
 import Footer from './Footer';
 import AdminTopNavbar from './AdminTopNavbar';
 import AdminSidebar from './AdminSidebar';
+import './ManageCandidates.css';
 
 const ManageCandidates = () => {
   const [candidates, setCandidates] = useState([]);
@@ -264,36 +265,44 @@ const ManageCandidates = () => {
           </div>
 
           {/* Candidates Grid */}
-          <div className="candidates-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '24px', position: 'relative', minHeight: '200px' }}>
-            {loading && <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', fontWeight: '600', color: 'black' }}>Loading candidates...</div>}
+          <div className="candidates-grid">
+            {loading && <div className="loading-message">Loading candidates...</div>}
             {!loading && candidates.map((candidate) => (
-              <div key={candidate.id} className="candidate-card" style={{ background: '#FFFFFF', borderRadius: '20px', border: '1px solid #E9EDF2', overflow: 'hidden', opacity: loading ? 0.5 : 1 }}>
-                <div className="candidate-header" style={{ background: 'linear-gradient(135deg, #002F6C 0%, #1A4A7A 100%)', padding: '20px', color: 'white', textAlign: 'center', position: 'relative' }}>
+              <div key={candidate.id} className="candidate-card">
+                <div className="candidate-header">
                   {candidate.photo_url ? (
                     <img
-                      src={`https://busa-voting-portal.onrender.com${candidate.photo_url}`}
+                      src={`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'}${candidate.photo_url}`}
                       alt={candidate.name}
-                      style={{ width: '80px', height: '80px', borderRadius: '50%', objectFit: 'cover', border: '3px solid white', marginBottom: '10px' }}
+                      className="candidate-photo"
+                      onError={(e) => {
+                        e.target.onerror = null; 
+                        e.target.style.display = 'none';
+                        e.target.nextElementSibling.style.display = 'flex';
+                      }}
                     />
                   ) : (
-                    <div style={{ width: '80px', height: '80px', borderRadius: '50%', background: 'rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '32px', margin: '0 auto 10px' }}>👤</div>
+                    <div className="fallback-avatar" style={{ display: 'none' }}>👤</div>
                   )}
-                  <div style={{ fontSize: '20px', fontWeight: '800', marginBottom: '4px' }}>{candidate.name}</div>
-                  <div style={{ fontSize: '13px', opacity: '0.9' }}>{candidate.position}</div>
+                  {!candidate.photo_url && (
+                    <div className="fallback-avatar">👤</div>
+                  )}
+                  <div className="candidate-name">{candidate.name}</div>
+                  <div className="candidate-position">{candidate.position}</div>
                 </div>
-                <div className="candidate-body" style={{ padding: '20px' }}>
-                  <div style={{ fontStyle: 'italic', fontSize: '18px', color: 'black', lineHeight: '1.5', marginBottom: '12px', minHeight: '60px' }}>"{candidate.slogan}"</div>
-                  <div style={{ fontSize: '12px', fontWeight: '600', color: 'black', display: 'flex', alignItems: 'center', gap: '6px' }}>🎓 {candidate.faculty || candidate.school}</div>
-                  <div style={{ fontSize: '11px', color: '#8AA0B8', marginTop: '4px' }}>🗳️ {elections.find(e => e.id === candidate.election_id)?.title || 'Unknown Election'}</div>
-                  <div style={{ display: 'flex', gap: '12px', marginTop: '16px', paddingTop: '12px', borderTop: '1px solid #F0F4F9' }}>
-                    <button onClick={() => handleEditCandidate(candidate.id)} style={{ flex: '1', background: '#F0F4F9', border: 'none', padding: '6px 0', borderRadius: '40px', fontSize: '12px', fontWeight: '600', cursor: 'pointer' }}>Edit</button>
-                    <button onClick={() => handleDeleteCandidate(candidate.id)} style={{ flex: '1', background: '#FFEBEE', color: '#C62828', border: 'none', padding: '6px 0', borderRadius: '40px', fontSize: '12px', fontWeight: '600', cursor: 'pointer' }}>Delete</button>
+                <div className="candidate-body">
+                  <div className="candidate-slogan">"{candidate.slogan}"</div>
+                  <div className="candidate-faculty">🎓 {candidate.faculty || candidate.school}</div>
+                  <div className="candidate-election">🗳️ {elections.find(e => e.id === candidate.election_id)?.title || 'Unknown Election'}</div>
+                  <div className="candidate-actions">
+                    <button onClick={() => handleEditCandidate(candidate.id)} className="edit-button">Edit</button>
+                    <button onClick={() => handleDeleteCandidate(candidate.id)} className="delete-button">Delete</button>
                   </div>
                 </div>
               </div>
             ))}
             {!loading && candidates.length === 0 && (
-              <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '40px', color: 'black' }}>No candidates registered yet.</div>
+              <div className="empty-state">No candidates registered yet.</div>
             )}
           </div>
         </div>
