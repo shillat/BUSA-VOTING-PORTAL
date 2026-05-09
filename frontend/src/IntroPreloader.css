@@ -70,8 +70,8 @@
   background:
     linear-gradient(145deg, rgba(255,255,255,0.16), rgba(255,255,255,0) 24%),
     linear-gradient(145deg, #272727, #101010);
-  border-radius: 30px;
-  padding: 12px;
+  border-radius: 26px;
+  padding: 7px;
   box-shadow: 
     0 15px 30px rgba(0,0,0,0.4),
     inset 0 2px 4px rgba(255,255,255,0.1);
@@ -88,7 +88,7 @@
   background:
     linear-gradient(180deg, #F8FBFF 0%, #FFFFFF 42%, #EEF7F2 100%);
   border: 1px solid rgba(255,255,255,0.18);
-  border-radius: 20px;
+  border-radius: 19px;
   padding: 18px 12px 15px;
   display: flex;
   flex-direction: column;
@@ -257,7 +257,7 @@
 
 .phone-button {
   position: absolute;
-  bottom: 7px;
+  bottom: 4px;
   left: 50%;
   transform: translateX(-50%);
   width: 30px;

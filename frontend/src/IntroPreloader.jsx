@@ -56,7 +56,7 @@ const IntroPreloader = ({ onComplete }) => {
             </div>
             <div className="voter-id-panel">
               <div className="panel-label">Voter ID</div>
-              <div className="voter-code">VID-2026-001</div>
+              <div className="voter-code">VID-XXXXXX</div>
               <div className="id-lines" aria-hidden="true">
                 <span></span>
                 <span></span>
