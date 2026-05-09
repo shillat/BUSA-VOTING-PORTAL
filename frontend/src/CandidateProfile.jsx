@@ -87,16 +87,22 @@ const CandidateProfile = () => {
             )}
           </div>
 
-          <div className="profile-content">
-            <div className="election-title">{candidate.election_title}</div>
-            <h1>{candidate.name}</h1>
-            <div className="position">{candidate.position}</div>
-
+          <div className="profile-content" style={{ padding: '24px', background: '#FFFFFF' }}>
+            <p style={{ fontSize: '16px', fontWeight: '700', color: 'black', margin: '0 0 8px 0' }}>
+              <span style={{ fontWeight: '600' }}>NAME:</span> {candidate.name}
+            </p>
             {candidate.faculty && (
-              <p className="faculty"><strong>Faculty:</strong> {candidate.faculty}</p>
+              <p style={{ fontSize: '16px', fontWeight: '700', color: 'black', margin: '0 0 8px 0' }}>
+                <span style={{ fontWeight: '600' }}>FACULTY:</span> {candidate.faculty}
+              </p>
             )}
+            <p style={{ fontSize: '16px', fontWeight: '700', color: 'black', margin: '0 0 8px 0' }}>
+              <span style={{ fontWeight: '600' }}>POST:</span> {candidate.position}
+            </p>
             {candidate.slogan && (
-              <p className="slogan">"{candidate.slogan}"</p>
+              <p style={{ fontSize: '15px', fontStyle: 'italic', color: 'black', margin: '0 0 18px 0' }}>
+                <span style={{ fontWeight: '600', fontStyle: 'normal' }}>SLOGAN:</span> "{candidate.slogan}"
+              </p>
             )}
 
             <div className="manifesto-section">

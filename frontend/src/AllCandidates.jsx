@@ -100,7 +100,7 @@ const AllCandidates = () => {
                           <span style={{ fontWeight: '600', fontStyle: 'normal' }}>SLOGAN:</span> "{cand.slogan}"
                         </p>
                       )}
-                      <button onClick={() => navigate(`/candidates/${cand.id}`)} className="btn" style={{ marginTop: '8px' }}>View Profile</button>
+                      <button onClick={() => navigate('/login')} className="btn" style={{ marginTop: '8px' }}>Vote</button>
                     </div>
                   </div>
                 ))}
