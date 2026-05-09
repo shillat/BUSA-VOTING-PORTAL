@@ -19,18 +19,16 @@ const AdminDashboard = () => {
   const [recentLogs, setRecentLogs] = useState([]);
   const [ratingsStats, setRatingsStats] = useState({ total_ratings: 0, average_rating: 0 });
   const [recentReviews, setRecentReviews] = useState([]);
-  const [verifiedVoters, setVerifiedVoters] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [statsData, electionsData, logsData, ratingsData, reviewsData, verifiedVotersData] = await Promise.all([
+        const [statsData, electionsData, logsData, ratingsData, reviewsData] = await Promise.all([
           adminAPI.getVoterStats(),
           electionAPI.getActive(),
           adminAPI.getSecurityLogs({ limit: 5 }),
           adminAPI.getRatingsStats(),
-          adminAPI.getRecentReviews(),
-          voterAPI.getVerifiedVoters()
+          adminAPI.getRecentReviews()
         ]);
 
         setStats(statsData);
@@ -38,7 +36,6 @@ const AdminDashboard = () => {
         setRecentLogs(logsData);
         setRatingsStats(ratingsData);
         setRecentReviews(reviewsData);
-        setVerifiedVoters(verifiedVotersData);
       } catch {
         utils.showToast('Failed to fetch dashboard stats', true);
       }
@@ -146,46 +143,6 @@ const AdminDashboard = () => {
                   {review.feedback && <div style={{ fontSize: '12px', color: 'black', marginTop: '4px' }}>"{review.feedback}"</div>}
                 </div>
               ))
-            )}
-          </section>
-
-          <section style={cardStyle}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '18px 24px', background: 'linear-gradient(90deg, #002F6C 0%, #0A4175 100%)' }}>
-              <h3 style={{ fontSize: '16px', fontWeight: '800', color: 'white', margin: 0 }}>Verified Voters</h3>
-              <a href="#" onClick={(e) => { e.preventDefault(); navigate('/admin/students'); }} style={{ fontSize: '12px', color: 'white', textDecoration: 'none', fontWeight: '500' }}>Manage Voters</a>
-            </div>
-            {verifiedVoters.filter(voter => voter.status === 'Approved').length === 0 ? (
-              <div style={{ padding: '24px', textAlign: 'center', fontSize: '13px', color: 'black' }}>No verified voters found.</div>
-            ) : (
-              <div style={{ overflowX: 'auto' }}>
-                <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                  <thead>
-                    <tr>
-                      <th style={{ textAlign: 'left', padding: '12px 24px', fontSize: '11px', fontWeight: '600', color: 'black', background: '#FAFCFE', textTransform: 'uppercase' }}>Name</th>
-                      <th style={{ textAlign: 'left', padding: '12px 24px', fontSize: '11px', fontWeight: '600', color: 'black', background: '#FAFCFE', textTransform: 'uppercase' }}>Reg Number</th>
-                      <th style={{ textAlign: 'left', padding: '12px 24px', fontSize: '11px', fontWeight: '600', color: 'black', background: '#FAFCFE', textTransform: 'uppercase' }}>Verification Time</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {verifiedVoters.filter(voter => voter.status === 'Approved').slice(0, 5).map((voter, index) => (
-                      <tr key={voter.id || index}>
-                        <td style={{ padding: '14px 24px', borderTop: '1px solid #EEF3F8', fontSize: '13px', color: '#1A2C3E', fontWeight: '600' }}>{voter.name || 'Unknown'}</td>
-                        <td style={{ padding: '14px 24px', borderTop: '1px solid #EEF3F8', fontSize: '13px', color: '#1A2C3E' }}>{voter.reg_no || voter.voter_reg_no || 'N/A'}</td>
-                        <td style={{ padding: '14px 24px', borderTop: '1px solid #EEF3F8', fontSize: '13px', color: '#1A2C3E' }}>
-                          {voter.approved_at || voter.updated_at ? new Date(voter.approved_at || voter.updated_at).toLocaleString([], { 
-                            year: 'numeric', 
-                            month: 'short', 
-                            day: 'numeric', 
-                            hour: '2-digit', 
-                            minute: '2-digit',
-                            hour12: true 
-                          }) : 'N/A'}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
             )}
           </section>
 
