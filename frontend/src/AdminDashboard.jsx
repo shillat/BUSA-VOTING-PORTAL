@@ -62,7 +62,7 @@ const AdminDashboard = () => {
 
           <section className="stats-row" style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
             {[
-              ['Total Registered Voters', stats.total || 0, '#1A2C3E'],
+              ['Total Verified Voters', stats.total || 0, '#1A2C3E'],
               ['Pending Approvals', stats.pending || 0, '#E67E22'],
               ['Active Elections', activeElections.length, '#002F6C'],
               ['Total Ratings', ratingsStats.total_ratings || 0, '#FF6B35'],
