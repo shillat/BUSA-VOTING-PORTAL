@@ -154,7 +154,7 @@ const AdminDashboard = () => {
               <h3 style={{ fontSize: '16px', fontWeight: '800', color: 'white', margin: 0 }}>Verified Voters</h3>
               <a href="#" onClick={(e) => { e.preventDefault(); navigate('/admin/students'); }} style={{ fontSize: '12px', color: 'white', textDecoration: 'none', fontWeight: '500' }}>Manage Voters</a>
             </div>
-            {verifiedVoters.length === 0 ? (
+            {verifiedVoters.filter(voter => voter.status === 'Approved').length === 0 ? (
               <div style={{ padding: '24px', textAlign: 'center', fontSize: '13px', color: 'black' }}>No verified voters found.</div>
             ) : (
               <div style={{ overflowX: 'auto' }}>
@@ -167,12 +167,12 @@ const AdminDashboard = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {verifiedVoters.slice(0, 5).map((voter, index) => (
+                    {verifiedVoters.filter(voter => voter.status === 'Approved').slice(0, 5).map((voter, index) => (
                       <tr key={voter.id || index}>
                         <td style={{ padding: '14px 24px', borderTop: '1px solid #EEF3F8', fontSize: '13px', color: '#1A2C3E', fontWeight: '600' }}>{voter.name || 'Unknown'}</td>
-                        <td style={{ padding: '14px 24px', borderTop: '1px solid #EEF3F8', fontSize: '13px', color: '#1A2C3E' }}>{voter.reg_no || voter.registration_number || 'N/A'}</td>
+                        <td style={{ padding: '14px 24px', borderTop: '1px solid #EEF3F8', fontSize: '13px', color: '#1A2C3E' }}>{voter.reg_no || voter.voter_reg_no || 'N/A'}</td>
                         <td style={{ padding: '14px 24px', borderTop: '1px solid #EEF3F8', fontSize: '13px', color: '#1A2C3E' }}>
-                          {voter.verified_at ? new Date(voter.verified_at).toLocaleString([], { 
+                          {voter.approved_at || voter.updated_at ? new Date(voter.approved_at || voter.updated_at).toLocaleString([], { 
                             year: 'numeric', 
                             month: 'short', 
                             day: 'numeric', 

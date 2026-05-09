@@ -170,7 +170,7 @@ export const voterAPI = {
 
   // Get verified voters (admin only)
   getVerifiedVoters: async () => {
-    return await apiRequest('/admin/verified-voters');
+    return await apiRequest('/admin/voters');
   },
 
   // Approve registration (admin only)
