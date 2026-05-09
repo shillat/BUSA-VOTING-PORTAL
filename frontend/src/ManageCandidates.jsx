@@ -41,6 +41,7 @@ const ManageCandidates = () => {
   });
 
   const [uploadedFile, setUploadedFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
 
   const handleInputChange = (e) => {
     const { id, value } = e.target;
@@ -50,8 +51,21 @@ const ManageCandidates = () => {
 
   const handleFileChange = (e) => {
     if (e.target.files && e.target.files[0]) {
-      setUploadedFile(e.target.files[0]);
+      const file = e.target.files[0];
+      setUploadedFile(file);
+      
+      // Create preview
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setImagePreview(e.target.result);
+      };
+      reader.readAsDataURL(file);
     }
+  };
+
+  const clearImage = () => {
+    setUploadedFile(null);
+    setImagePreview(null);
   };
 
   const handleAddCandidate = async () => {
@@ -97,6 +111,7 @@ const ManageCandidates = () => {
         manifesto: ''
       });
       setUploadedFile(null);
+      setImagePreview(null);
       fetchData();
     } catch (err) {
       utils.showToast(err.message || 'Failed to save candidate', true);
@@ -129,6 +144,14 @@ const ManageCandidates = () => {
         slogan: candidate.slogan,
         manifesto: candidate.manifesto || ''
       });
+      
+      // Set image preview if candidate has existing photo
+      if (candidate.photo_url) {
+        setImagePreview(`https://busa-voting-portal.onrender.com${candidate.photo_url}`);
+      } else {
+        setImagePreview(null);
+      }
+      
       utils.showToast(`✏️ Editing "${candidate.name}". Update details and save.`, false);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -252,6 +275,47 @@ const ManageCandidates = () => {
 
             <div className="form-group" style={{ marginBottom: '24px' }}>
               <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', color: 'black', marginBottom: '8px' }}>Candidate Photograph</label>
+              
+              {/* Image Preview */}
+              {imagePreview && (
+                <div style={{ marginBottom: '16px', position: 'relative' }}>
+                  <img 
+                    src={imagePreview} 
+                    alt="Candidate preview" 
+                    style={{ 
+                      width: '120px', 
+                      height: '120px', 
+                      objectFit: 'cover', 
+                      borderRadius: '12px',
+                      border: '2px solid #E2E9F2',
+                      display: 'block'
+                    }}
+                  />
+                  <button
+                    type="button"
+                    onClick={clearImage}
+                    style={{
+                      position: 'absolute',
+                      top: '8px',
+                      right: '8px',
+                      background: '#FF4444',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '50%',
+                      width: '24px',
+                      height: '24px',
+                      fontSize: '12px',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}
+                  >
+                    ×
+                  </button>
+                </div>
+              )}
+              
               <div onClick={() => document.getElementById('fileInput').click()} style={{ border: '2px dashed #E2E9F2', borderRadius: '20px', padding: '32px', textAlign: 'center', background: '#F8FAFE', cursor: 'pointer', transition: '0.2s' }}>
                 <div style={{ fontSize: '48px', marginBottom: '12px' }}>📸</div>
                 <div style={{ fontSize: '14px', color: 'black' }}>Click to upload candidate image</div>
@@ -272,7 +336,7 @@ const ManageCandidates = () => {
                 <div className="candidate-header">
                   {candidate.photo_url ? (
                     <img
-                      src={`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'}${candidate.photo_url}`}
+                      src={`https://busa-voting-portal.onrender.com${candidate.photo_url}`}
                       alt={candidate.name}
                       className="candidate-photo"
                       onError={(e) => {
