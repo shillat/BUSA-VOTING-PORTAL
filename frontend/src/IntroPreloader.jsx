@@ -49,19 +49,29 @@ const IntroPreloader = ({ onComplete }) => {
         {/* Phone */}
         <div className="phone">
           <div className="phone-screen">
-            <div className="phone-header">BUSA Voting</div>
-            <div className="voting-card">
-              <div className="card-header">Voter Card</div>
-              <div className="card-info">
-                <div className="card-name">STUDENT VOTER</div>
-                <div className="card-id">VoterID: 2026-BUSA-001</div>
+            <div className="phone-speaker" aria-hidden="true"></div>
+            <div className="phone-header">
+              <span>BUSA Voting</span>
+              <span className="secure-dot">Secure</span>
+            </div>
+            <div className="voter-id-panel">
+              <div className="panel-label">Voter ID</div>
+              <div className="voter-code">VID-2026-001</div>
+              <div className="id-lines" aria-hidden="true">
+                <span></span>
+                <span></span>
               </div>
+            </div>
+            <div className="submission-path" aria-hidden="true">
+              <span></span>
+              <span></span>
+              <span></span>
             </div>
             <div className="voted-status">
               <svg className="voted-check" viewBox="0 0 24 24">
                 <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" />
               </svg>
-              <span>VOTED</span>
+              <span>Vote Submitted</span>
             </div>
           </div>
           <div className="phone-button"></div>
