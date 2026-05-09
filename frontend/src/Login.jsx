@@ -94,6 +94,9 @@ const Login = () => {
           input::placeholder {
             font-size: 13px !important;
           }
+          .voter-id-input::placeholder {
+            font-size: 11px !important;
+          }
           label {
             font-size: 15px !important;
           }
@@ -101,7 +104,7 @@ const Login = () => {
             font-size: 18px !important;
           }
           .login-container {
-            margin: 40px 0 !important;
+            margin: 18px 0 40px !important;
           }
         }
       `}</style>
@@ -166,10 +169,11 @@ const Login = () => {
                   </label>
                   <input
                     type="text"
+                    className="voter-id-input"
                     name="voterId"
                     value={formData.voterId}
                     onChange={handleChange}
-                    placeholder="Enter unique Voter ID (e.g. VID-XXXXXX)"
+                    placeholder="Enter Voter ID (e.g. VID-XXXXXX)"
                     required
                     style={{ fontSize: '14px', width: '100%', padding: '12px 16px', border: '1.5px solid #E2E9F2', borderRadius: '16px', outline: 'none' }}
                   />
