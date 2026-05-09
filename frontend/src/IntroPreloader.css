@@ -81,15 +81,18 @@
 }
 
 .phone-screen {
-  width: 100%;
-  height: 100%;
+  width: calc(100% - 4px);
+  height: calc(100% - 4px);
   background: #FFFFFF;
+  border: 2px solid #000000;
   border-radius: 18px;
   padding: 15px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  position: relative;
+  position: absolute;
+  top: 2px;
+  left: 2px;
   overflow: hidden;
   box-shadow: inset 0 2px 8px rgba(0,0,0,0.1);
 }
@@ -112,6 +115,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
   box-shadow: 0 6px 15px rgba(0,47,108,0.3);
   animation: cardPop 7s cubic-bezier(0.4, 0, 0.2, 1) forwards;
   opacity: 0;

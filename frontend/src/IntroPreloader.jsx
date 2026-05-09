@@ -54,7 +54,7 @@ const IntroPreloader = ({ onComplete }) => {
               <div className="card-header">Voter Card</div>
               <div className="card-info">
                 <div className="card-name">STUDENT VOTER</div>
-                <div className="card-id">ID: 2026-BUSA-001</div>
+                <div className="card-id">VoterID: 2026-BUSA-001</div>
               </div>
             </div>
             <div className="voted-status">
