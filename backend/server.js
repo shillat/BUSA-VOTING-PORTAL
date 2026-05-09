@@ -425,56 +425,17 @@ app.post('/api/register', (req, res, next) => {
       });
 
     } else if (student.type === 'In-Service') {
+      // Simplified In-Service validation - same as regular students
+      const voterId = 'VID-' + Math.floor(100000 + Math.random() * 900000);
+      const voterIdHash = await bcrypt.hash(voterId, 10);
 
-      if (isOnCampus) {
-        // Path B: In-Service @ Campus
-        if (student.is_registered_sem) {
-          const voterId = 'VID-' + Math.floor(100000 + Math.random() * 900000);
-          const voterIdHash = await bcrypt.hash(voterId, 10);
-
-          const insertSql = "INSERT INTO voter_registrations (reg_no, voter_id, password_hash, status) VALUES (?, ?, ?, 'Approved')";
-          db.run(insertSql, [reg_no, voterId, voterIdHash], function (err) {
-            if (err) return res.status(500).json({ error: 'Database error saving registration.' });
-            logSecurityEvent('voter', reg_no, 'REGISTRATION_APPROVED', ipAddress, userAgent, `In-Service campus student approved with Voter ID: ${voterId}`);
-            sendEmail(student.email, "Voter Registration Approved", `Congratulations! You have been successfully registered as a voter. Your unique Voter ID is: ${voterId}`);
-            return res.json({ success: true, message: "Registration successful. You are approved and your Voter ID has been sent to your email.", voter_id: voterId });
-          });
-        } else {
-          const rejectionMsg = "Registration failed: You must be on the current session list.";
-          logSecurityEvent('voter', reg_no, 'REGISTRATION_FAILED', ipAddress, userAgent, 'In-Service campus student not on current session list');
-          sendEmail(student.email, "Registration Rejected", rejectionMsg);
-          return res.status(400).json({ error: rejectionMsg });
-        }
-
-      } else {
-        // Path C: In-Service Remote
-        if (!req.file) {
-          logSecurityEvent('voter', reg_no, 'REGISTRATION_FAILED', ipAddress, userAgent, 'Remote In-Service student missing bank slip file');
-          return res.status(400).json({ error: "Current Session Bank Slip is mandatory for Remote In-Service students." });
-        }
-
-        const evidence_url = `/uploads/${req.file.filename}`;
-
-        // Regardless of expected_grad_year, providing the file puts them in Pending for admin approval.
-        const insertSql = "INSERT INTO voter_registrations (reg_no, password_hash, evidence_url, status) VALUES (?, ?, ?, 'Pending')";
-        db.run(insertSql, [reg_no, "", evidence_url], async function (err) {
-          if (err) return res.status(500).json({ error: 'Database error saving registration.' });
-
-          logSecurityEvent('voter', reg_no, 'REGISTRATION_PENDING', ipAddress, userAgent, `Remote In-Service student pending approval with evidence: ${evidence_url}`);
-          
-          // Send email notification immediately
-          try {
-            await sendEmail(student.email, "Voter Registration Pending", 
-              `Dear ${student.name},\n\nYour voter registration has been received and is currently pending admin approval.\n\nRegistration Details:\n- Registration Number: ${reg_no}\n- Student Type: In-Service (Remote)\n- Evidence File: Bank slip submitted\n\nYou will receive another email once your registration has been reviewed and approved.\n\nBest regards,\nBUSA Voting System Administration`);
-            
-            console.log(`Pending registration email sent to ${student.email}`);
-          } catch (emailError) {
-            console.error('Failed to send pending registration email:', emailError);
-          }
-          
-          return res.json({ success: true, message: "Registration pending. Wait for admin approval." });
-        });
-      }
+      const insertSql = "INSERT INTO voter_registrations (reg_no, voter_id, password_hash, status) VALUES (?, ?, ?, 'Approved')";
+      db.run(insertSql, [reg_no, voterId, voterIdHash], function (err) {
+        if (err) return res.status(500).json({ error: 'Database error saving registration.' });
+        logSecurityEvent('voter', reg_no, 'REGISTRATION_APPROVED', ipAddress, userAgent, `In-Service student approved with Voter ID: ${voterId}`);
+        sendEmail(student.email, "Voter Registration Approved", `Congratulations! You have been successfully registered as a voter. Your unique Voter ID is: ${voterId}`);
+        return res.json({ success: true, message: "Registration successful. You are approved and your Voter ID has been sent to your email.", voter_id: voterId });
+      });
 
     } else {
       logSecurityEvent('voter', reg_no, 'REGISTRATION_FAILED', ipAddress, userAgent, 'Unknown student type in records');
@@ -551,7 +512,7 @@ app.post('/api/admin/approve/:id', authenticateToken, (req, res) => {
 
 app.post('/api/admin/reject/:id', authenticateToken, (req, res) => {
   const { id } = req.params;
-  const { reason = "Your bank slip was rejected." } = req.body;
+  const { reason = "Your registration has been rejected." } = req.body;
 
   db.get("SELECT s.email, s.name FROM voter_registrations v JOIN students_master s ON v.reg_no = s.reg_no WHERE v.id = ?", [id], async (err, row) => {
     if (!row) return res.status(404).json({ error: 'Record not found' });
