@@ -890,6 +890,8 @@ input:focus {
     padding: 20px !important;
     border-radius: 16px !important;
     text-align: left !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
   }
 
   .cards-3 .card h3 {
@@ -911,6 +913,11 @@ input:focus {
     border-radius: 8px !important;
     margin-top: 16px !important;
     min-height: 44px !important;
+    box-sizing: border-box !important;
+    max-width: 100% !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
   }
 
   /* Announcements section */
@@ -923,6 +930,8 @@ input:focus {
   .announcements .card {
     padding: 20px !important;
     border-radius: 16px !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
   }
 
   .announcements .card h3 {
@@ -944,6 +953,11 @@ input:focus {
     border-radius: 8px !important;
     margin-top: 16px !important;
     min-height: 44px !important;
+    box-sizing: border-box !important;
+    max-width: 100% !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
   }
 
   /* Candidates section */
@@ -974,6 +988,7 @@ input:focus {
     padding: 0 !important;
     border-radius: 16px !important;
     overflow: hidden !important;
+    box-sizing: border-box !important;
   }
 
   .candidate-grid .card img {
@@ -984,6 +999,8 @@ input:focus {
 
   .candidate-grid .card div[style*="padding: 16px"] {
     padding: 16px !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
   }
 
   .candidate-grid .card p {
@@ -999,6 +1016,11 @@ input:focus {
     border-radius: 8px !important;
     margin-top: 12px !important;
     min-height: 44px !important;
+    box-sizing: border-box !important;
+    max-width: 100% !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
   }
 
   /* Section titles */
