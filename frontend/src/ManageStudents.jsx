@@ -857,7 +857,10 @@ const ManageStudents = () => {
                   <label htmlFor="campus">Campus</label>
                   <select id="campus" name="campus" value={formData.campus} onChange={handleInputChange} required>
                     <option value="main">Main campus</option>
-                    <option value="virtual">Virtual</option>
+                    <option value="virtual">Kampala Campus</option>
+                     <option value="virtual">Arua Campus</option>
+                      <option value="virtual">Mbale Campus</option>
+
                   </select>
                 </div>
                 <div className="student-form-field">
