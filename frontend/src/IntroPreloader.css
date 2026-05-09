@@ -220,7 +220,7 @@
   height: 6px;
   background: #18A85D;
   border-radius: 50%;
-  animation: pathPulse 1.1s ease-in-out infinite;
+  animation: pathPulse 1.1s ease-in-out 2;
 }
 
 .submission-path span:nth-child(2) {
@@ -321,7 +321,8 @@
 
 @keyframes pathAppear {
   0%, 49% { opacity: 0; transform: translateY(8px); }
-  54%, 100% { opacity: 1; transform: translateY(0); }
+  54%, 61% { opacity: 1; transform: translateY(0); }
+  68%, 100% { opacity: 0; transform: translateY(-4px); }
 }
 
 @keyframes pathPulse {
