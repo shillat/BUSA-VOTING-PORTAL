@@ -88,7 +88,7 @@
 
 /* Cells */
 .candidates-table td {
-  padding: 10px 12px;
+  padding: 14px 16px;
   vertical-align: middle;
   color: #1A2B4A;
   word-break: break-word;
@@ -169,6 +169,16 @@
   font-size: 12px;
   color: #4A6080;
   max-width: 160px;
+  white-space: normal;
+  word-break: break-word;
+}
+
+/* Slogan column */
+.td-slogan {
+  font-style: italic;
+  color: #6B7FA0;
+  font-size: 12.5px;
+  max-width: 220px;
   white-space: normal;
   word-break: break-word;
 }
