@@ -344,7 +344,7 @@ const ManageCandidates = () => {
             )}
 
             {!loading && candidates.length > 0 && (
-              <div style={{ overflowX: 'auto' }}>
+              <div style={{ overflowX: 'auto', width: '100%', maxWidth: '100%' }}>
                 <table className="candidates-table">
                   <thead>
                     <tr>
@@ -354,7 +354,6 @@ const ManageCandidates = () => {
                       <th>Position</th>
                       <th>Faculty</th>
                       <th>Election</th>
-                      <th>Slogan</th>
                       <th>Actions</th>
                     </tr>
                   </thead>
@@ -387,7 +386,6 @@ const ManageCandidates = () => {
                         </td>
                         <td className="td-faculty">{candidate.faculty || candidate.school || '—'}</td>
                         <td className="td-election">{elections.find(e => e.id === candidate.election_id)?.title || <span style={{ color: '#aaa' }}>Unknown</span>}</td>
-                        <td className="td-slogan">{candidate.slogan ? `"${candidate.slogan}"` : <span style={{ color: '#ccc' }}>—</span>}</td>
                         <td className="td-actions">
                           <button onClick={() => handleEditCandidate(candidate.id)} className="tbl-edit-btn">✏️ Edit</button>
                           <button onClick={() => handleDeleteCandidate(candidate.id)} className="tbl-delete-btn">🗑️ Delete</button>
