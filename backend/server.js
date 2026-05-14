@@ -425,7 +425,14 @@ app.post('/api/register', (req, res, next) => {
       });
 
     } else if (student.type === 'In-Service') {
-      // Simplified In-Service validation - same as regular students
+      // In-Service students must also be registered for the current semester
+      if (!student.is_registered_sem) {
+        const rejectionMsg = "Registration failed: You must be registered for the current semester to be eligible to vote.";
+        logSecurityEvent('voter', reg_no, 'REGISTRATION_FAILED', ipAddress, userAgent, 'In-Service student not registered for current semester');
+        sendEmail(student.email, "Registration Rejected", rejectionMsg);
+        return res.status(400).json({ error: rejectionMsg });
+      }
+
       const voterId = 'VID-' + Math.floor(100000 + Math.random() * 900000);
       const voterIdHash = await bcrypt.hash(voterId, 10);
 
