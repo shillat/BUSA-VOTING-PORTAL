@@ -1,282 +1,249 @@
-/* Base Styles for ManageCandidates */
+/* =====================================================
+   ManageCandidates – Table Layout Styles
+   ===================================================== */
 
-/* Candidate Card Styles */
-.candidate-card {
+/* Wrapper card */
+.candidates-table-wrapper {
   background: #FFFFFF;
   border-radius: 20px;
   border: 1px solid #E9EDF2;
   overflow: hidden;
-  opacity: 1;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
 }
 
-.candidate-header {
-  background: linear-gradient(135deg, #002F6C 0%, #1A4A7A 100%);
-  padding: 20px;
-  color: white;
+/* Table header row (title + count) */
+.candidates-table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 24px;
+  border-bottom: 1px solid #E9EDF2;
+  background: #F8FAFE;
+}
+
+.candidates-count-badge {
+  background: #E8F0FE;
+  color: #002F6C;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 14px;
+  border-radius: 40px;
+}
+
+/* Loading / empty states */
+.table-loading,
+.table-empty {
+  padding: 40px;
   text-align: center;
-  position: relative;
+  color: #8AA0B8;
+  font-size: 14px;
+  font-weight: 600;
 }
 
-.candidate-photo {
-  width: 80px;
-  height: 80px;
+/* The actual table */
+.candidates-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13.5px;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Thead */
+.candidates-table thead {
+  background: #002F6C;
+  color: white;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.candidates-table thead th {
+  padding: 13px 16px;
+  text-align: left;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* Tbody rows */
+.candidates-table tbody tr {
+  border-bottom: 1px solid #F0F4F9;
+  transition: background 0.15s ease;
+}
+
+.candidates-table tbody tr:nth-child(even) {
+  background: #F8FAFE;
+}
+
+.candidates-table tbody tr:hover {
+  background: #EEF4FF;
+}
+
+/* Cells */
+.candidates-table td {
+  padding: 12px 16px;
+  vertical-align: middle;
+  color: #1A2B4A;
+}
+
+/* # column */
+.td-index {
+  width: 40px;
+  color: #8AA0B8;
+  font-weight: 700;
+  font-size: 12px;
+  text-align: center;
+}
+
+/* Photo column */
+.td-photo {
+  width: 64px;
+  text-align: center;
+}
+
+.table-candidate-photo {
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   object-fit: cover;
-  border: 3px solid white;
-  margin-bottom: 10px;
+  border: 2px solid #E2E9F2;
+  display: block;
+  margin: 0 auto;
 }
 
-.fallback-avatar {
-  width: 80px;
-  height: 80px;
+.table-fallback-avatar {
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
-  background: rgba(255,255,255,0.2);
+  background: #EEF4FF;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 32px;
-  margin: 0 auto 10px;
-}
-
-.candidate-name {
   font-size: 20px;
-  font-weight: 800;
-  margin-bottom: 4px;
+  margin: 0 auto;
 }
 
-.candidate-position {
-  font-size: 13px;
-  opacity: 0.9;
+/* Name column */
+.td-name {
+  font-weight: 700;
+  color: #0A1F44;
+  white-space: nowrap;
 }
 
-.candidate-body {
-  padding: 20px;
+/* Position badge */
+.td-position {
+  white-space: nowrap;
 }
 
-.candidate-slogan {
-  font-style: italic;
-  font-size: 18px;
-  color: black;
-  line-height: 1.5;
-  margin-bottom: 12px;
-  min-height: 60px;
-}
-
-.candidate-faculty {
-  font-size: 12px;
-  font-weight: 600;
-  color: black;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin-bottom: 4px;
-}
-
-.candidate-election {
+.position-badge {
+  display: inline-block;
+  background: #E8F0FE;
+  color: #002F6C;
   font-size: 11px;
-  color: #8AA0B8;
-  margin-top: 4px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 40px;
+  white-space: nowrap;
 }
 
-.candidate-actions {
+/* Faculty column */
+.td-faculty {
+  color: #4A6080;
+  font-size: 12.5px;
+}
+
+/* Election column */
+.td-election {
+  font-size: 12.5px;
+  color: #4A6080;
+  max-width: 180px;
+}
+
+/* Slogan column */
+.td-slogan {
+  font-style: italic;
+  color: #6B7FA0;
+  font-size: 12px;
+  max-width: 200px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Actions column */
+.td-actions {
+  white-space: nowrap;
   display: flex;
-  gap: 12px;
-  margin-top: 16px;
-  padding-top: 12px;
-  border-top: 1px solid #F0F4F9;
+  gap: 8px;
+  align-items: center;
 }
 
-.edit-button {
-  flex: 1;
+.tbl-edit-btn {
   background: #F0F4F9;
+  color: #002F6C;
   border: none;
-  padding: 6px 0;
+  padding: 7px 14px;
   border-radius: 40px;
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: background 0.2s ease, transform 0.15s ease;
 }
 
-.delete-button {
-  flex: 1;
+.tbl-edit-btn:hover {
+  background: #D8E8FF;
+  transform: translateY(-1px);
+}
+
+.tbl-delete-btn {
   background: #FFEBEE;
   color: #C62828;
   border: none;
-  padding: 6px 0;
+  padding: 7px 14px;
   border-radius: 40px;
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: background 0.2s ease, transform 0.15s ease;
 }
 
-.loading-message, .empty-state {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-weight: 600;
-  color: black;
-  text-align: center;
+.tbl-delete-btn:hover {
+  background: #FFCDD2;
+  transform: translateY(-1px);
 }
 
-/* Mobile Responsive Styles for ManageCandidates */
-
-/* Responsive Grid Layout */
-.candidates-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 24px;
-  position: relative;
-  min-height: 200px;
-}
-
-/* Mobile Styles */
-@media (max-width: 640px) {
-  .candidates-grid {
-    grid-template-columns: 1fr;
-    gap: 16px;
-    padding: 0 8px;
-  }
-  
-  .candidate-card {
-    border-radius: 16px;
-    margin: 0 auto;
-    max-width: 100%;
-  }
-  
-  .candidate-header {
-    padding: 16px 12px !important;
-  }
-  
-  .candidate-header img,
-  .candidate-header .fallback-avatar {
-    width: 60px !important;
-    height: 60px !important;
-    margin-bottom: 8px !important;
-    font-size: 24px !important;
-  }
-  
-  .candidate-name {
-    font-size: 16px !important;
-    margin-bottom: 2px !important;
-    line-height: 1.2 !important;
-  }
-  
-  .candidate-position {
-    font-size: 11px !important;
-    line-height: 1.3 !important;
-  }
-  
-  .candidate-body {
-    padding: 16px 12px !important;
-  }
-  
-  .candidate-slogan {
-    font-size: 14px !important;
-    margin-bottom: 10px !important;
-    min-height: 48px !important;
-    line-height: 1.4 !important;
-  }
-  
-  .candidate-faculty {
-    font-size: 11px !important;
-    margin-bottom: 3px !important;
-  }
-  
-  .candidate-election {
-    font-size: 10px !important;
-    margin-top: 2px !important;
-  }
-  
-  .candidate-actions {
-    gap: 8px !important;
-    margin-top: 12px !important;
-    padding-top: 10px !important;
-  }
-  
-  .candidate-actions button {
-    font-size: 11px !important;
-    padding: 8px 0 !important;
-  }
-}
-
-/* Tablet Styles */
-@media (min-width: 641px) and (max-width: 768px) {
-  .candidates-grid {
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: 16px;
-  }
-}
-
-/* Hover Effects for Desktop */
-@media (hover: hover) {
-  .candidate-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 16px rgba(0,0,0,0.12);
-  }
-  
-  .candidate-actions button:hover {
-    transform: translateY(-1px);
-  }
-  
-  .edit-button:hover {
-    background: #E2E8F0 !important;
-  }
-  
-  .delete-button:hover {
-    background: #FFCDD2 !important;
-  }
-}
-
-/* Touch-friendly button sizes for mobile */
-@media (max-width: 640px) {
-  .candidate-actions button {
-    min-height: 44px; /* Touch-friendly size */
-  }
-}
-
-/* Improved loading and empty states */
-@media (max-width: 640px) {
-  .loading-message,
-  .empty-state {
-    padding: 20px;
-    font-size: 14px;
-  }
-}
-
-/* Form responsiveness for mobile */
+/* =====================================================
+   Form responsiveness
+   ===================================================== */
 @media (max-width: 640px) {
   .form-row {
     flex-direction: column;
     gap: 16px;
   }
-  
+
   .form-group {
     min-width: 100%;
   }
-  
+
   .form-card {
     padding: 20px 16px;
   }
-  
-  .upload-area {
-    padding: 24px 16px;
-  }
 }
 
-/* Dashboard layout responsiveness */
+/* =====================================================
+   Dashboard layout responsiveness
+   ===================================================== */
 @media (max-width: 768px) {
   .dashboard-layout {
     flex-direction: column;
     gap: 20px;
     padding: 20px 16px;
   }
-  
+
   .main-content {
     order: 1;
   }
 }
+

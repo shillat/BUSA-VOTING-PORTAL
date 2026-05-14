@@ -328,45 +328,75 @@ const ManageCandidates = () => {
             <button onClick={handleAddCandidate} style={{ background: '#002F6C', color: 'white', border: 'none', padding: '14px 32px', borderRadius: '48px', fontWeight: '700', fontSize: '16px', cursor: 'pointer', width: '100%' }}>REGISTER CANDIDATE →</button>
           </div>
 
-          {/* Candidates Grid */}
-          <div className="candidates-grid">
-            {loading && <div className="loading-message">Loading candidates...</div>}
-            {!loading && candidates.map((candidate) => (
-              <div key={candidate.id} className="candidate-card">
-                <div className="candidate-header">
-                  {candidate.photo_url ? (
-                    <img
-                      src={`https://busa-voting-portal.onrender.com${candidate.photo_url}`}
-                      alt={candidate.name}
-                      className="candidate-photo"
-                      onError={(e) => {
-                        e.target.onerror = null; 
-                        e.target.style.display = 'none';
-                        e.target.nextElementSibling.style.display = 'flex';
-                      }}
-                    />
-                  ) : (
-                    <div className="fallback-avatar" style={{ display: 'none' }}>👤</div>
-                  )}
-                  {!candidate.photo_url && (
-                    <div className="fallback-avatar">👤</div>
-                  )}
-                  <div className="candidate-name">{candidate.name}</div>
-                  <div className="candidate-position">{candidate.position}</div>
-                </div>
-                <div className="candidate-body">
-                  <div className="candidate-slogan">"{candidate.slogan}"</div>
-                  <div className="candidate-faculty">🎓 {candidate.faculty || candidate.school}</div>
-                  <div className="candidate-election">🗳️ {elections.find(e => e.id === candidate.election_id)?.title || 'Unknown Election'}</div>
-                  <div className="candidate-actions">
-                    <button onClick={() => handleEditCandidate(candidate.id)} className="edit-button">Edit</button>
-                    <button onClick={() => handleDeleteCandidate(candidate.id)} className="delete-button">Delete</button>
-                  </div>
-                </div>
-              </div>
-            ))}
+          {/* Candidates Table */}
+          <div className="candidates-table-wrapper">
+            <div className="candidates-table-header">
+              <h3 style={{ fontSize: '17px', fontWeight: '800', color: 'black', margin: 0 }}>Registered Candidates</h3>
+              <div className="candidates-count-badge">{candidates.length} total</div>
+            </div>
+
+            {loading && (
+              <div className="table-loading">⏳ Loading candidates...</div>
+            )}
+
             {!loading && candidates.length === 0 && (
-              <div className="empty-state">No candidates registered yet.</div>
+              <div className="table-empty">No candidates registered yet.</div>
+            )}
+
+            {!loading && candidates.length > 0 && (
+              <div style={{ overflowX: 'auto' }}>
+                <table className="candidates-table">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Photo</th>
+                      <th>Full Name</th>
+                      <th>Position</th>
+                      <th>Faculty</th>
+                      <th>Election</th>
+                      <th>Slogan</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {candidates.map((candidate, index) => (
+                      <tr key={candidate.id}>
+                        <td className="td-index">{index + 1}</td>
+                        <td className="td-photo">
+                          {candidate.photo_url ? (
+                            <img
+                              src={`https://busa-voting-portal.onrender.com${candidate.photo_url}`}
+                              alt={candidate.name}
+                              className="table-candidate-photo"
+                              onError={(e) => {
+                                e.target.onerror = null;
+                                e.target.src = '';
+                                e.target.style.display = 'none';
+                                e.target.nextElementSibling.style.display = 'flex';
+                              }}
+                            />
+                          ) : null}
+                          {!candidate.photo_url && (
+                            <div className="table-fallback-avatar">👤</div>
+                          )}
+                          <div className="table-fallback-avatar" style={{ display: 'none' }}>👤</div>
+                        </td>
+                        <td className="td-name">{candidate.name}</td>
+                        <td className="td-position">
+                          <span className="position-badge">{candidate.position || '—'}</span>
+                        </td>
+                        <td className="td-faculty">{candidate.faculty || candidate.school || '—'}</td>
+                        <td className="td-election">{elections.find(e => e.id === candidate.election_id)?.title || <span style={{ color: '#aaa' }}>Unknown</span>}</td>
+                        <td className="td-slogan">{candidate.slogan ? `"${candidate.slogan}"` : <span style={{ color: '#ccc' }}>—</span>}</td>
+                        <td className="td-actions">
+                          <button onClick={() => handleEditCandidate(candidate.id)} className="tbl-edit-btn">✏️ Edit</button>
+                          <button onClick={() => handleDeleteCandidate(candidate.id)} className="tbl-delete-btn">🗑️ Delete</button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             )}
           </div>
         </div>
